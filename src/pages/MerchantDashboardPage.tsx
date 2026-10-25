@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabaseClient';
 import { useAddProduct } from '../contexts/AddProductContext';
@@ -125,7 +126,13 @@ const MerchantDashboardPage = () => {
     }
   }, []);
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+
+  // Non connecté : renvoyer vers la connexion marchand au lieu d'un spinner infini
+  useEffect(() => {
+    if (!authLoading && !user) navigate('/merchant/auth', { replace: true });
+  }, [authLoading, user, navigate]);
   const { showAddProductModal, openAddProductModal, closeAddProductModal } = useAddProduct();
   const [merchantId, setMerchantId] = useState<string | null>(null);
   const [merchantProfile, setMerchantProfile] = useState<MerchantProfile | null>(null);
