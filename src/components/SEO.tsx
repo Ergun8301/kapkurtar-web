@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 interface SEOProps {
@@ -14,12 +14,12 @@ interface SEOProps {
  * Composant SEO réutilisable pour optimiser les meta tags de chaque page
  * Gère les meta tags standards, Open Graph et Twitter Cards
  */
-const SEO: React.FC<SEOProps> = ({
+const SEO: FC<SEOProps> = ({
   title,
   description,
   canonical,
   keywords = 'ucuz yemek, indirimli yemek, fazla gıda, gıda israfı, KapKurtar, yemek fırsatları',
-  ogImage = 'https://kapkurtar.com/og-image.jpg',
+  ogImage = 'https://kapkurtar.com/images/logo-footer.webp',
   ogType = 'website'
 }) => {
   const siteUrl = 'https://kapkurtar.com';

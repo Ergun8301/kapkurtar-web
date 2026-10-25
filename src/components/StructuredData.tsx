@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 
 interface OrganizationSchemaProps {
   type: 'organization';
@@ -24,7 +24,7 @@ type StructuredDataProps = OrganizationSchemaProps | LocalBusinessSchemaProps | 
  * Composant pour injecter des données structurées Schema.org dans le <head>
  * Améliore le référencement et l'affichage dans les résultats de recherche Google
  */
-const StructuredData: React.FC<StructuredDataProps> = (props) => {
+const StructuredData: FC<StructuredDataProps> = (props) => {
   let schema: any = {};
 
   if (props.type === 'organization') {
@@ -34,8 +34,8 @@ const StructuredData: React.FC<StructuredDataProps> = (props) => {
       "@id": "https://kapkurtar.com/#organization",
       "name": "KapKurtar",
       "url": "https://kapkurtar.com",
-      "logo": "https://kapkurtar.com/logo.png",
-      "description": "Türkiye'nin gıda israfını önleyen marketplace platformu. Restoranlar, fırınlar ve marketlerden %70 indirimli yemek fırsatları.",
+      "logo": "https://kapkurtar.com/images/logo-round.webp",
+      "description": "Gıda israfını önleyen KapKurtar, restoran, fırın ve marketlerin günün sonunda kalan ürünlerini indirimli fiyatlarla sunar.",
       "foundingDate": "2024",
       "areaServed": [
         {
@@ -63,11 +63,6 @@ const StructuredData: React.FC<StructuredDataProps> = (props) => {
           "name": "Bursa",
           "addressCountry": "TR"
         }
-      ],
-      "sameAs": [
-        "https://www.facebook.com/kapkurtar",
-        "https://www.instagram.com/kapkurtar",
-        "https://www.linkedin.com/company/kapkurtar"
       ]
     };
   } else if (props.type === 'localBusiness') {
@@ -75,7 +70,7 @@ const StructuredData: React.FC<StructuredDataProps> = (props) => {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
       "name": `KapKurtar ${props.cityTurkish}`,
-      "description": `${props.cityTurkish}'da gıda israfını önleyen marketplace. %70 indirimli yemek fırsatları.`,
+      "description": `${props.cityTurkish} bölgesinde gıda israfını önleyen KapKurtar ile indirimli yemek fırsatları.`,
       "url": `https://kapkurtar.com/${props.city}`,
       "priceRange": "₺₺",
       "areaServed": {

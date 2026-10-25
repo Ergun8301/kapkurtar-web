@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, MapPin, Star, Heart, ArrowRight, MapPinOff } from 'lucide-react';
+import { Clock, MapPin, MapPinOff } from 'lucide-react';
 import { getActiveOffers, type Offer } from '../api/offers';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { QuantityModal } from './QuantityModal';
 import { createReservation } from '../api/reservations';
-import { supabase } from '../lib/supabaseClient';
 import { useNearbyOffers } from '../hooks/useNearbyOffers';
 import { useClientLocation } from '../hooks/useClientLocation';
-import { getPublicImageUrl } from '../lib/supabasePublic';
+import { getPublicImageUrl, NO_IMAGE_PLACEHOLDER } from '../lib/supabasePublic';
+import { formatTL, toTurkishError } from '../lib/errorMessages';
 
-interface FeaturedOffersProps {}
+// Rayon de recherche des offres proches (km)
+const NEARBY_RADIUS_KM = 10;
+
+interface FeaturedOffersProps {
+  // Passé par HomePage (non utilisé ici)
+  onOpenDownloadModal?: () => void;
+}
 
 const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
@@ -20,24 +26,31 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { location: clientLocation } = useClientLocation(user?.id || null);
+  const { location: clientLocation, loading: locationLoading } = useClientLocation(user?.id || null);
 
-  // Use nearby offers for authenticated users, all offers for guests
+  // Offres proches pour un utilisateur connecté avec une position enregistrée,
+  // sinon toutes les offres actives
+  const useNearby = !!user && !!clientLocation;
+  const waitingLocation = !!user && locationLoading;
   const {
     offers: nearbyOffers,
-    loading: nearbyLoading
+    loading: nearbyLoading,
+    refetch: refetchNearby
   } = useNearbyOffers({
     clientId: user?.id || null,
-    radiusKm: 10,
-    enabled: !!user && !!clientLocation
+    radiusKm: NEARBY_RADIUS_KM,
+    enabled: useNearby
   });
 
   useEffect(() => {
-    // For non-authenticated users, fetch all offers once
-    if (!user) {
+    if (waitingLocation) {
+      setLoading(true);
+      return;
+    }
+
+    if (!useNearby) {
       fetchOffers();
     } else {
-      // For authenticated users, use nearby offers from hook
       setLoading(nearbyLoading);
       if (!nearbyLoading) {
         const formattedOffers = nearbyOffers.map(offer => ({
@@ -54,8 +67,7 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
             company_name: offer.merchant_name,
             full_address: '',
             street: '',
-            city: '',
-            avg_rating: 4.5
+            city: ''
           },
           available_until: offer.available_until,
           is_active: true
@@ -63,7 +75,8 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
         setOffers(formattedOffers);
       }
     }
-  }, [user, nearbyOffers, nearbyLoading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useNearby, waitingLocation, nearbyOffers, nearbyLoading]);
 
   useEffect(() => {
     if (toast) {
@@ -98,73 +111,46 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
   };
 
   const handleReserve = (offer: Offer) => {
-    console.log('Reserve button clicked', { user: user?.id, offer: offer.id });
-
     if (!user) {
-      console.log('User not authenticated, cannot reserve');
-      setToast({ message: 'Rezervasyon yapmak için lütfen giriş yapın', type: 'error' });
+      navigate('/customer/auth');
       return;
     }
 
-    if (!clientLocation) {
-      console.warn('User location not available yet');
-      setToast({ message: 'Konumunuz yüklenirken lütfen bekleyin...', type: 'error' });
+    if (!offer.quantity || offer.quantity <= 0) {
+      setToast({ message: 'Stokta yok', type: 'error' });
       return;
     }
 
-    if (!offer.merchant_id) {
-      console.error('Offer missing merchant_id:', offer);
-      setToast({ message: 'Geçersiz teklif verisi', type: 'error' });
-      return;
-    }
-
-    console.log('Opening quantity modal for offer:', offer.id);
     setSelectedOffer(offer);
   };
 
   const handleConfirmReservation = async (quantity: number) => {
-    if (!selectedOffer) {
-      console.error('No offer selected');
-      return;
-    }
+    if (!selectedOffer) return;
 
     if (!user) {
-      console.error('User not authenticated');
-      setToast({ message: 'Rezervasyon yapmak için lütfen giriş yapın', type: 'error' });
       setSelectedOffer(null);
+      navigate('/customer/auth');
       return;
     }
-
-    if (!selectedOffer.merchant_id) {
-      console.error('Offer missing merchant_id');
-      setToast({ message: 'Geçersiz teklif: işletme bilgisi eksik', type: 'error' });
-      setSelectedOffer(null);
-      return;
-    }
-
-    console.log('Confirming reservation:', {
-      offerId: selectedOffer.id,
-      merchantId: selectedOffer.merchant_id,
-      quantity,
-      userId: user.id
-    });
 
     setReserving(true);
     try {
-      const result = await createReservation(selectedOffer.id, selectedOffer.merchant_id, quantity);
+      const result = await createReservation(selectedOffer.id, quantity);
 
       if (result.success) {
-        console.log('Reservation successful:', result.data);
-        setToast({ message: 'Rezervasyon başarıyla oluşturuldu!', type: 'success' });
+        setToast({ message: '✅ Rezervasyon onaylandı! Rezervasyonlarım sayfasından takip edebilirsiniz.', type: 'success' });
         setSelectedOffer(null);
-        fetchOffers();
+        if (useNearby) {
+          refetchNearby();
+        } else {
+          fetchOffers();
+        }
       } else {
-        console.error('Reservation failed:', result.error);
-        setToast({ message: result.error || 'Rezervasyon oluşturulamadı', type: 'error' });
+        setToast({ message: result.error, type: 'error' });
       }
-    } catch (error: any) {
-      console.error('Exception during reservation:', error);
-      setToast({ message: error.message || 'Bir hata oluştu', type: 'error' });
+    } catch (error) {
+      console.error('Rezervasyon hatası:', error);
+      setToast({ message: toTurkishError(error, '❌ Rezervasyon sırasında hata oluştu'), type: 'error' });
     } finally {
       setReserving(false);
     }
@@ -203,10 +189,10 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
                   Bölgenizde teklif bulunmuyor
                 </p>
                 <p className="text-gray-500 mb-4">
-                  Konumunuzun 50km yarıçapında hiçbir teklif bulamadık.
+                  Konumunuzun {NEARBY_RADIUS_KM} km yarıçapında şu anda teklif bulunmuyor.
                 </p>
                 <p className="text-sm text-gray-400">
-                  Profilinizden adresinizi değiştirin veya yeni teklifler için daha sonra tekrar kontrol edin.
+                  Yeni teklifler için daha sonra tekrar kontrol edin.
                 </p>
               </>
             ) : (
@@ -233,24 +219,17 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
                   referrerPolicy="no-referrer"
                   crossOrigin="anonymous"
                   onError={(e) => {
-                    console.error('❌ Featured offer image load failed for:', offer.title, '| URL:', offer.image_url);
-                    (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e5e7eb" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="%239ca3af"%3EImage unavailable%3C/text%3E%3C/svg%3E';
+                    const img = e.currentTarget as HTMLImageElement;
+                    if (img.src !== NO_IMAGE_PLACEHOLDER) img.src = NO_IMAGE_PLACEHOLDER;
                   }}
                 />
                 <div className="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded-md text-sm font-bold">
                   -{offer.discount_percentage}%
                 </div>
-                <button className="absolute top-4 right-4 bg-white bg-opacity-90 p-2 rounded-full hover:bg-opacity-100 transition-all">
-                  <Heart className="w-5 h-5 text-gray-600 hover:text-red-500" />
-                </button>
               </div>
 
               <div className="p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="text-sm text-gray-600">{offer.merchant?.avg_rating || 'N/A'}</span>
-                  </div>
+                <div className="flex items-center justify-end mb-2">
                   <div className="flex items-center text-sm text-red-600">
                     <Clock className="w-4 h-4 mr-1" />
                     {formatTimeLeft(offer.available_until)}
@@ -272,10 +251,10 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <span className="text-2xl font-bold text-[#00A690]">
-                      ₺{offer.discounted_price}
+                      {formatTL(offer.discounted_price)}
                     </span>
                     <span className="text-lg text-gray-400 line-through">
-                      ₺{offer.original_price}
+                      {formatTL(offer.original_price)}
                     </span>
                   </div>
                   {user ? (
@@ -288,7 +267,7 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
                     </button>
                   ) : (
                     <button
-                      onClick={() => navigate('/offers')}
+                      onClick={() => navigate('/customer/auth')}
                       className="bg-[#00A690] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#F75C00] transition-colors"
                     >
                       Rezerve Etmek İçin Giriş Yapın

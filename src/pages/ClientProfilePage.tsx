@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Camera, Save, X, ArrowLeft } from 'lucide-react';
+import { User, Mail, Phone, Camera, Save, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabaseClient';
 import { uploadImageToSupabase } from '../lib/uploadImage';
+import { toTurkishError } from '../lib/errorMessages';
 
 interface ClientProfile {
   first_name: string | null;
@@ -24,7 +25,7 @@ const ClientProfilePage = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
-  // Charger le profil
+  // Profili yükle
   useEffect(() => {
     const loadProfile = async () => {
       if (!user) {
@@ -46,8 +47,8 @@ const ClientProfilePage = () => {
           setPhotoPreview(data.profile_photo_url);
         }
       } catch (error) {
-        console.error('Erreur chargement profil:', error);
-        setToast({ message: 'Erreur chargement profil', type: 'error' });
+        console.error('Profil yükleme hatası:', error);
+        setToast({ message: 'Profil yükleme hatası', type: 'error' });
       } finally {
         setLoading(false);
       }
@@ -58,7 +59,7 @@ const ClientProfilePage = () => {
     }
   }, [user, authLoading]);
 
-  // Toast auto-hide
+  // Toast otomatik gizleme
   useEffect(() => {
     if (toast) {
       const timer = setTimeout(() => setToast(null), 3000);
@@ -79,12 +80,12 @@ const ClientProfilePage = () => {
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif', 'image/avif'];
 
     if (file.size > MAX_SIZE) {
-      setToast({ message: 'Photo trop volumineuse (max. 5 Mo)', type: 'error' });
+      setToast({ message: 'Fotoğraf çok büyük (maks. 5 MB)', type: 'error' });
       return;
     }
 
     if (!validTypes.includes(file.type.toLowerCase())) {
-      setToast({ message: 'Format non pris en charge', type: 'error' });
+      setToast({ message: 'Desteklenmeyen format', type: 'error' });
       return;
     }
 
@@ -103,10 +104,10 @@ const ClientProfilePage = () => {
       setPhotoPreview(photoUrl);
       setProfile((prev) => (prev ? { ...prev, profile_photo_url: photoUrl } : null));
       setEditedProfile((prev) => (prev ? { ...prev, profile_photo_url: photoUrl } : null));
-      setToast({ message: '✅ Photo mise à jour', type: 'success' });
-    } catch (error: any) {
-      console.error('Erreur upload photo:', error);
-      setToast({ message: error.message || 'Erreur upload photo', type: 'error' });
+      setToast({ message: 'Fotoğraf güncellendi', type: 'success' });
+    } catch (error) {
+      console.error('Fotoğraf yükleme hatası:', error);
+      setToast({ message: toTurkishError(error, 'Fotoğraf yükleme hatası'), type: 'error' });
     } finally {
       setIsUploadingPhoto(false);
     }
@@ -116,7 +117,7 @@ const ClientProfilePage = () => {
     if (!user || !editedProfile) return;
 
     if (!editedProfile.first_name?.trim() || !editedProfile.last_name?.trim()) {
-      setToast({ message: 'Prénom et nom sont obligatoires', type: 'error' });
+      setToast({ message: 'Ad ve soyad zorunludur', type: 'error' });
       return;
     }
 
@@ -134,10 +135,10 @@ const ClientProfilePage = () => {
       if (error) throw error;
 
       setProfile(editedProfile);
-      setToast({ message: '✅ Profil mis à jour', type: 'success' });
-    } catch (error: any) {
-      console.error('Erreur mise à jour profil:', error);
-      setToast({ message: error.message || 'Erreur mise à jour', type: 'error' });
+      setToast({ message: 'Profil güncellendi', type: 'success' });
+    } catch (error) {
+      console.error('Güncelleme hatası:', error);
+      setToast({ message: toTurkishError(error, 'Güncelleme hatası'), type: 'error' });
     } finally {
       setIsSaving(false);
     }
@@ -172,26 +173,26 @@ const ClientProfilePage = () => {
           </div>
         )}
 
-        {/* Bouton retour */}
+        {/* Geri butonu */}
         <button
           onClick={() => navigate('/offers')}
           className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors duration-300"
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
-          Retour aux offres
+          Tekliflere Dön
         </button>
 
-        {/* Profil principal */}
+        {/* Ana profil kartı */}
         <div className="bg-white rounded-lg shadow-md p-8">
           {/* Header */}
           <div className="flex items-center mb-8">
             <div className="w-12 h-12 bg-[#FFFFF0] rounded-full flex items-center justify-center mr-4">
               <User className="w-6 h-6 text-[#00A690]" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Mon Profil</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Profilim</h1>
           </div>
 
-          {/* Photo de profil */}
+          {/* Profil fotoğrafı */}
           <div className="flex flex-col items-center mb-8">
             <div className="relative">
               <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
@@ -220,14 +221,14 @@ const ClientProfilePage = () => {
                 />
               </label>
             </div>
-            <p className="text-sm text-gray-500 mt-3">Cliquez sur l'icône pour changer la photo</p>
+            <p className="text-sm text-gray-500 mt-3">Fotoğrafı değiştirmek için simgeye tıklayın</p>
           </div>
 
-          {/* Formulaire */}
+          {/* Form */}
           <div className="space-y-6">
-            {/* Email (lecture seule) */}
+            {/* E-posta (salt okunur) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">E-posta</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
@@ -237,13 +238,13 @@ const ClientProfilePage = () => {
                   disabled
                 />
               </div>
-              <p className="text-xs text-gray-400 mt-1">L'email ne peut pas être modifié</p>
+              <p className="text-xs text-gray-400 mt-1">E-posta değiştirilemez</p>
             </div>
 
-            {/* Prénom */}
+            {/* Ad */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Prénom <span className="text-red-500">*</span>
+                Ad <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -253,16 +254,16 @@ const ClientProfilePage = () => {
                   value={editedProfile?.first_name || ''}
                   onChange={handleInputChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
-                  placeholder="Prénom"
+                  placeholder="Ad"
                   required
                 />
               </div>
             </div>
 
-            {/* Nom */}
+            {/* Soyad */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nom <span className="text-red-500">*</span>
+                Soyad <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -272,16 +273,16 @@ const ClientProfilePage = () => {
                   value={editedProfile?.last_name || ''}
                   onChange={handleInputChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
-                  placeholder="Nom"
+                  placeholder="Soyad"
                   required
                 />
               </div>
             </div>
 
-            {/* Téléphone */}
+            {/* Telefon */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Téléphone <span className="text-gray-400 text-xs">(optionnel)</span>
+                Telefon <span className="text-gray-400 text-xs">(isteğe bağlı)</span>
               </label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -291,19 +292,19 @@ const ClientProfilePage = () => {
                   value={editedProfile?.phone || ''}
                   onChange={handleInputChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
-                  placeholder="Ex: 06 12 34 56 78"
+                  placeholder="Örn: 0532 123 45 67"
                 />
               </div>
             </div>
 
-            {/* Boutons d'action */}
+            {/* Eylem butonları */}
             {hasChanges && (
               <div className="flex gap-4 pt-6 border-t border-gray-200">
                 <button
                   onClick={handleCancel}
                   className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-300 font-medium"
                 >
-                  Annuler
+                  İptal
                 </button>
                 <button
                   onClick={handleSaveChanges}
@@ -313,12 +314,12 @@ const ClientProfilePage = () => {
                   {isSaving ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Enregistrement...
+                      Kaydediliyor...
                     </>
                   ) : (
                     <>
                       <Save className="w-5 h-5 mr-2" />
-                      Enregistrer
+                      Kaydet
                     </>
                   )}
                 </button>

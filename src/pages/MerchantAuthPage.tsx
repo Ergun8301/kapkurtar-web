@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, Store } from "lucide-react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuthFlow } from "../hooks/useAuthFlow";
+import { toTurkishError } from "../lib/errorMessages";
 
 type AuthMode = "login" | "register";
 
@@ -27,38 +28,7 @@ const MerchantAuthPage = () => {
   });
 
   // ---------- Redirection ----------
-  const goToMerchantHome = async () => {
-    try {
-      if (!user) return navigate("/merchant/dashboard");
-      const { data: prof } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("auth_id", user.id)
-        .maybeSingle();
-
-      if (prof?.id) {
-        const { data: merch } = await supabase
-          .from("merchants")
-          .select("id")
-          .eq("profile_id", prof.id)
-          .maybeSingle();
-
-        if (merch?.id) {
-          const { data: offers } = await supabase
-            .from("offers")
-            .select("id")
-            .eq("merchant_id", merch.id)
-            .limit(1);
-
-          if (!offers || offers.length === 0) {
-            navigate("/merchant/dashboard");
-            return;
-          }
-        }
-      }
-    } catch (err) {
-      console.warn("Erreur redirection merchant:", err);
-    }
+  const goToMerchantHome = () => {
     navigate("/merchant/dashboard");
   };
 
@@ -94,7 +64,7 @@ const MerchantAuthPage = () => {
       } else {
         // ----------- REGISTER -----------
         if (formData.password.length < 6)
-          throw new Error("Şifre en az 6 karakter içermelidir");
+          throw new Error("Şifre en az 6 karakter içermelidir.");
 
         // 🔹 Crée un flow_state avant signup
         const { data: flow, error: flowError } = await supabase
@@ -104,7 +74,7 @@ const MerchantAuthPage = () => {
           .single();
 
         if (flowError || !flow)
-          throw flowError || new Error("Flow state oluşturulamadı");
+          throw flowError || new Error("Kayıt başlatılamadı. Lütfen tekrar deneyin.");
 
         const { data: signUpData, error: signUpError } =
           await supabase.auth.signUp({
@@ -119,14 +89,14 @@ const MerchantAuthPage = () => {
           });
         if (signUpError) throw signUpError;
 
-        // ✅ Auto-login après signup (email confirmation désactivée dans Supabase)
+        // Auto-login après signup (confirmation email désactivée dans Supabase)
         if (signUpData.user) {
           await refetchProfile();
           navigate("/merchant/dashboard");
         }
       }
     } catch (err) {
-      setError((err as Error).message);
+      setError(toTurkishError(err));
     } finally {
       setIsLoading(false);
     }
@@ -134,7 +104,7 @@ const MerchantAuthPage = () => {
 
   // ---------- Google OAuth marchand ----------
   const handleGoogleAuth = async () => {
-    console.log("🚀🚀🚀 handleGoogleAuth APPELÉ - Début OAuth marchand 🚀🚀🚀");
+    setError("");
     try {
       // 🔹 Crée un flow_state avec rôle marchand avant OAuth
       const { data: flow, error: flowError } = await supabase
@@ -144,18 +114,14 @@ const MerchantAuthPage = () => {
         .single();
 
       if (flowError || !flow)
-        throw flowError || new Error("Flow state oluşturulamadı");
-
-      console.log("🎟️ Flow token créé :", flow.token);
+        throw flowError || new Error("Google ile giriş başlatılamadı. Lütfen tekrar deneyin.");
 
       // 🔹 Stocker dans localStorage comme fallback
       localStorage.setItem("oauth_flow_token", flow.token);
       localStorage.setItem("oauth_desired_role", "merchant");
-      console.log("💾 Flow token stocké dans localStorage");
 
       // 🔹 Redirection Google avec query params (domaine sans www)
       const redirectUrl = `https://kapkurtar.com/auth/callback?role=merchant&flow_token=${flow.token}`;
-      console.log("🔗 Redirect URL:", redirectUrl);
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -167,7 +133,7 @@ const MerchantAuthPage = () => {
       if (error) throw error;
     } catch (err) {
       console.error("Erreur OAuth marchand :", err);
-      setError((err as Error).message);
+      setError(toTurkishError(err));
     }
   };
 
@@ -207,7 +173,7 @@ const MerchantAuthPage = () => {
             <p className="text-gray-600">
               {mode === "login"
                 ? "Tekliflerinizi yönetin ve israfı azaltın"
-                : "SEPET'e katılın ve satılmayan ürünlerinizi değerlendirin"}
+                : "KapKurtar'a katılın ve satılmayan ürünlerinizi değerlendirin"}
             </p>
           </div>
 

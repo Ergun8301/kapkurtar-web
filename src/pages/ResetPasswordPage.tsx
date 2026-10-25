@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
-import type { Session } from '@supabase/supabase-js';
+import { toTurkishError } from '../lib/errorMessages';
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
-  const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [password, setPassword] = useState('');
@@ -16,21 +15,21 @@ const ResetPasswordPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [invalidLink, setInvalidLink] = useState(false);
 
   // Récupérer la session directement pour éviter erreur 422
   useEffect(() => {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        setSession(session);
         // Récupérer le rôle
         const { data } = await supabase.rpc('get_user_role', {
           p_auth_id: session.user.id
         });
         setRole(data);
       } else {
-        // Pas de session valide, rediriger
-        navigate('/');
+        // Pas de session valide : lien expiré ou invalide
+        setInvalidLink(true);
       }
       setLoading(false);
     })();
@@ -74,7 +73,7 @@ const ResetPasswordPage = () => {
         }
       }, 2000);
     } catch (err) {
-      setError((err as Error).message);
+      setError(toTurkishError(err));
     } finally {
       setIsLoading(false);
     }
@@ -107,6 +106,24 @@ const ResetPasswordPage = () => {
           </div>
 
           <div className="bg-white rounded-3xl shadow-xl p-6 space-y-6">
+            {invalidLink ? (
+              <div className="space-y-4">
+                <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+                  <p className="text-sm font-semibold text-red-700">Bağlantı geçersiz veya süresi dolmuş</p>
+                  <p className="text-sm text-red-600 mt-1">
+                    Şifre sıfırlama bağlantınızın süresi dolmuş ya da bağlantı daha önce kullanılmış olabilir. Lütfen yeni bir bağlantı isteyin.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate('/forgot-password')}
+                  className="w-full bg-gray-800 text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-900 transition-all shadow-lg hover:shadow-xl"
+                >
+                  Yeni Bağlantı İste
+                </button>
+              </div>
+            ) : (
+            <>
             {success && (
               <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded-lg flex items-start">
                 <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
@@ -201,6 +218,8 @@ const ResetPasswordPage = () => {
                 En az 6 karakter gerekli
               </p>
             </div>
+            </>
+            )}
           </div>
         </div>
       </div>

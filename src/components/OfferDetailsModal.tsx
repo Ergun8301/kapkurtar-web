@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { X, MapPin, Phone, Navigation, Clock, Package, Star, Heart } from 'lucide-react';
+import { X, MapPin, Phone, Navigation, Clock, Package } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { formatTL, toTurkishError } from '../lib/errorMessages';
+
+// Valeurs factices écrites par défaut en base (ne pas afficher)
+const PLACEHOLDER_VALUES = ['à définir', 'position gps', 'gps konumu', 'belirtilmemiş'];
+const cleanPart = (value?: string | null) => {
+  const v = (value || '').trim();
+  return v && !PLACEHOLDER_VALUES.includes(v.toLowerCase()) ? v : '';
+};
 
 interface Offer {
   offer_id: string;
@@ -140,6 +148,8 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
   };
 
   const progressPercent = getProgressPercent();
+  const isOutOfStock = typeof offer.quantity === 'number' && offer.quantity <= 0;
+  const merchantPlace = cleanPart(offer.merchant_city) || cleanPart(offer.merchant_street);
   
   let progressColor = '#16a34a';
   if (progressPercent < 66) progressColor = '#f59e0b';
@@ -174,7 +184,7 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
         return;
       }
 
-      const { data, error: reservationError } = await supabase.rpc('create_reservation_dynamic', {
+      const { error: reservationError } = await supabase.rpc('create_reservation_dynamic', {
         p_client_id: profileData.id,
         p_offer_id: offer.offer_id,
         p_quantity: reservationQuantity,
@@ -182,14 +192,14 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
       if (reservationError) throw reservationError;
 
-      setToast({ message: '✅ Rezervasyon onaylandı!', type: 'success' });
+      setToast({ message: '✅ Rezervasyon onaylandı! Rezervasyonlarım sayfasından takip edebilirsiniz.', type: 'success' });
 
       setTimeout(() => {
         onClose();
       }, 1500);
-    } catch (error: any) {
-      console.error('❌ Erreur réservation:', error);
-      setToast({ message: error.message || '❌ Rezervasyon sırasında hata oluştu', type: 'error' });
+    } catch (error) {
+      console.error('Rezervasyon hatası:', error);
+      setToast({ message: toTurkishError(error, '❌ Rezervasyon sırasında hata oluştu'), type: 'error' });
     } finally {
       setIsReserving(false);
     }
@@ -246,37 +256,20 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                 />
               ) : (
                 <img
-  src="https://zhabjdyzawffsmvziojl.supabase.co/storage/v1/object/public/logos/FAVICON%20MINI%20rond%20fond%20vert.png"
-  alt="KapKurtar"
-  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0"
-  crossOrigin="anonymous"
-  referrerPolicy="no-referrer"
-/>
+                  src="/images/merchant-default.webp"
+                  alt="KapKurtar"
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0"
+                />
               )}
 
               <div className="flex-1 min-w-0">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">{offer.merchant_name}</h2>
                 
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} className="w-4 h-4 fill-gray-300 text-gray-300" />
-                    ))}
-                  </div>
-                  <span className="text-xs text-gray-500">Yakında kullanılabilir</span>
-                </div>
-
                 <div className="flex items-center gap-4 flex-wrap text-sm text-gray-600">
-                  {offer.merchant_street && 
-                   offer.merchant_street !== 'Position GPS' && 
-                   offer.merchant_street !== 'À définir' && (
+                  {merchantPlace && (
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4 text-[#00A690] flex-shrink-0" />
-                      <span className="truncate">
-                        {offer.merchant_city && offer.merchant_city !== 'À définir' 
-                          ? offer.merchant_city 
-                          : offer.merchant_street}
-                      </span>
+                      <span className="truncate">{merchantPlace}</span>
                     </div>
                   )}
                   {offer.merchant_phone && (
@@ -316,12 +309,6 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                     <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-lg shadow-lg">
                       -{getDiscountPercent(offer.price_before, offer.price_after)}%
                     </div>
-                    <button
-                      className="absolute top-4 left-4 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors opacity-50 cursor-not-allowed"
-                      title="Yakında kullanılabilir"
-                    >
-                      <Heart className="w-5 h-5 text-gray-400" />
-                    </button>
                   </div>
                 )}
               </div>
@@ -337,10 +324,10 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
                 <div className="flex items-baseline gap-3 bg-green-100 rounded-lg p-4 mb-4">
                   <span className="text-3xl md:text-4xl font-bold text-[#00A690]">
-                    {offer.price_after.toFixed(2)}₺
+                    {formatTL(offer.price_after)}
                   </span>
                   <span className="text-lg md:text-xl text-gray-400 line-through">
-                    {offer.price_before.toFixed(2)}₺
+                    {formatTL(offer.price_before)}
                   </span>
                 </div>
 
@@ -407,9 +394,9 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
                 <button
                   onClick={handleReserve}
-                  disabled={isReserving || (offer.quantity && offer.quantity <= 0)}
+                  disabled={isReserving || isOutOfStock}
                   className={`w-full py-4 rounded-lg font-bold text-lg shadow-lg transition-all ${
-                    isReserving || (offer.quantity && offer.quantity <= 0)
+                    isReserving || isOutOfStock
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       : 'bg-[#00A690] hover:bg-[#F75C00] text-white hover:shadow-xl'
                   }`}
@@ -419,7 +406,7 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                       Rezervasyon yapılıyor...
                     </div>
-                  ) : offer.quantity && offer.quantity <= 0 ? (
+                  ) : isOutOfStock ? (
                     'Stokta yok'
                   ) : (
                     '🛒 Şimdi Rezerve Et'
@@ -461,10 +448,10 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
                         <div className="flex items-center gap-2 mb-2">
                           <span className="font-bold text-[#00A690] text-lg">
-                            {otherOffer.price_after.toFixed(2)}₺
+                            {formatTL(otherOffer.price_after)}
                           </span>
                           <span className="line-through text-gray-400 text-xs">
-                            {otherOffer.price_before.toFixed(2)}₺
+                            {formatTL(otherOffer.price_before)}
                           </span>
                           <span className="text-xs text-red-600 font-semibold bg-red-50 px-1.5 py-0.5 rounded">
                             -{getDiscountPercent(otherOffer.price_before, otherOffer.price_after)}%
@@ -550,7 +537,7 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                 onClick={() => navigate('/merchant/auth')}
                 className="text-[#00A690] hover:text-[#F75C00] font-semibold text-sm"
               >
-                SEPET'e ücretsiz katılın
+                KapKurtar'a ücretsiz katılın
               </button>
             </div>
           </div>

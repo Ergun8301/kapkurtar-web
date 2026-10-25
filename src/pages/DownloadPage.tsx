@@ -1,33 +1,39 @@
-import React from 'react';
-import { Smartphone, Bell, MapPin, Star, QrCode } from 'lucide-react';
+import { Bell, MapPin, Star } from 'lucide-react';
+import SEO from '../components/SEO';
+import { GOOGLE_PLAY_URL, GOOGLE_PLAY_QR_SRC } from '../lib/appLinks';
 
 const DownloadPage = () => {
   const features = [
     {
       icon: Bell,
-      title: 'Real-time Notifications',
-      description: 'Get instant alerts when new offers are available near you'
+      title: 'Anlık Bildirimler',
+      description: 'Yakınınızda yeni bir teklif yayınlandığında hemen haberdar olun'
     },
     {
       icon: MapPin,
-      title: 'Location-based Offers',
-      description: 'Find the best deals from restaurants in your area'
+      title: 'Konuma Göre Teklifler',
+      description: 'Bölgenizdeki restoran, fırın ve marketlerin fırsatlarını harita üzerinde keşfedin'
     },
     {
       icon: Star,
-      title: 'Exclusive App Deals',
-      description: 'Access special offers only available on mobile'
+      title: 'Kolay Rezervasyon',
+      description: 'Birkaç dokunuşla rezerve edin, ödemeyi ürünü teslim alırken işletmede yapın'
     }
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
+      <SEO
+        title="KapKurtar Uygulamasını İndir | Android'de Yayında"
+        description="KapKurtar Android uygulamasını Google Play'den indirin. Yakınınızdaki restoran, fırın ve marketlerin indirimli fırsatlarını keşfedin ve yeni teklifler için bildirim alın. iOS sürümü yakında."
+        canonical="/download"
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">Download the KapKurtar App</h1>
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">KapKurtar Uygulamasını İndirin</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Get the best food rescue experience on your mobile device. Never miss a deal again!
+            Yakınınızdaki indirimli fırsatları cebinizden takip edin, hiçbir teklifi kaçırmayın!
           </p>
         </div>
 
@@ -36,60 +42,46 @@ const DownloadPage = () => {
           {/* Left side - QR Code and Download */}
           <div className="text-center">
             <div className="bg-white p-8 rounded-2xl shadow-lg mb-8">
-              <div className="w-48 h-48 mx-auto bg-gray-100 rounded-lg flex items-center justify-center mb-6">
-                <QrCode className="w-24 h-24 text-gray-400" />
+              <div className="w-48 h-48 mx-auto bg-gray-100 rounded-lg flex items-center justify-center mb-6 p-2">
+                <img
+                  src={GOOGLE_PLAY_QR_SRC}
+                  alt="Google Play'de KapKurtar uygulaması için QR kodu"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <p className="text-gray-600 mb-6 font-medium">Scan to download</p>
+              <p className="text-gray-600 mb-6 font-medium">Android için QR kodu tarayın</p>
               
               {/* Download Text */}
               <div className="mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  Get notified instantly. Download our app today.
+                  Anında haberdar olun. Uygulamayı hemen indirin.
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Never miss a deal from your favorite restaurants. Get push notifications for new offers near you.
+                  Favori işletmelerinizin fırsatlarını kaçırmayın. Yakınınızdaki yeni teklifler için bildirim alın.
                 </p>
               </div>
               
               {/* Download Buttons */}
               <div className="flex flex-col gap-4">
                 <a
-                  href="#"
+                  href={GOOGLE_PLAY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="transition-transform hover:scale-105"
                 >
-                  <img 
-                    src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" 
-                    alt="Download on the App Store" 
+                  <img
+                    src="https://play.google.com/intl/en_us/badges/static/images/badges/tr_badge_web_generic.png"
+                    alt="Google Play'den alın"
                     className="h-14 mx-auto"
                   />
                 </a>
-                
-                <a
-                  href="#"
-                  className="transition-transform hover:scale-105"
-                >
-                  <img 
-                    src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" 
-                    alt="Get it on Google Play" 
-                    className="h-14 mx-auto"
-                  />
-                </a>
-              </div>
-            </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#00A690]">4.8★</div>
-                <div className="text-sm text-gray-600">App Rating</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#00A690]">50K+</div>
-                <div className="text-sm text-gray-600">Downloads</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#00A690]">1M+</div>
-                <div className="text-sm text-gray-600">Meals Saved</div>
+                <div
+                  aria-disabled="true"
+                  className="h-14 mx-auto px-6 rounded-lg bg-gray-300 text-gray-500 font-semibold flex items-center justify-center cursor-not-allowed opacity-60"
+                >
+                  App Store – Yakında
+                </div>
               </div>
             </div>
           </div>
@@ -97,7 +89,7 @@ const DownloadPage = () => {
           {/* Right side - Features */}
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              Why Download the App?
+              Neden Uygulamayı İndirmelisiniz?
             </h2>
             
             <div className="space-y-8 mb-8">
@@ -114,10 +106,10 @@ const DownloadPage = () => {
               ))}
             </div>
 
-            <div className="bg-[#00A690] py-16">
-              <h3 className="font-semibold text-[#00A690] mb-2">📱 Activate Notifications</h3>
-              <p className="text-[#00A690] leading-relaxed">
-                Enable push notifications to never miss a deal. Get alerted when your favorite restaurants post new offers!
+            <div className="bg-[#00A690] py-16 px-6 rounded-2xl">
+              <h3 className="font-semibold text-white mb-2">📱 Bildirimleri Etkinleştirin</h3>
+              <p className="text-white leading-relaxed">
+                Uygulamayı açtığınızda bildirim iznini verin: yakınınızda yeni bir teklif yayınlandığında anında haberdar olursunuz.
               </p>
             </div>
           </div>
@@ -125,7 +117,7 @@ const DownloadPage = () => {
 
         {/* Phone Mockup Section */}
         <div className="bg-white rounded-2xl p-12 text-center shadow-lg">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12">Experience KapKurtar on Mobile</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12">KapKurtar Mobilde</h2>
           
           <div className="flex justify-center relative">
             <div className="mx-auto w-64 h-96 bg-gray-900 rounded-3xl p-2 shadow-2xl">
@@ -133,9 +125,7 @@ const DownloadPage = () => {
                 {/* Phone screen content */}
                 <div className="bg-gradient-to-br from-green-400 to-green-500 h-24 flex items-center justify-center">
                   <div className="flex items-center space-x-2 text-white">
-                    <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold">R</span>
-                    </div>
+                    <img src="/images/logo-round.webp" alt="KapKurtar logosu" className="w-8 h-8 rounded-lg" />
                     <span className="font-bold text-lg">KapKurtar</span>
                   </div>
                 </div>
@@ -169,8 +159,8 @@ const DownloadPage = () => {
                   <div className="flex items-center space-x-2">
                     <Bell className="w-4 h-4 text-[#00A690]" />
                     <div>
-                      <div className="text-xs font-semibold text-gray-900">New offer nearby!</div>
-                      <div className="text-xs text-gray-600">50% off at Green Kitchen</div>
+                      <div className="text-xs font-semibold text-gray-900">Yakınınızda yeni teklif!</div>
+                      <div className="text-xs text-gray-600">Bir işletme yeni bir paket yayınladı</div>
                     </div>
                   </div>
                 </div>
@@ -181,12 +171,12 @@ const DownloadPage = () => {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <p className="text-gray-600 mb-6 text-lg">Ready to start saving money and reducing waste?</p>
+          <p className="text-gray-600 mb-6 text-lg">Tasarruf etmeye ve israfı azaltmaya hazır mısınız?</p>
           <a
-            href="/"
+            href="/offers"
             className="bg-[#00A690] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#F75C00] transition-colors inline-block text-lg"
           >
-            Explore Offers Now
+            Teklifleri Keşfet
           </a>
         </div>
       </div>

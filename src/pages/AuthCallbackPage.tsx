@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
+import { toTurkishError } from "../lib/errorMessages";
 
 const AuthCallbackPage = () => {
-  console.log("🔥🔥🔥 AUTH CALLBACK PAGE LOADED 🔥🔥🔥");
-
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [error, setError] = useState("");
@@ -12,12 +11,8 @@ const AuthCallbackPage = () => {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    console.log("🚀🚀🚀 AuthCallbackPage MONTÉ - Version avec localStorage 🚀🚀🚀");
-
     const handleOAuthCallback = async () => {
       try {
-        console.log("🔄 handleOAuthCallback démarré");
-
         // 🔹 Récupérer depuis localStorage (Supabase OAuth perd les query params)
         const storedRole = localStorage.getItem("oauth_desired_role");
         const storedFlowToken = localStorage.getItem("oauth_flow_token");
@@ -25,9 +20,6 @@ const AuthCallbackPage = () => {
         // Fallback sur URL params si localStorage vide
         let role = storedRole || searchParams.get("role") || "client";
         const flowToken = storedFlowToken || searchParams.get("flow_token");
-
-        console.log("🔁 OAuth callback → rôle:", role, "| flow_token:", flowToken);
-        console.log("📦 Depuis localStorage → role:", storedRole, "| flow_token:", storedFlowToken);
 
         // 🔹 Nettoyer localStorage après récupération
         localStorage.removeItem("oauth_desired_role");
@@ -45,13 +37,12 @@ const AuthCallbackPage = () => {
         }
 
         if (!session) {
-          setError("Impossible de récupérer la session après OAuth");
+          setError("Oturum alınamadı. Lütfen tekrar giriş yapın.");
           setLoading(false);
           return;
         }
 
         const user = session.user;
-        console.log("✅ Session récupérée pour:", user.email);
 
         // 1️⃣ Si un flow_token est présent → récupérer le rôle et associer à l'utilisateur
         if (flowToken) {
@@ -64,7 +55,6 @@ const AuthCallbackPage = () => {
 
           if (flowData?.desired_role) {
             role = flowData.desired_role;
-            console.log("✅ Rôle récupéré depuis flow_states:", role);
           }
 
           // Marquer le flow_state comme utilisé
@@ -74,30 +64,36 @@ const AuthCallbackPage = () => {
             .eq("token", flowToken);
         }
 
-        // 2️⃣ Mise à jour / création du profil
-        // D'abord vérifier si le profil existe
+        // 2️⃣ Création du profil uniquement s'il n'existe pas.
+        // Un profil existant garde TOUJOURS son rôle (un marchand qui utilise
+        // le bouton Google client reste marchand, et inversement).
         const { data: existingProfile } = await supabase
           .from("profiles")
-          .select("id, role")
+          .select("role, first_name, last_name")
           .eq("auth_id", user.id)
           .maybeSingle();
 
-        console.log("📋 Profil existant:", existingProfile, "| Rôle souhaité:", role);
+        let finalRole: string = role;
+        let firstName: string | null = null;
+        let lastName: string | null = null;
 
         if (existingProfile) {
-          // ✅ Profil existe → UPDATE explicite du rôle
-          const { error: updateError } = await supabase
-            .from("profiles")
-            .update({ role, email: user.email })
-            .eq("auth_id", user.id);
-
-          if (updateError) {
-            console.warn("⚠️ Erreur UPDATE profil:", updateError.message);
+          firstName = existingProfile.first_name;
+          lastName = existingProfile.last_name;
+          if (existingProfile.role) {
+            finalRole = existingProfile.role;
           } else {
-            console.log("✅ Profil MIS À JOUR avec rôle:", role);
+            // Profil créé sans rôle (ex. par ensure_profile_exists) → on le complète
+            const { error: updateError } = await supabase
+              .from("profiles")
+              .update({ role })
+              .eq("auth_id", user.id)
+              .is("role", null);
+            if (updateError) {
+              console.warn("Profil: rôle non enregistré:", updateError.message);
+            }
           }
         } else {
-          // ✅ Profil n'existe pas → INSERT
           const { error: insertError } = await supabase
             .from("profiles")
             .insert({
@@ -107,45 +103,23 @@ const AuthCallbackPage = () => {
             });
 
           if (insertError) {
-            console.warn("⚠️ Erreur INSERT profil:", insertError.message);
-          } else {
-            console.log("✅ Profil CRÉÉ avec rôle:", role);
+            console.warn("Profil non créé:", insertError.message);
           }
         }
 
-        // 3️⃣ Vérifier si le profil est complet (pour les clients)
-        const { data: profileData, error: fetchError } = await supabase
-          .from("profiles")
-          .select("role, first_name, last_name")
-          .eq("auth_id", user.id)
-          .single();
-
-        if (fetchError) {
-          console.warn("⚠️ Impossible de récupérer le profil:", fetchError.message);
-        }
-
-        // 4️⃣ Redirection selon rôle ET complétude du profil
+        // 3️⃣ Redirection selon le rôle réel ET la complétude du profil
         setIsRedirecting(true);
-        if (role === "merchant") {
-          navigate("/merchant/dashboard");
-        } else if (role === "client") {
-          // ✅ Vérifier si le profil client est complet
-          if (!profileData?.first_name || !profileData?.last_name) {
-            console.log("⚠️ Profil incomplet → redirection vers /customer/auth");
-            // Profil incomplet → rediriger vers la page d'auth où le modal s'affichera
-            navigate("/customer/auth");
-          } else {
-            console.log("✅ Profil complet → redirection vers /offers");
-            // Profil complet → redirection normale
-            navigate("/offers");
-          }
+        if (finalRole === "merchant") {
+          navigate("/merchant/dashboard", { replace: true });
+        } else if (!firstName || !lastName) {
+          // Profil client incomplet → la page d'auth affichera le formulaire de profil
+          navigate("/customer/auth", { replace: true });
         } else {
-          // Fallback
-          navigate("/offers");
+          navigate("/offers", { replace: true });
         }
       } catch (err) {
         console.error("OAuth callback error:", err);
-        setError((err as Error).message);
+        setError(toTurkishError(err, "Giriş tamamlanamadı. Lütfen tekrar deneyin."));
       } finally {
         setLoading(false);
       }
@@ -160,7 +134,7 @@ const AuthCallbackPage = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3A6932] mx-auto mb-4"></div>
           <p className="text-gray-600">
-            {isRedirecting ? "Redirection en cours..." : "Finalisation de la connexion..."}
+            {isRedirecting ? "Yönlendiriliyor..." : "Giriş tamamlanıyor..."}
           </p>
         </div>
       </div>
@@ -175,13 +149,13 @@ const AuthCallbackPage = () => {
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-red-600 text-2xl">✕</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Erreur de connexion</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Giriş hatası</h2>
             <p className="text-gray-600 mb-6">{error}</p>
             <button
               onClick={() => navigate("/")}
               className="w-full bg-[#3A6932] text-white py-3 rounded-xl font-semibold hover:bg-[#2d5226] transition-colors"
             >
-              Retour à l'accueil
+              Ana Sayfaya Dön
             </button>
           </div>
         </div>

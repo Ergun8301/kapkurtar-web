@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Package, 
@@ -15,6 +15,17 @@ import {
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabaseClient';
 import { useClientNotifications } from '../hooks/useClientNotifications';
+import { formatTL, toTurkishError } from '../lib/errorMessages';
+
+// Valeurs factices écrites par défaut en base (ne pas afficher)
+const PLACEHOLDER_VALUES = ['à définir', 'position gps', 'gps konumu', 'belirtilmemiş'];
+const cleanPart = (value?: string | null) => {
+  const v = (value || '').trim();
+  return v && !PLACEHOLDER_VALUES.includes(v.toLowerCase()) ? v : '';
+};
+
+// Statuts affichés dans la liste (les réservations archivées sont masquées)
+const DISPLAYED_STATUSES = ['pending', 'completed', 'cancelled', 'expired'];
 
 interface Reservation {
   reservation_id: string;
@@ -49,6 +60,7 @@ const ClientDashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [cancelConfirm, setCancelConfirm] = useState<string | null>(null);
+  const [profileNotFound, setProfileNotFound] = useState(false);
   
   // Ref pour le canal Realtime des réservations uniquement
   const reservationsChannelRef = useRef<any>(null);
@@ -71,9 +83,14 @@ const ClientDashboardPage = () => {
         if (error) throw error;
         if (profile) {
           setClientId(profile.id);
+        } else {
+          setProfileNotFound(true);
+          setLoading(false);
         }
       } catch (error) {
-        console.error('Erreur récupération profil:', error);
+        console.error('Profil alınamadı:', error);
+        setProfileNotFound(true);
+        setLoading(false);
       }
     };
 
@@ -92,8 +109,8 @@ const ClientDashboardPage = () => {
         if (error) throw error;
         setReservations(data || []);
       } catch (error) {
-        console.error('Erreur chargement réservations:', error);
-        setToast({ message: '❌ Rezervasyonlar yüklenirken hata oluştu', type: 'error' });
+        console.error('Rezervasyonlar yüklenemedi:', error);
+        setToast({ message: toTurkishError(error, '❌ Rezervasyonlar yüklenirken hata oluştu'), type: 'error' });
       } finally {
         setLoading(false);
       }
@@ -113,8 +130,6 @@ const ClientDashboardPage = () => {
       reservationsChannelRef.current = null;
     }
 
-    console.log('🔌 Connexion Realtime RÉSERVATIONS:', clientId);
-
     // Créer un nouveau canal pour les réservations
     const reservationsChannel = supabase
       .channel(`client-reservations-${clientId}`)
@@ -126,8 +141,7 @@ const ClientDashboardPage = () => {
           table: 'reservations',
           filter: `client_id=eq.${clientId}`,
         },
-        async (payload) => {
-          console.log('🔔 Changement réservation:', payload);
+        async () => {
           // Recharger les réservations
           const { data } = await supabase.rpc('get_client_reservations', {
             p_client_id: clientId
@@ -135,15 +149,12 @@ const ClientDashboardPage = () => {
           if (data) setReservations(data);
         }
       )
-      .subscribe((status) => {
-        console.log('📡 Statut Realtime RÉSERVATIONS:', status);
-      });
+      .subscribe();
 
     reservationsChannelRef.current = reservationsChannel;
 
     // Cleanup à la déconnexion
     return () => {
-      console.log('🔌 Déconnexion Realtime RÉSERVATIONS');
       if (reservationsChannelRef.current) {
         supabase.removeChannel(reservationsChannelRef.current);
         reservationsChannelRef.current = null;
@@ -174,7 +185,7 @@ const ClientDashboardPage = () => {
       const result = data as { success: boolean; message: string };
 
       if (!result.success) {
-        setToast({ message: result.message, type: 'error' });
+        setToast({ message: toTurkishError(result.message, '❌ İptal edilirken hata oluştu'), type: 'error' });
         return;
       }
 
@@ -188,8 +199,8 @@ const ClientDashboardPage = () => {
       setCancelConfirm(null);
       setToast({ message: '✅ Rezervasyon iptal edildi, stok serbest bırakıldı', type: 'success' });
     } catch (error) {
-      console.error('Erreur annulation:', error);
-      setToast({ message: '❌ İptal edilirken hata oluştu', type: 'error' });
+      console.error('İptal hatası:', error);
+      setToast({ message: toTurkishError(error, '❌ İptal edilirken hata oluştu'), type: 'error' });
     }
   };
 
@@ -206,8 +217,8 @@ const ClientDashboardPage = () => {
 
       setToast({ message: '✅ Rezervasyon arşivlendi', type: 'success' });
     } catch (error) {
-      console.error('Erreur archivage:', error);
-      setToast({ message: '❌ Arşivlenirken hata oluştu', type: 'error' });
+      console.error('Arşivleme hatası:', error);
+      setToast({ message: toTurkishError(error, '❌ Arşivlenirken hata oluştu'), type: 'error' });
     }
   };
 
@@ -235,6 +246,7 @@ const ClientDashboardPage = () => {
     });
   };
 
+  const visibleReservations = reservations.filter(r => DISPLAYED_STATUSES.includes(r.status));
   const pendingReservations = reservations.filter(r => r.status === 'pending');
   const completedReservations = reservations.filter(r => r.status === 'completed');
   const expiredReservations = reservations.filter(r => r.status === 'expired');
@@ -245,6 +257,8 @@ const ClientDashboardPage = () => {
     const isCompleted = reservation.status === 'completed';
     const isExpired = reservation.status === 'expired';
     const isCancelled = reservation.status === 'cancelled';
+    const merchantCity = cleanPart(reservation.merchant_city);
+    const merchantStreet = cleanPart(reservation.merchant_street);
 
     return (
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
@@ -269,7 +283,7 @@ const ClientDashboardPage = () => {
                 {reservation.offer_title}
               </h3>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-base font-bold text-[#00A690]">{reservation.total_price.toFixed(2)}₺</span>
+                <span className="text-base font-bold text-[#00A690]">{formatTL(reservation.total_price)}</span>
                 <span className="text-xs text-gray-400">×{reservation.quantity}</span>
               </div>
               <div className="text-xs text-gray-500 space-y-0.5">
@@ -301,7 +315,7 @@ const ClientDashboardPage = () => {
             </div>
           )}
           {isCancelled && (
-            <div className="mb-3 flex items-center gap-2 text-xs text-[#00A690] bg-green-100 px-3 py-2 rounded-lg">
+            <div className="mb-3 flex items-center gap-2 text-xs text-red-700 bg-red-50 px-3 py-2 rounded-lg">
               <X className="w-4 h-4" />
               <span className="font-medium">Rezervasyon İptal Edildi</span>
             </div>
@@ -322,15 +336,17 @@ const ClientDashboardPage = () => {
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-[#00A690] flex items-center justify-center text-white font-bold text-xs">
-                {reservation.merchant_name[0]}
+                {reservation.merchant_name?.[0]}
               </div>
             )}
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-xs text-gray-900 truncate">{reservation.merchant_name}</p>
-              <p className="text-xs text-gray-500 flex items-center gap-1">
-                <MapPin className="w-3 h-3 flex-shrink-0" />
-                <span className="truncate">{reservation.merchant_city}</span>
-              </p>
+              {merchantCity && (
+                <p className="text-xs text-gray-500 flex items-center gap-1">
+                  <MapPin className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">{merchantCity}</span>
+                </p>
+              )}
             </div>
           </div>
 
@@ -394,8 +410,8 @@ const ClientDashboardPage = () => {
                   {reservation.offer_title}
                 </h3>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg font-bold text-[#00A690]">{reservation.total_price.toFixed(2)}₺</span>
-                  <span className="text-xs text-gray-400">{reservation.offer_price.toFixed(2)}₺ × {reservation.quantity}</span>
+                  <span className="text-lg font-bold text-[#00A690]">{formatTL(reservation.total_price)}</span>
+                  <span className="text-xs text-gray-400">{formatTL(reservation.offer_price)} × {reservation.quantity}</span>
                 </div>
               </div>
               <div className="space-y-0.5 text-xs text-gray-500">
@@ -467,15 +483,15 @@ const ClientDashboardPage = () => {
               />
             ) : (
               <div className="w-14 h-14 rounded-full bg-[#00A690] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
-                {reservation.merchant_name[0]}
+                {reservation.merchant_name?.[0]}
               </div>
             )}
             <div className="flex-1 min-w-0">
               <p className="font-bold text-sm text-gray-900 mb-1 truncate">{reservation.merchant_name}</p>
-              {reservation.merchant_city && (
+              {merchantCity && (
                 <p className="text-xs text-gray-500 flex items-center gap-1 mb-1">
                   <MapPin className="w-3 h-3 flex-shrink-0" />
-                  <span className="truncate">{reservation.merchant_city}</span>
+                  <span className="truncate">{merchantCity}</span>
                 </p>
               )}
               {reservation.merchant_phone && (
@@ -484,9 +500,9 @@ const ClientDashboardPage = () => {
                   <span className="truncate">{reservation.merchant_phone}</span>
                 </p>
               )}
-              {reservation.merchant_street && (
+              {merchantStreet && (
                 <p className="text-xs text-gray-400 line-clamp-1">
-                  {reservation.merchant_street}
+                  {merchantStreet}
                 </p>
               )}
             </div>
@@ -506,7 +522,7 @@ const ClientDashboardPage = () => {
             </div>
           )}
           {isCancelled && (
-            <div className="col-span-12 -mt-2 flex items-center gap-2 text-xs text-[#00A690] bg-green-100 px-3 py-2 rounded-lg">
+            <div className="col-span-12 -mt-2 flex items-center gap-2 text-xs text-red-700 bg-red-50 px-3 py-2 rounded-lg">
               <X className="w-4 h-4" />
               <span className="font-medium">Rezervasyon İptal Edildi - Stok Serbest Bırakıldı</span>
             </div>
@@ -522,6 +538,26 @@ const ClientDashboardPage = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A690] mx-auto mb-4"></div>
           <p className="text-gray-600">Yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (profileNotFound) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center max-w-md w-full">
+          <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Müşteri profili bulunamadı</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Rezervasyonlarınızı görmek için müşteri hesabınızla giriş yapın.
+          </p>
+          <button
+            onClick={() => navigate('/customer/auth')}
+            className="px-6 py-2.5 bg-[#00A690] hover:bg-[#F75C00] text-white rounded-lg font-semibold transition-colors duration-300"
+          >
+            Giriş Yap
+          </button>
         </div>
       </div>
     );
@@ -587,10 +623,10 @@ const ClientDashboardPage = () => {
         <div>
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
             <Package className="w-5 h-5 text-[#00A690]" />
-            Rezervasyonlarım ({reservations.length})
+            Rezervasyonlarım ({visibleReservations.length})
           </h2>
 
-          {reservations.length === 0 ? (
+          {visibleReservations.length === 0 ? (
             <div className="bg-white rounded-lg shadow-sm border-2 border-dashed border-gray-300 p-8 text-center">
               <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -642,7 +678,7 @@ const ClientDashboardPage = () => {
               {cancelledReservations.length > 0 && (
                 <div>
                   <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <X className="w-4 h-4 text-[#00A690]" />
+                    <X className="w-4 h-4 text-red-600" />
                     İptal Edildi ({cancelledReservations.length})
                   </h3>
                   <div className="space-y-3 opacity-75">

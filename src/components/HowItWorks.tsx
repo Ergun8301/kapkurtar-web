@@ -1,4 +1,3 @@
-import React from 'react';
 import { Search, ShoppingCart, MapPin } from 'lucide-react';
 
 const HowItWorks = () => {
@@ -12,13 +11,13 @@ const HowItWorks = () => {
     {
       icon: ShoppingCart,
       title: 'Yemeğinizi Rezerve Edin',
-      description: 'İstediğiniz teklifleri seçin ve anında rezerve edin. Platformumuz üzerinden güvenli ödeme yapın.',
+      description: 'İstediğiniz teklifi seçin ve uygulamadan anında rezerve edin. Ödemeyi ürünü teslim alırken işletmede yaparsınız.',
       step: '02'
     },
     {
       icon: MapPin,
       title: 'Alın ve Tadını Çıkarın',
-      description: 'Seçtiğiniz saatte restorana gidin, yemeğinizi alın ve harika fiyatlarla lezzetli yemeklerin tadını çıkarın.',
+      description: 'Teklif sona ermeden işletmeye gidin, ödemenizi yerinde yapıp yemeğinizi alın ve harika fiyatlarla tadını çıkarın.',
       step: '03'
     }
   ];

@@ -8,9 +8,8 @@ import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabaseClient';
 import { useAddProduct } from '../contexts/AddProductContext';
 import { uploadImageToSupabase } from '../lib/uploadImage';
-import { useRealtimeNotifications } from '../hooks/useRealtimeNotifications';
-import { type Notification } from '../api/notifications';
 import { OfferForm } from '../components/OfferForm';
+import { formatTL, toTurkishError } from '../lib/errorMessages';
 
 interface Offer {
   id: string;
@@ -39,6 +38,7 @@ interface MerchantProfile {
   postal_code: string | null;
   logo_url: string | null;
   onboarding_completed: boolean;
+  location?: unknown;
 }
 
 interface MerchantReservation {
@@ -59,6 +59,60 @@ interface MerchantReservation {
 
 const MAPBOX_TOKEN = 'pk.eyJ1Ijoia2lsaWNlcmd1bjAxIiwiYSI6ImNtaGptNTlvMzAxMjUya3F5YXc0Z2hjdngifQ.wgpZMAaxvM3NvGUJqdbvCA';
 mapboxgl.accessToken = MAPBOX_TOKEN;
+
+// Centre par défaut de la carte (Turquie) quand l'entreprise n'a pas encore de position
+const DEFAULT_MAP_CENTER = { latitude: 38.9637, longitude: 35.2433 };
+const DEFAULT_MAP_ZOOM = 5;
+const SAVED_LOCATION_ZOOM = 15;
+const DEFAULT_MERCHANT_LOGO = 'https://kapkurtar.com/images/merchant-default.webp';
+
+// Lit merchants.location (PostGIS) : GeoJSON, WKT/EWKT ou EWKB hexadécimal
+const parseMerchantLocation = (raw: unknown): { latitude: number; longitude: number } | null => {
+  if (!raw) return null;
+
+  const fromCoords = (lng: unknown, lat: unknown) => {
+    const lo = Number(lng);
+    const la = Number(lat);
+    if (!Number.isFinite(lo) || !Number.isFinite(la)) return null;
+    if (Math.abs(la) > 90 || Math.abs(lo) > 180) return null;
+    if (lo === 0 && la === 0) return null;
+    return { latitude: la, longitude: lo };
+  };
+
+  try {
+    if (typeof raw === 'object') {
+      const coords = (raw as { coordinates?: unknown }).coordinates;
+      if (Array.isArray(coords) && coords.length >= 2) return fromCoords(coords[0], coords[1]);
+      return null;
+    }
+
+    if (typeof raw !== 'string') return null;
+    const text = raw.trim();
+
+    if (text.startsWith('{')) return parseMerchantLocation(JSON.parse(text));
+
+    const wkt = text.match(/POINT\s*\(\s*(-?[\d.]+)\s+(-?[\d.]+)\s*\)/i);
+    if (wkt) return fromCoords(wkt[1], wkt[2]);
+
+    if (/^[0-9a-f]+$/i.test(text) && text.length >= 42) {
+      const bytes = new Uint8Array(text.length / 2);
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(text.substr(i * 2, 2), 16);
+      }
+      const view = new DataView(bytes.buffer);
+      const little = bytes[0] === 1;
+      const type = view.getUint32(1, little);
+      if ((type & 0xff) !== 1) return null; // Point uniquement
+      let offset = 5;
+      if (type & 0x20000000) offset += 4; // SRID présent (EWKB)
+      if (bytes.length < offset + 16) return null;
+      return fromCoords(view.getFloat64(offset, little), view.getFloat64(offset + 8, little));
+    }
+  } catch {
+    return null;
+  }
+  return null;
+};
 
 const MerchantDashboardPage = () => {
   const scrolledOnceRef = useRef(false);
@@ -85,8 +139,7 @@ const MerchantDashboardPage = () => {
   const [editingOffer, setEditingOffer] = useState<Offer | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [togglingOfferId, setTogglingOfferId] = useState<string | null>(null);
-  const [showNotifications, setShowNotifications] = useState(true);
-  const { notifications, unreadCount } = useRealtimeNotifications(user?.id || null);
+  const [loadError, setLoadError] = useState<'not_found' | 'error' | null>(null);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [onboardingData, setOnboardingData] = useState<{
     company_name: string;
@@ -104,9 +157,12 @@ const MerchantDashboardPage = () => {
     city: '',
     postal_code: '',
     logo_url: '',
-    latitude: 46.2044,
-    longitude: 5.2258
+    latitude: DEFAULT_MAP_CENTER.latitude,
+    longitude: DEFAULT_MAP_CENTER.longitude
   });
+  // Position enregistrée en base, et position choisie dans la modale (marqueur, recherche, géoloc)
+  const [hasSavedLocation, setHasSavedLocation] = useState(false);
+  const [locationChanged, setLocationChanged] = useState(false);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSubmittingOnboarding, setIsSubmittingOnboarding] = useState(false);
   const [isFromSettings, setIsFromSettings] = useState(false);
@@ -121,6 +177,7 @@ const MerchantDashboardPage = () => {
   const [showAllInSection, setShowAllInSection] = useState(false);
   const [reservationLoading, setReservationLoading] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [processingReservationId, setProcessingReservationId] = useState<string | null>(null);
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -151,8 +208,6 @@ const MerchantDashboardPage = () => {
       }
 
       try {
-        console.log('🔍 Recherche du profil pour auth_id:', user.id);
-
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('id')
@@ -161,7 +216,8 @@ const MerchantDashboardPage = () => {
 
         if (profileError) throw profileError;
         if (!profileData) {
-          console.warn('⚠️ Aucun profil trouvé');
+          setLoadError('not_found');
+          setLoading(false);
           return;
         }
 
@@ -173,8 +229,15 @@ const MerchantDashboardPage = () => {
 
         if (merchantError) throw merchantError;
 
+        if (!merchantData) {
+          setLoadError('not_found');
+          setLoading(false);
+          return;
+        }
+
+        setLoadError(null);
+
         if (merchantData) {
-          console.log('✅ Marchand trouvé:', merchantData.id);
           setMerchantId(merchantData.id);
           setMerchantProfile(merchantData);
 
@@ -185,7 +248,10 @@ const MerchantDashboardPage = () => {
             !merchantData.logo_url?.trim();
 
           if (isIncomplete && !showOnboardingModal) {
-            console.log('⚠️ Profil incomplet → ouverture modale');
+            const savedLocation = parseMerchantLocation(merchantData.location);
+            setHasSavedLocation(!!savedLocation);
+            setLocationChanged(false);
+            setLogoFile(null);
             setIsFromSettings(false);
             setShowOnboardingModal(true);
             setTimeout(() => setModalReady(true), 100);
@@ -196,13 +262,15 @@ const MerchantDashboardPage = () => {
               city: merchantData.city || '',
               postal_code: merchantData.postal_code || '',
               logo_url: merchantData.logo_url || '',
-              latitude: 46.2044,
-              longitude: 5.2258
+              latitude: savedLocation?.latitude ?? DEFAULT_MAP_CENTER.latitude,
+              longitude: savedLocation?.longitude ?? DEFAULT_MAP_CENTER.longitude
             });
           }
         }
       } catch (error) {
         console.error('❌ Erreur fetch merchant:', error);
+        setLoadError('error');
+        setLoading(false);
       }
     };
 
@@ -211,6 +279,10 @@ const MerchantDashboardPage = () => {
 
   useEffect(() => {
     const handleOpenProfileModal = () => {
+      const savedLocation = parseMerchantLocation(merchantProfile?.location);
+      setHasSavedLocation(!!savedLocation);
+      setLocationChanged(false);
+      setLogoFile(null);
       setIsFromSettings(true);
       setShowOnboardingModal(true);
       setModalReady(true);
@@ -222,8 +294,8 @@ const MerchantDashboardPage = () => {
           city: merchantProfile.city || '',
           postal_code: merchantProfile.postal_code || '',
           logo_url: merchantProfile.logo_url || '',
-          latitude: 46.2044,
-          longitude: 5.2258
+          latitude: savedLocation?.latitude ?? DEFAULT_MAP_CENTER.latitude,
+          longitude: savedLocation?.longitude ?? DEFAULT_MAP_CENTER.longitude
         });
       }
     };
@@ -251,7 +323,7 @@ const MerchantDashboardPage = () => {
           container: mapContainerRef.current,
           style: 'mapbox://styles/mapbox/streets-v12',
           center: [onboardingData.longitude, onboardingData.latitude],
-          zoom: 13,
+          zoom: hasSavedLocation ? SAVED_LOCATION_ZOOM : DEFAULT_MAP_ZOOM,
         });
 
         mapRef.current = map;
@@ -284,6 +356,7 @@ const MerchantDashboardPage = () => {
             latitude: lngLat.lat,
             longitude: lngLat.lng,
           }));
+          setLocationChanged(true);
         });
 
         const geocoder = new MapboxGeocoder({
@@ -297,7 +370,7 @@ const MerchantDashboardPage = () => {
 
         map.addControl(geocoder, 'top-left');
 
-        geocoder.on('result', (e) => {
+        geocoder.on('result', (e: { result: { center: [number, number] } }) => {
           const { center } = e.result;
           marker.setLngLat(center);
           setOnboardingData((prev) => ({
@@ -305,6 +378,7 @@ const MerchantDashboardPage = () => {
             latitude: center[1],
             longitude: center[0],
           }));
+          setLocationChanged(true);
         });
       } catch (error) {
         console.error('❌ Erreur initialisation Mapbox:', error);
@@ -371,7 +445,7 @@ const MerchantDashboardPage = () => {
         if (error) throw error;
         
         // Ne garder QUE les pending pour la section principale
-        const pendingOnly = (data || []).filter(r => r.status === 'pending');
+        const pendingOnly = (data || []).filter((r: MerchantReservation) => r.status === 'pending');
         setReservations(pendingOnly);
       } catch (error) {
         console.error('Erreur chargement réservations:', error);
@@ -405,7 +479,6 @@ const MerchantDashboardPage = () => {
 
           // Si notification de réservation, recharger la liste
           if (notification.type === 'reservation') {
-            console.log('🔔 Nouvelle réservation → Refresh automatique');
 
             supabase
               .rpc('get_merchant_reservations', { p_merchant_id: merchantId })
@@ -464,7 +537,7 @@ const MerchantDashboardPage = () => {
 
       const formatted: MerchantReservation[] = (data || []).map((r: any) => ({
         reservation_id: r.id,
-        client_name: `${r.profiles.first_name || ''} ${r.profiles.last_name || ''}`.trim() || 'Client',
+        client_name: `${r.profiles.first_name || ''} ${r.profiles.last_name || ''}`.trim() || 'Müşteri',
         client_email: r.profiles.email,
         client_phone: r.profiles.phone,
         offer_id: r.offers.id,
@@ -527,7 +600,7 @@ const MerchantDashboardPage = () => {
       setInactiveOffers(inactive);
     } catch (error: any) {
       console.error('Error loading offers:', error);
-      setToast({ message: error.message || 'Teklifler yüklenemedi', type: 'error' });
+      setToast({ message: toTurkishError(error, 'Teklifler yüklenemedi'), type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -575,41 +648,9 @@ const MerchantDashboardPage = () => {
     return `${minutes}dk`;
   };
 
-  const getProgressPercent = (availableFrom?: string, availableUntil?: string) => {
-    if (!availableFrom || !availableUntil) return 0;
-
-    const now = new Date();
-    const start = new Date(availableFrom);
-    const end = new Date(availableUntil);
-
-    const total = end.getTime() - start.getTime();
-    const remaining = end.getTime() - now.getTime();
-
-    if (remaining <= 0) return 0;
-    if (remaining >= total) return 100;
-
-    return Math.max(0, Math.min(100, (remaining / total) * 100));
-  };
-
-  const calculateTimeLeft = (endDate: string) => {
-    const now = new Date();
-    const end = new Date(endDate);
-    const diff = end.getTime() - now.getTime();
-
-    if (diff < 0) return 'Süresi Doldu';
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-    if (hours > 24) {
-      const days = Math.floor(hours / 24);
-      return days + ' gün kaldı';
-    }
-    if (hours > 0) return hours + 's ' + minutes + 'dk kaldı';
-    return minutes + 'dk kaldı';
-  };
-
   const handleValidateReservation = async (reservationId: string) => {
+    if (processingReservationId) return;
+    setProcessingReservationId(reservationId);
     try {
       const { error } = await supabase
         .from('reservations')
@@ -618,20 +659,21 @@ const MerchantDashboardPage = () => {
 
       if (error) throw error;
 
-      setReservations(prev =>
-        prev.map(r =>
-          r.reservation_id === reservationId ? { ...r, status: 'completed' } : r
-        )
-      );
+      // La réservation n'est plus en attente : on la retire de la liste
+      setReservations(prev => prev.filter(r => r.reservation_id !== reservationId));
 
       setToast({ message: '✅ Rezervasyon onaylandı', type: 'success' });
     } catch (error) {
       console.error('Erreur validation:', error);
-      setToast({ message: '❌ Doğrulama sırasında hata oluştu', type: 'error' });
+      setToast({ message: '❌ ' + toTurkishError(error, 'Doğrulama sırasında hata oluştu'), type: 'error' });
+    } finally {
+      setProcessingReservationId(null);
     }
   };
 
   const handleArchiveReservation = async (reservationId: string) => {
+    if (processingReservationId) return;
+    setProcessingReservationId(reservationId);
     try {
       const { error } = await supabase
         .from('reservations')
@@ -650,7 +692,9 @@ const MerchantDashboardPage = () => {
       setToast({ message: '✅ Rezervasyon arşivlendi', type: 'success' });
     } catch (error) {
       console.error('Erreur archivage:', error);
-      setToast({ message: '❌ Arşivleme sırasında hata oluştu', type: 'error' });
+      setToast({ message: '❌ ' + toTurkishError(error, 'Arşivleme sırasında hata oluştu'), type: 'error' });
+    } finally {
+      setProcessingReservationId(null);
     }
   };
 
@@ -730,6 +774,7 @@ const MerchantDashboardPage = () => {
         price_before: parseFloat(formData.price_before),
         price_after: parseFloat(formData.price_after),
         quantity: parseInt(formData.quantity),
+        // OfferForm envoie déjà des dates ISO (UTC) converties depuis l'heure locale
         available_from: formData.available_from,
         available_until: formData.available_until,
         is_active: true
@@ -752,7 +797,7 @@ const MerchantDashboardPage = () => {
       setToast({ message: '✅ Teklif başarıyla eklendi', type: 'success' });
     } catch (error: any) {
       console.error('❌ Error publishing offer:', error);
-      setToast({ message: error.message || 'Teklif yayınlanamadı', type: 'error' });
+      setToast({ message: toTurkishError(error, 'Teklif yayınlanamadı'), type: 'error' });
     } finally {
       setIsPublishing(false);
     }
@@ -769,7 +814,7 @@ const MerchantDashboardPage = () => {
       await loadOffers();
       setToast({ message: currentStatus ? '✅ Teklif duraklatıldı' : '✅ Teklif etkinleştirildi', type: 'success' });
     } catch (error: any) {
-      setToast({ message: error.message || 'Teklif durumu değiştirilemedi', type: 'error' });
+      setToast({ message: toTurkishError(error, 'Teklif durumu değiştirilemedi'), type: 'error' });
     } finally {
       setTogglingOfferId(null);
     }
@@ -778,16 +823,16 @@ const MerchantDashboardPage = () => {
   const deleteOffer = async (offerId: string) => {
     if (!user) return;
 
-    const confirmed = confirm('Bu teklifi gizlemek istediğinizden emin misiniz?');
+    const confirmed = confirm('Bu teklifi silmek istediğinizden emin misiniz?');
     if (!confirmed) return;
 
     try {
       const { error } = await supabase.rpc('delete_offer_soft', { p_offer_id: offerId });
       if (error) throw error;
       await loadOffers();
-      setToast({ message: '🗑️ Teklif gizlendi', type: 'success' });
+      setToast({ message: '🗑️ Teklif silindi', type: 'success' });
     } catch (error: any) {
-      setToast({ message: error.message || 'Teklif silinemedi', type: 'error' });
+      setToast({ message: toTurkishError(error, 'Teklif silinemedi'), type: 'error' });
     }
   };
 
@@ -829,6 +874,7 @@ const MerchantDashboardPage = () => {
         price_before: parseFloat(formData.price_before),
         price_after: parseFloat(formData.price_after),
         quantity: parseInt(formData.quantity),
+        // Dates ISO (UTC) fournies par OfferForm
         available_from: formData.available_from,
         available_until: formData.available_until,
         updated_at: new Date().toISOString(),
@@ -851,7 +897,7 @@ const MerchantDashboardPage = () => {
         : '✅ Teklif başarıyla güncellendi';
       setToast({ message, type: 'success' });
     } catch (error: any) {
-      setToast({ message: error.message || 'Teklif güncellenemedi', type: 'error' });
+      setToast({ message: toTurkishError(error, 'Teklif güncellenemedi'), type: 'error' });
     } finally {
       setIsPublishing(false);
     }
@@ -860,6 +906,12 @@ const MerchantDashboardPage = () => {
   const handleOnboardingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!merchantId) return;
+
+    // Sans position enregistrée, l'entreprise doit choisir sa position sur la carte
+    if (!hasSavedLocation && !locationChanged) {
+      setToast({ message: '📍 Lütfen haritada işletmenizin konumunu seçin', type: 'error' });
+      return;
+    }
 
     setIsSubmittingOnboarding(true);
     try {
@@ -870,7 +922,7 @@ const MerchantDashboardPage = () => {
         const path = `${merchantId}/${randomId}.jpg`;
         logoUrl = await uploadImageToSupabase(logoFile, 'merchant-logos', path);
       } else if (!logoUrl) {
-        logoUrl = 'https://zhabjdyzawffsmvziojl.supabase.co/storage/v1/object/public/logos/FAVICON%20MINI%20rond%20fond%20vert.png';
+        logoUrl = DEFAULT_MERCHANT_LOGO;
       }
 
       const { latitude, longitude } = onboardingData;
@@ -883,8 +935,12 @@ const MerchantDashboardPage = () => {
         postal_code: onboardingData.postal_code || '00000',
         logo_url: logoUrl,
         onboarding_completed: true,
-        location: `SRID=4326;POINT(${longitude} ${latitude})`
       };
+
+      // On n'écrase la position enregistrée que si une nouvelle position a été choisie
+      if (locationChanged) {
+        updatePayload.location = `SRID=4326;POINT(${longitude} ${latitude})`;
+      }
 
       const { error: updateError } = await supabase
         .from('merchants')
@@ -893,7 +949,10 @@ const MerchantDashboardPage = () => {
 
       if (updateError) throw updateError;
 
-      setToast({ message: '✅ Profil başarıyla tamamlandı', type: 'success' });
+      setToast({
+        message: isFromSettings ? '✅ Bilgileriniz güncellendi' : '✅ Profil başarıyla tamamlandı',
+        type: 'success',
+      });
       setShowOnboardingModal(false);
       setModalReady(false);
 
@@ -905,10 +964,12 @@ const MerchantDashboardPage = () => {
 
       if (updatedMerchant) {
         setMerchantProfile(updatedMerchant);
+        setHasSavedLocation(!!parseMerchantLocation(updatedMerchant.location));
+        setLocationChanged(false);
       }
     } catch (error: any) {
       console.error('❌ Erreur mise à jour:', error);
-      setToast({ message: error.message || 'Güncelleme sırasında hata oluştu', type: 'error' });
+      setToast({ message: toTurkishError(error, 'Güncelleme sırasında hata oluştu'), type: 'error' });
     } finally {
       setIsSubmittingOnboarding(false);
     }
@@ -920,7 +981,7 @@ const MerchantDashboardPage = () => {
       setLogoFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setOnboardingData({ ...onboardingData, logo_url: reader.result as string });
+        setOnboardingData((prev) => ({ ...prev, logo_url: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
@@ -928,11 +989,11 @@ const MerchantDashboardPage = () => {
 
   const handleGeolocate = () => {
     if (!navigator.geolocation) {
-      setToast({ message: 'Géolocalisation non supportée', type: 'error' });
+      setToast({ message: 'Bu cihaz konum belirlemeyi desteklemiyor', type: 'error' });
       return;
     }
 
-    setToast({ message: '📍 Détection en cours...', type: 'success' });
+    setToast({ message: '📍 Konumunuz belirleniyor...', type: 'success' });
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -943,17 +1004,23 @@ const MerchantDashboardPage = () => {
           latitude,
           longitude,
         }));
+        setLocationChanged(true);
 
         if (mapRef.current && markerRef.current) {
           mapRef.current.flyTo({ center: [longitude, latitude], zoom: 15 });
           markerRef.current.setLngLat([longitude, latitude]);
         }
 
-        setToast({ message: `✅ Position détectée (précision: ${Math.round(position.coords.accuracy)}m)`, type: 'success' });
+        setToast({ message: `✅ Konum bulundu (doğruluk: ${Math.round(position.coords.accuracy)} m)`, type: 'success' });
       },
       (error) => {
         console.error('❌ Erreur géolocalisation:', error);
-        setToast({ message: '⚠️ ' + error.message, type: 'error' });
+        const geoMessages: Record<number, string> = {
+          1: '⚠️ Konum izni verilmedi. Lütfen ayarlardan konum iznini açın.',
+          2: '⚠️ Konumunuz belirlenemedi. Haritada işaretleyebilir veya adres arayabilirsiniz.',
+          3: '⚠️ Konum belirleme zaman aşımına uğradı. Lütfen tekrar deneyin.',
+        };
+        setToast({ message: geoMessages[error.code] || '⚠️ Konumunuz belirlenemedi', type: 'error' });
       },
       {
         enableHighAccuracy: true,
@@ -979,6 +1046,58 @@ const MerchantDashboardPage = () => {
     );
   }
 
+  if (loadError) {
+    const handleRelogin = async () => {
+      try {
+        await supabase.auth.signOut();
+      } finally {
+        window.location.href = '/merchant/auth';
+      }
+    };
+
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-md w-full text-center">
+          <div className="w-14 h-14 bg-[#FFFFF0] rounded-full flex items-center justify-center mx-auto mb-4">
+            <Building2 className="w-7 h-7 text-[#00A690]" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            {loadError === 'not_found' ? 'İşletme profili bulunamadı' : 'Bilgiler yüklenemedi'}
+          </h2>
+          <p className="text-sm text-gray-600 mb-6">
+            {loadError === 'not_found'
+              ? 'Bu hesaba bağlı bir işletme kaydı bulunamadı. Lütfen tekrar giriş yapın; sorun devam ederse destek ekibimizle iletişime geçin.'
+              : 'Bağlantınızı kontrol edip tekrar deneyin. Sorun devam ederse destek ekibimizle iletişime geçin.'}
+          </p>
+          <div className="flex flex-col gap-3">
+            {loadError === 'error' && (
+              <button
+                onClick={() => window.location.reload()}
+                className="w-full py-3 bg-[#00A690] hover:bg-[#F75C00] text-white font-semibold rounded-lg transition-colors duration-300"
+              >
+                Tekrar Dene
+              </button>
+            )}
+            <button
+              onClick={handleRelogin}
+              className={
+                'w-full py-3 font-semibold rounded-lg transition-colors duration-300 ' +
+                (loadError === 'error'
+                  ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                  : 'bg-[#00A690] hover:bg-[#F75C00] text-white')
+              }
+            >
+              Yeniden Giriş Yap
+            </button>
+            <a href="/contact" className="text-sm text-[#00A690] hover:text-[#F75C00] font-medium">
+              Destek ile iletişime geç
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-[#FFFFF0] text-[#00A690]';
@@ -999,22 +1118,22 @@ const MerchantDashboardPage = () => {
         <div className="flex items-center justify-between mb-2">
           {isPending && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#00A690] bg-[#FFFFF0] px-2 py-1 rounded-full">
-              🟠 En attente
+              🟠 Beklemede
             </span>
           )}
           {isCompleted && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#00A690] bg-[#FFFFF0] px-2 py-1 rounded-full">
-              🟢 Récupérée
+              🟢 Teslim edildi
             </span>
           )}
           {isExpired && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold text-gray-700 bg-gray-100 px-2 py-1 rounded-full">
-              ⚫ Expirée
+              ⚫ Süresi doldu
             </span>
           )}
           {isArchived && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
-              📦 Archivée
+              📦 Arşivlendi
             </span>
           )}
           <span className="text-xs text-gray-500">{formatDate(reservation.created_at)}</span>
@@ -1046,7 +1165,7 @@ const MerchantDashboardPage = () => {
                 {reservation.offer_title}
               </p>
               <p className="text-xs text-gray-900 font-bold mb-1">
-                💰 {reservation.total_price.toFixed(2)}₺
+                💰 {formatTL(reservation.total_price)}
               </p>
               {isPending && (
                 <p className="text-xs text-[#00A690] font-semibold">
@@ -1063,7 +1182,8 @@ const MerchantDashboardPage = () => {
               <>
                 <button
                   onClick={() => handleValidateReservation(reservation.reservation_id)}
-                  className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[#00A690] hover:bg-[#F75C00] text-white rounded text-xs font-medium transition-colors duration-300"
+                  disabled={processingReservationId === reservation.reservation_id}
+                  className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[#00A690] hover:bg-[#F75C00] text-white rounded text-xs font-medium transition-colors duration-300 disabled:opacity-60 disabled:cursor-wait"
                 >
                   <Check className="w-3 h-3" />
                   Onayla
@@ -1081,7 +1201,8 @@ const MerchantDashboardPage = () => {
             {(isCompleted || isExpired) && (
               <button
                 onClick={() => handleArchiveReservation(reservation.reservation_id)}
-                className="w-full flex items-center justify-center gap-1 px-2 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-medium transition-colors duration-300"
+                disabled={processingReservationId === reservation.reservation_id}
+                className="w-full flex items-center justify-center gap-1 px-2 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-medium transition-colors duration-300 disabled:opacity-60 disabled:cursor-wait"
               >
                 <Archive className="w-3 h-3" />
                 Arşivle
@@ -1093,7 +1214,7 @@ const MerchantDashboardPage = () => {
     );
   };
 
-  const OfferCard = ({ offer, status }: { offer: Offer; status: 'active' | 'inactive' }) => {
+  const OfferCard = ({ offer }: { offer: Offer }) => {
     const offerStatus = getOfferStatus(offer);
     
     return (
@@ -1116,12 +1237,12 @@ const MerchantDashboardPage = () => {
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="flex items-baseline space-x-2">
-                <span className="text-xs text-gray-500 line-through">{offer.price_before.toFixed(2)} ₺</span>
-                <span className="text-lg font-bold text-[#00A690]">{offer.price_after.toFixed(2)} ₺</span>
+                <span className="text-xs text-gray-500 line-through">{formatTL(offer.price_before)}</span>
+                <span className="text-lg font-bold text-[#00A690]">{formatTL(offer.price_after)}</span>
               </div>
               {offer.discount_percent && (
                 <span className="text-xs font-medium text-[#00A690]">
-                  -{offer.discount_percent}% off
+                  %{offer.discount_percent} indirim
                 </span>
               )}
             </div>
@@ -1262,8 +1383,14 @@ const MerchantDashboardPage = () => {
                   <Building2 className="w-6 h-6 text-[#00A690]" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">İşletme Profilinizi Tamamlayın</h2>
-                  <p className="text-sm text-gray-600 mt-1">Teklif yayınlamak için kaydınızı tamamlayın</p>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {isFromSettings ? 'İşletme Ayarları' : 'İşletme Profilinizi Tamamlayın'}
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {isFromSettings
+                      ? 'İşletme bilgilerinizi, konumunuzu ve logonuzu güncelleyin'
+                      : 'Teklif yayınlamak için kaydınızı tamamlayın'}
+                  </p>
                 </div>
               </div>
             </div>
@@ -1317,7 +1444,7 @@ const MerchantDashboardPage = () => {
                       type="button"
                       onClick={handleGeolocate}
                       className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center border border-gray-200 hover:bg-gray-50 z-10"
-                      title="Me géolocaliser"
+                      title="Konumumu bul"
                     >
                       <svg className="w-6 h-6 text-[#00A690]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -1328,12 +1455,14 @@ const MerchantDashboardPage = () => {
                 </div>
 
                 <div className="text-xs text-gray-400 text-center">
-                  Konum: {onboardingData.latitude.toFixed(6)}, {onboardingData.longitude.toFixed(6)}
+                  {hasSavedLocation || locationChanged
+                    ? `Konum: ${onboardingData.latitude.toFixed(6)}, ${onboardingData.longitude.toFixed(6)}`
+                    : 'Konum henüz seçilmedi: işaretçiyi sürükleyin, adres arayın veya konum butonunu kullanın'}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">İşletme Logosu *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">İşletme Logosu (isteğe bağlı)</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -1381,71 +1510,73 @@ const MerchantDashboardPage = () => {
 
       {/* DASHBOARD CONTENT */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* SECTION RÉSERVATIONS */}
-        {reservations.length > 0 && (
-          <div ref={reservationsSectionRef} className="mb-6">
-            <div className="flex items-center gap-3 mb-4">
-              <button
-                onClick={() => setShowReservationsSection(!showReservationsSection)}
-                className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#FFFFF0] rounded-full flex items-center justify-center">
-                    <Package className="w-5 h-5 text-[#00A690]" />
-                  </div>
-                  <div className="text-left">
-                    <h2 className="text-lg font-bold text-gray-900">📦 Son Rezervasyonlar</h2>
-                    <p className="text-sm text-gray-600">{reservations.length} devam ediyor</p>
-                  </div>
+        {/* SECTION RÉSERVATIONS (toujours visible pour garder l'accès à l'historique) */}
+        <div ref={reservationsSectionRef} className="mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <button
+              onClick={() => setShowReservationsSection(!showReservationsSection)}
+              className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex items-center justify-between"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#FFFFF0] rounded-full flex items-center justify-center">
+                  <Package className="w-5 h-5 text-[#00A690]" />
                 </div>
-                {showReservationsSection ? (
-                  <ChevronUp className="w-5 h-5 text-gray-600" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-gray-600" />
-                )}
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowHistoryModal(true);
-                  fetchAllReservations();
-                }}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex items-center gap-2"
-              >
-                <History className="w-5 h-5 text-gray-600" />
-                <span className="text-sm font-medium text-gray-700">Geçmiş</span>
-              </button>
-            </div>
-
-            {showReservationsSection && (
-              <div className="space-y-4">
-                {reservationLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00A690]"></div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                      {(showAllInSection ? reservations : reservations.slice(0, 8)).map((reservation) => (
-                        <ReservationCard key={reservation.reservation_id} reservation={reservation} />
-                      ))}
-                    </div>
-                    {reservations.length > 8 && (
-                      <div className="text-center">
-                        <button 
-                          onClick={() => setShowAllInSection(!showAllInSection)}
-                          className="text-sm text-[#00A690] hover:text-[#00A690] font-medium"
-                        >
-                          {showAllInSection ? '← Daha Az Göster' : `Tümünü Göster (${reservations.length}) →`}
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
+                <div className="text-left">
+                  <h2 className="text-lg font-bold text-gray-900">📦 Son Rezervasyonlar</h2>
+                  <p className="text-sm text-gray-600">
+                    {reservations.length > 0 ? `${reservations.length} devam ediyor` : 'Bekleyen rezervasyon yok'}
+                  </p>
+                </div>
               </div>
-            )}
+              {showReservationsSection ? (
+                <ChevronUp className="w-5 h-5 text-gray-600" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-gray-600" />
+              )}
+            </button>
+
+            <button
+              onClick={() => {
+                setShowHistoryModal(true);
+                fetchAllReservations();
+              }}
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex items-center gap-2"
+            >
+              <History className="w-5 h-5 text-gray-600" />
+              <span className="text-sm font-medium text-gray-700">Geçmiş</span>
+            </button>
           </div>
-        )}
+
+          {showReservationsSection && (
+            <div className="space-y-4">
+              {reservationLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00A690]"></div>
+                </div>
+              ) : reservations.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-4">Bekleyen rezervasyon yok</p>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {(showAllInSection ? reservations : reservations.slice(0, 8)).map((reservation) => (
+                      <ReservationCard key={reservation.reservation_id} reservation={reservation} />
+                    ))}
+                  </div>
+                  {reservations.length > 8 && (
+                    <div className="text-center">
+                      <button 
+                        onClick={() => setShowAllInSection(!showAllInSection)}
+                        className="text-sm text-[#00A690] hover:text-[#00A690] font-medium"
+                      >
+                        {showAllInSection ? '← Daha Az Göster' : `Tümünü Göster (${reservations.length}) →`}
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="mb-6 flex items-center justify-between">
           <div>
@@ -1491,7 +1622,7 @@ const MerchantDashboardPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {activeOffers.map((offer) => (
-                <OfferCard key={offer.id} offer={offer} status="active" />
+                <OfferCard key={offer.id} offer={offer} />
               ))}
             </div>
           )}
@@ -1513,7 +1644,7 @@ const MerchantDashboardPage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-75">
               {inactiveOffers.map((offer) => (
-                <OfferCard key={offer.id} offer={offer} status="inactive" />
+                <OfferCard key={offer.id} offer={offer} />
               ))}
             </div>
           </div>

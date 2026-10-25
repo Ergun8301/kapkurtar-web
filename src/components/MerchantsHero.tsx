@@ -1,4 +1,3 @@
-import React from 'react';
 import { TrendingUp, Shield, Zap } from 'lucide-react';
 
 const MerchantsHero = () => {
@@ -25,7 +24,7 @@ const MerchantsHero = () => {
             <div className="inline-block mb-6">
               <span className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-semibold border border-white/30 flex items-center gap-2">
   <img 
-    src="https://zhabjdyzawffsmvziojl.supabase.co/storage/v1/object/public/logos/FAVICON%20MINI%20rond%20noir%20(1).png" 
+    src="/images/logo-round-black.webp" 
     alt="KapKurtar" 
     className="w-5 h-5" 
   />
@@ -46,12 +45,12 @@ const MerchantsHero = () => {
 
             <div className="grid grid-cols-3 gap-6 mb-8">
               <div className="text-center">
-                <div className="text-3xl font-black text-[#FFFFF0]">500+</div>
-                <div className="text-sm text-white/80">Ortak İşletme</div>
+                <div className="text-3xl font-black text-[#FFFFF0]">Yeni</div>
+                <div className="text-sm text-white/80">Müşteriler</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-black text-[#FFFFF0]">10K+</div>
-                <div className="text-sm text-white/80">Kurtarılan Paket</div>
+                <div className="text-3xl font-black text-[#FFFFF0]">Daha Az</div>
+                <div className="text-sm text-white/80">İsraf</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-black text-[#FFFFF0]">%0</div>
@@ -111,7 +110,7 @@ const MerchantsHero = () => {
                   <div>
                     <h3 className="font-bold text-lg mb-1">Gelir Artışı</h3>
                     <p className="text-white/80 text-sm">
-                      Ortalama %25 gelir artışı. Atılan gıda yerine satış geliri.
+                      Atılacak gıda yerine satış geliri elde edin.
                     </p>
                   </div>
                 </div>

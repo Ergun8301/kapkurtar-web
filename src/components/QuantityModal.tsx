@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Minus, Plus, ShoppingCart } from 'lucide-react';
+import { formatTL } from '../lib/errorMessages';
 
 interface QuantityModalProps {
   isOpen: boolean;
@@ -22,7 +23,7 @@ export const QuantityModal: React.FC<QuantityModalProps> = ({
 }) => {
   const safePrice = price ?? 0;
   const safeAvailableQuantity = availableQuantity ?? 0;
-  const safeOfferTitle = offerTitle ?? 'Offer';
+  const safeOfferTitle = offerTitle || 'Teklif';
 
   const [quantity, setQuantity] = useState(1);
 
@@ -41,8 +42,6 @@ export const QuantityModal: React.FC<QuantityModalProps> = ({
   const handleConfirm = () => {
     onConfirm(quantity);
   };
-
-  const totalPrice = ((safePrice ?? 0) * quantity).toFixed(2);
 
   if (!isOpen) return null;
 
@@ -100,11 +99,11 @@ export const QuantityModal: React.FC<QuantityModalProps> = ({
           <div className="bg-green-100 rounded-lg p-4 mb-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-gray-600">Birim fiyat:</span>
-              <span className="font-semibold text-gray-900">{(safePrice ?? 0).toFixed(2)}₺</span>
+              <span className="font-semibold text-gray-900">{formatTL(safePrice)}</span>
             </div>
             <div className="flex items-center justify-between border-t border-green-300 pt-2">
               <span className="text-lg font-semibold text-gray-900">Toplam:</span>
-              <span className="text-2xl font-bold text-[#00A690]">{((safePrice ?? 0) * quantity).toFixed(2)}₺</span>
+              <span className="text-2xl font-bold text-[#00A690]">{formatTL(safePrice * quantity)}</span>
             </div>
           </div>
 

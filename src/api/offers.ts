@@ -34,9 +34,19 @@ export interface Merchant {
   points: number;
 }
 
+// Valeurs factices écrites par défaut en base (ne pas afficher)
+const PLACEHOLDER_VALUES = ['à définir', 'position gps', 'gps konumu', 'belirtilmemiş'];
+
+const cleanPart = (value: string | null | undefined): string => {
+  const v = (value || '').trim();
+  return v && !PLACEHOLDER_VALUES.includes(v.toLowerCase()) ? v : '';
+};
+
+const joinAddress = (...parts: Array<string | null | undefined>): string =>
+  parts.map(cleanPart).filter(Boolean).join(', ');
+
 export const getActiveOffers = async (): Promise<Offer[]> => {
   try {
-    console.log('Fetching active offers from Supabase...');
 
     const now = new Date().toISOString();
 
@@ -57,7 +67,6 @@ export const getActiveOffers = async (): Promise<Offer[]> => {
     }
 
     if (!data || data.length === 0) {
-      console.log('No active offers found in database');
       return [];
     }
 
@@ -73,15 +82,14 @@ export const getActiveOffers = async (): Promise<Offer[]> => {
       merchant_id: offer.merchant_id,
       merchant: offer.merchants ? {
         company_name: offer.merchants.company_name,
-        full_address: `${offer.merchants.street || ''}, ${offer.merchants.city || ''}`.trim(),
-        street: offer.merchants.street || '',
-        city: offer.merchants.city || '',
-        avg_rating: offer.merchants.avg_rating || 4.5,
+        full_address: joinAddress(offer.merchants.street, offer.merchants.city),
+        street: cleanPart(offer.merchants.street),
+        city: cleanPart(offer.merchants.city),
+        avg_rating: offer.merchants.avg_rating ?? undefined,
       } : null,
       available_until: offer.available_until,
     }));
 
-    console.log(`Fetched ${formattedOffers.length} active offers from database`);
     return formattedOffers;
   } catch (error) {
     console.error('Exception fetching offers:', error);
@@ -102,14 +110,13 @@ export const getMerchants = async (): Promise<Merchant[]> => {
     }
 
     if (!data || data.length === 0) {
-      console.log('No merchants found in database');
       return [];
     }
 
     const formattedMerchants: Merchant[] = data.map((merchant: any) => ({
       id: merchant.id,
       company_name: merchant.company_name,
-      full_address: `${merchant.street || ''}, ${merchant.city || ''}, ${merchant.postal_code || ''}, ${merchant.country || ''}`.trim(),
+      full_address: joinAddress(merchant.street, merchant.city, merchant.postal_code, merchant.country),
       street: merchant.street,
       city: merchant.city,
       postal_code: merchant.postal_code,
@@ -119,7 +126,6 @@ export const getMerchants = async (): Promise<Merchant[]> => {
       points: merchant.points || 0,
     }));
 
-    console.log(`Fetched ${formattedMerchants.length} merchants from database`);
     return formattedMerchants;
   } catch (error) {
     console.error('Exception fetching merchants:', error);
@@ -144,7 +150,6 @@ export const getMerchantOffers = async (merchantId: string): Promise<Offer[]> =>
     }
 
     if (!data || data.length === 0) {
-      console.log('No offers found for merchant');
       return [];
     }
 
@@ -160,16 +165,15 @@ export const getMerchantOffers = async (merchantId: string): Promise<Offer[]> =>
       merchant_id: offer.merchant_id,
       merchant: offer.merchants ? {
         company_name: offer.merchants.company_name,
-        full_address: `${offer.merchants.street || ''}, ${offer.merchants.city || ''}`.trim(),
-        street: offer.merchants.street || '',
-        city: offer.merchants.city || '',
-        avg_rating: offer.merchants.avg_rating || 4.5,
+        full_address: joinAddress(offer.merchants.street, offer.merchants.city),
+        street: cleanPart(offer.merchants.street),
+        city: cleanPart(offer.merchants.city),
+        avg_rating: offer.merchants.avg_rating ?? undefined,
       } : null,
       available_until: offer.available_until,
       is_active: offer.is_active,
     }));
 
-    console.log(`Fetched ${formattedOffers.length} offers for merchant ${merchantId}`);
     return formattedOffers;
   } catch (error) {
     console.error('Exception fetching merchant offers:', error);
@@ -192,7 +196,6 @@ export const toggleOfferActive = async (offerId: string, isActive: boolean, merc
       return { success: false, error: error.message };
     }
 
-    console.log(`Offer ${offerId} is_active set to ${isActive}`);
     return { success: true, data };
   } catch (err: any) {
     console.error('Exception toggling offer:', err);

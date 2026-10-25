@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
+import { toTurkishError } from '../lib/errorMessages';
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -23,10 +24,10 @@ const ForgotPasswordPage = () => {
 
       if (error) throw error;
 
+      // L'e-mail saisi est conservé pour permettre un nouvel envoi
       setSuccess(true);
-      setEmail('');
     } catch (err) {
-      setError((err as Error).message);
+      setError(toTurkishError(err));
     } finally {
       setIsLoading(false);
     }
@@ -126,17 +127,19 @@ const ForgotPasswordPage = () => {
             )}
           </div>
 
-          <div className="text-center text-sm text-gray-600">
-            <p>
-              E-postayı almadınız mı?{' '}
-              <button
-                onClick={() => setSuccess(false)}
-                className="text-[#3A6932] hover:text-[#2d5226] font-semibold"
-              >
-                Tekrar Dene
-              </button>
-            </p>
-          </div>
+          {success && (
+            <div className="text-center text-sm text-gray-600">
+              <p>
+                E-postayı almadınız mı?{' '}
+                <button
+                  onClick={() => setSuccess(false)}
+                  className="text-[#3A6932] hover:text-[#2d5226] font-semibold"
+                >
+                  Tekrar Dene
+                </button>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

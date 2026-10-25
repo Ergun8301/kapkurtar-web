@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Menu,
   X,
@@ -10,7 +10,6 @@ import {
   ArrowRight,
   Store,
   LayoutDashboard,
-  Bell,
   Package,
   Download,
 } from "lucide-react";
@@ -18,14 +17,11 @@ import { useAuth } from "../hooks/useAuth";
 import { supabase } from "../lib/supabaseClient";
 import { NotificationBell } from "./NotificationBell";
 import { logoutUser } from "../lib/logout";
-import { useAddProduct } from "../contexts/AddProductContext";
 import DownloadAppModal from "./DownloadAppModal";
 
 const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { user, loading } = useAuth();
-  const { openAddProductModal } = useAddProduct();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMerchant, setIsMerchant] = useState<boolean | null>(null);
@@ -98,7 +94,7 @@ const Header = () => {
     setIsUserMenuOpen(false);
   };
 
-  const getUserDisplayName = () => user?.email?.split("@")[0] || "User";
+  const getUserDisplayName = () => user?.email?.split("@")[0] || "Kullanıcı";
 
   // Obtenir les initiales (2 premières lettres de l'email)
   const getUserInitials = () => {
@@ -133,7 +129,7 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <button onClick={handleLogoClick} className="flex items-center space-x-3 cursor-pointer">
             <img
-              src="https://zhabjdyzawffsmvziojl.supabase.co/storage/v1/object/public/logos/KK%20fond%20vert%20(6).png"
+              src="/images/logo-header.webp"
               alt="KapKurtar"
               className="h-12 w-auto"
             />
@@ -252,6 +248,14 @@ const Header = () => {
                 )}
               </div>
             )}
+            <button
+              onClick={() => setShowDownloadModal(true)}
+              className="md:hidden bg-[#00A690] text-white hover:bg-[#F75C00] px-2 py-2 rounded-md text-sm font-medium transition-colors duration-300 border border-white/20 flex items-center space-x-1"
+              aria-label="Uygulamayı İndir"
+            >
+              <Download className="w-4 h-4" />
+              <span>İndir</span>
+            </button>
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 rounded-md text-[#FFFFF0] hover:text-white transition-colors duration-300">
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>

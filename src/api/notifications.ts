@@ -38,7 +38,7 @@ export const getNotifications = async (userId?: string) => {
   try {
     const uid = userId || (await getCurrentUserId());
     if (!uid)
-      return { success: false, error: "Utilisateur non authentifié", data: [] };
+      return { success: false, error: "Oturum açılmamış. Lütfen giriş yapın.", data: [] };
 
     const { data, error } = await supabase
       .from("notifications")
@@ -59,7 +59,7 @@ export const getUnreadNotifications = async (userId?: string) => {
   try {
     const uid = userId || (await getCurrentUserId());
     if (!uid)
-      return { success: false, error: "Utilisateur non authentifié", data: [] };
+      return { success: false, error: "Oturum açılmamış. Lütfen giriş yapın.", data: [] };
 
     const { data, error } = await supabase
       .from("notifications")
@@ -104,7 +104,7 @@ export const markAllNotificationsAsRead = async (userId?: string) => {
   try {
     const uid = userId || (await getCurrentUserId());
     if (!uid)
-      return { success: false, error: "Utilisateur non authentifié" };
+      return { success: false, error: "Oturum açılmamış. Lütfen giriş yapın." };
 
     const { error } = await supabase
       .from("notifications")
@@ -141,7 +141,6 @@ export const subscribeToNotifications = (
   }
 
   if (activeChannel && currentUserId === userId) {
-    console.log(`⚠️ Canal déjà actif pour ${userId}, réutilisation`);
     return () => {};
   }
 
@@ -168,21 +167,15 @@ export const subscribeToNotifications = (
       (payload) => {
         const now = Date.now();
         if (now - lastNotifTime < THROTTLE_MS) {
-          console.debug("⏱️ Notification throttled");
           return;
         }
         lastNotifTime = now;
 
         const notif = payload.new as Notification;
-        console.debug("Realtime notification:", notif);
         onNotification(notif);
       }
     )
-    .subscribe((status) => {
-      if (status === "SUBSCRIBED") {
-        console.log(`✅ Subscribed to realtime notifications for user ${userId}`);
-      }
-    });
+    .subscribe();
 
   activeChannel = channel;
 
@@ -191,7 +184,6 @@ export const subscribeToNotifications = (
       supabase.removeChannel(channel);
       activeChannel = null;
       currentUserId = null;
-      console.log(`🧹 Unsubscribed from notifications (${channelName})`);
     }
   };
 

@@ -11,7 +11,6 @@ export function useNotificationSound() {
       }
       
       audioRef.current.play()
-        .then(() => console.log("🔊 Son joué avec succès"))
         .catch((err) => {
           console.error("🔇 Erreur son:", err.message);
         });

@@ -1,5 +1,6 @@
 // src/lib/uploadImage.ts
 import { supabase } from './supabaseClient';
+import { toTurkishError } from './errorMessages';
 
 /**
  * Upload une image dans Supabase Storage et retourne son URL publique.
@@ -20,7 +21,7 @@ export async function uploadImageToSupabase(
   path: string
 ): Promise<string> {
   if (!file) {
-    throw new Error('⚠️ Aucun fichier sélectionné pour l’upload.');
+    throw new Error('Yüklenecek bir dosya seçilmedi.');
   }
 
   // Vérification des formats autorisés
@@ -35,18 +36,18 @@ export async function uploadImageToSupabase(
   ];
   if (!allowedTypes.includes(file.type.toLowerCase())) {
     throw new Error(
-      'Format non pris en charge. Formats acceptés : JPG, PNG, WEBP, HEIC, HEIF, AVIF.'
+      'Desteklenmeyen format. Kabul edilen formatlar: JPG, PNG, WEBP, HEIC, HEIF, AVIF.'
     );
   }
 
   // Taille max 5 Mo
   const MAX_SIZE = 5 * 1024 * 1024;
   if (file.size > MAX_SIZE) {
-    throw new Error('Fichier trop volumineux (max. 5 Mo).');
+    throw new Error('Dosya çok büyük (maks. 5 MB).');
   }
 
   // Upload du fichier
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from(bucket)
     .upload(path, file, {
       cacheControl: '3600',
@@ -57,19 +58,16 @@ export async function uploadImageToSupabase(
   if (error) {
     console.error('❌ Erreur lors de l’upload Supabase :', error);
     if (error.message.includes('not found')) {
-      throw new Error(
-        `Le bucket "${bucket}" n'existe pas. Vérifie le nom exact dans Supabase.`
-      );
+      throw new Error('Görsel depolama alanı bulunamadı. Lütfen destek ekibiyle iletişime geçin.');
     }
-    throw new Error(`Erreur Supabase : ${error.message}`);
+    throw new Error(toTurkishError(error, 'Görsel yüklenemedi. Lütfen tekrar deneyin.'));
   }
 
   // Récupération de l’URL publique
   const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(path);
   if (!publicUrlData?.publicUrl) {
-    throw new Error('Impossible de récupérer l’URL publique du fichier.');
+    throw new Error('Görsel bağlantısı alınamadı. Lütfen tekrar deneyin.');
   }
 
-  console.log('✅ Image uploadée avec succès :', publicUrlData.publicUrl);
   return publicUrlData.publicUrl;
 }

@@ -3,7 +3,7 @@ import { logoutNoNav } from '../lib/logout';
 
 // ---------- Email / Password ----------
 
-export const signUp = async (email: string, password: string, userData?: any) => {
+export const signUp = async (email: string, password: string) => {
   const { data, error } = await supabase.auth.signUp({ email, password });
   return { data, error };
 };
@@ -44,7 +44,7 @@ export const signOut = async () => {
   try {
     await logoutNoNav();
     return { error: null };
-  } catch (err: any) {
+  } catch (err) {
     console.warn('SignOut error (treated as success):', err);
     return { error: null };
   }
@@ -56,7 +56,7 @@ export const signOut = async () => {
 export const resetPassword = async (email: string) => {
   try {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/update-password`,
+      redirectTo: `${window.location.origin}/reset-password`,
     });
     return { data, error };
   } catch (err: any) {
@@ -79,52 +79,6 @@ export const updatePassword = async (newPassword: string) => {
 // ---------- Utils ----------
 
 export const getCurrentUser = () => supabase.auth.getUser();
-
-// ---------- Client helpers ----------
-// NOTE: Table 'clients' n'existe pas dans le schéma actuel
-// Utiliser 'profiles' à la place
-
-// export const getClientProfile = async (userId: string) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from('clients')
-//       .select('*')
-//       .eq('id', userId)
-//       .maybeSingle();
-//     if (error) throw error;
-//     return data;
-//   } catch (error) {
-//     console.warn('Error fetching client profile:', error);
-//     return null;
-//   }
-// };
-
-// export const updateClientProfile = async (userId: string, profileData: any) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from('clients')
-//       .upsert(
-//         {
-//           id: userId,
-//           ...profileData,
-//           created_at: profileData?.created_at || new Date().toISOString(),
-//         },
-//         { onConflict: 'id' }
-//       )
-//       .select()
-//       .single();
-
-//     if (error) {
-//       console.error('Update error:', error);
-//       return { success: false, error: error.message };
-//     }
-
-//     return { success: true, data };
-//   } catch (err: any) {
-//     console.error('Update exception:', err);
-//     return { success: false, error: err.message };
-//   }
-// };
 
 // ---------- Avatar ----------
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import SEO from '../components/SEO';
 import StructuredData from '../components/StructuredData';
 import HeroBanner from '../components/HeroBanner';
@@ -15,34 +15,13 @@ const HomePage = () => {
   return (
     <div>
       <SEO
-        title="KapKurtar"
-        description="Türkiye'nin #1 gıda israfı önleme platformu. Restoranlar, fırınlar ve marketlerden %70 indirimli yemek fırsatları. Gıda israfını önle, tasarruf et!"
+        title="KapKurtar - Gıda israfını önle, indirimli yemek bul"
+        description="KapKurtar ile yakınınızdaki restoran, fırın ve marketlerin günün sonunda kalan ürünlerini indirimli fiyatlarla rezerve edin. Gıda israfını önleyin, tasarruf edin!"
         canonical="/"
         keywords="ucuz yemek, indirimli yemek, fazla gıda, gıda israfı, KapKurtar, yemek fırsatları, Türkiye"
       />
       <StructuredData type="organization" />
       <HeroBanner />
-
-      {/*
-        TODO: SEO Content Section (Optionnel mais recommandé)
-
-        Pour améliorer le référencement, vous pouvez ajouter une section de contenu textuel ici:
-        - 150-200 mots minimum
-        - Mots-clés: "ucuz yemek", "indirimli yemek", "gıda israfı", "Türkiye"
-        - Structure H2 + paragraphes
-
-        Exemple:
-        <div className="bg-white py-12">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
-              Türkiye'nin En İyi Ucuz Yemek Platformu
-            </h2>
-            <p className="text-lg text-gray-700 leading-relaxed mb-4">
-              [Votre contenu unique ici...]
-            </p>
-          </div>
-        </div>
-      */}
 
       {/* Section HowItWorks - fond turquoise clair */}
       <div className="bg-[#2DD4BF]/10">
@@ -68,7 +47,7 @@ const HomePage = () => {
             </div>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            KAPKURTAR Uygulamasını İndirin
+            KapKurtar Uygulamasını İndirin
           </h2>
           <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
             Gerçek zamanlı bildirimler alın ve yakınınızdaki hiçbir teklifi kaçırmayın
