@@ -1,4 +1,3 @@
-import React from 'react';
 import { Check, Star, Zap, TrendingUp, Award } from 'lucide-react';
 
 const PricingSection3Plans = () => {
@@ -6,7 +5,7 @@ const PricingSection3Plans = () => {
     {
       name: 'TEMEL',
       price: '0',
-      commission: '20',
+      commission: '15',
       badge: null,
       icon: Zap,
       iconBg: 'bg-gray-100',
@@ -142,14 +141,14 @@ const PricingSection3Plans = () => {
                       {plan.price}
                     </span>
                     <div className="flex flex-col">
-                      <span className="text-xl font-semibold text-gray-700">TRY</span>
+                      <span className="text-xl font-semibold text-gray-700">₺</span>
                       <span className="text-sm text-gray-500">/ay</span>
                     </div>
                   </div>
                   <div className="mt-3 flex items-baseline gap-1">
                     <span className="text-gray-600">+</span>
                     <span className={`text-3xl font-bold ${plan.highlight ? 'text-[#F75C00]' : 'text-gray-700'}`}>
-                      {plan.commission}%
+                      %{plan.commission}
                     </span>
                     <span className="text-sm text-gray-600">komisyon satışta</span>
                   </div>

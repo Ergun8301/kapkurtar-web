@@ -4,6 +4,7 @@ import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import ProfileCompletionModal from '../components/ProfileCompletionModal';
+import { toTurkishError } from '../lib/errorMessages';
 
 type AuthMode = 'login' | 'register';
 
@@ -103,7 +104,7 @@ const CustomerAuthPage = () => {
         }
       }
     } catch (err) {
-      setError((err as Error).message);
+      setError(toTurkishError(err));
     } finally {
       setIsLoading(false);
     }
@@ -114,11 +115,9 @@ const CustomerAuthPage = () => {
     try {
       // 🔹 Stocker dans localStorage comme fallback
       localStorage.setItem("oauth_desired_role", "client");
-      console.log("💾 Rôle client stocké dans localStorage");
 
       // 🔹 Redirection Google avec query params (domaine sans www)
       const redirectUrl = `https://kapkurtar.com/auth/callback?role=client`;
-      console.log("🔗 Redirect URL:", redirectUrl);
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -128,7 +127,7 @@ const CustomerAuthPage = () => {
       });
       if (error) throw error;
     } catch (err) {
-      setError((err as Error).message);
+      setError(toTurkishError(err, 'Google ile giriş başlatılamadı. Lütfen tekrar deneyin.'));
     }
   };
 
@@ -173,13 +172,8 @@ const CustomerAuthPage = () => {
             </button>
 
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center mb-6">
-                <div className="w-16 h-16 bg-[#3A6932] rounded-2xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-3xl">S</span>
-                </div>
-              </div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {mode === 'login' ? 'Hoş Geldiniz' : 'SEPET\'e Katılın'}
+                {mode === 'login' ? 'Hoş Geldiniz' : 'KapKurtar\'a Katılın'}
               </h1>
               <p className="text-gray-600">
                 {mode === 'login'

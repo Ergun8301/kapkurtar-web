@@ -1,5 +1,4 @@
-import React from 'react';
-import { Calendar, User, ArrowLeft, TrendingUp, Users, BarChart3, Smartphone } from 'lucide-react';
+import { Calendar, User, ArrowLeft, TrendingUp, BarChart3, Smartphone } from 'lucide-react';
 
 const BlogArticle5 = () => {
   return (
@@ -25,7 +24,7 @@ const BlogArticle5 = () => {
           </h1>
           <div className="flex items-center text-gray-600 mb-8">
             <User className="w-5 h-5 mr-2" />
-            <span className="mr-6">TILKAPP İşletme</span>
+            <span className="mr-6">KapKurtar İşletme</span>
             <Calendar className="w-5 h-5 mr-2" />
             <span>28 Ekim 2024</span>
             <span className="mx-3">•</span>
@@ -33,7 +32,7 @@ const BlogArticle5 = () => {
           </div>
           <img
             src="https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=1200"
-            alt="TILKAPP partner işletmesi"
+            alt="KapKurtar partner işletmesi"
             className="w-full h-96 object-cover rounded-xl shadow-lg"
           />
         </div>
@@ -43,7 +42,7 @@ const BlogArticle5 = () => {
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             İşletme sahibisiniz ve karlılığınızı artırırken satılmayan ürünlerinizi nasıl optimize edeceğinizi mi merak ediyorsunuz?
-            TILKAPP partner işletmelerinin kazanan stratejilerini keşfedin.
+            Satılmayan ürünlerinizi değerlendirmek için etkili stratejileri keşfedin.
           </p>
 
           <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
@@ -52,14 +51,14 @@ const BlogArticle5 = () => {
           </h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
             Ortalama olarak bir gıda işletmesi her gün stokunun %5 ile %15'i arasını atıyor.
-            TILKAPP ile bu kayıplar ek gelir fırsatlarına dönüşüyor.
+            KapKurtar ile bu kayıplar ek gelir fırsatlarına dönüşüyor.
           </p>
 
           <div className="bg-[#FFFFF0] rounded-lg p-6 my-8">
-            <h3 className="font-bold text-gray-900 mb-3">Somut örnek: Antalya'da bir fırın</h3>
+            <h3 className="font-bold text-gray-900 mb-3">Örnek hesaplama: bir fırın</h3>
             <ul className="space-y-2 text-gray-700">
-              <li>• <strong>TILKAPP öncesi:</strong> Günde 50 satılmayan ekmek = 200 TL kayıp</li>
-              <li>• <strong>TILKAPP ile:</strong> %40 indirimle satılan 45 ekmek = 108 TL gelir</li>
+              <li>• <strong>KapKurtar öncesi:</strong> Günde 50 satılmayan ekmek = 200 TL kayıp</li>
+              <li>• <strong>KapKurtar ile:</strong> %40 indirimle satılan 45 ekmek = 108 TL gelir</li>
               <li>• <strong>Aylık kazanç:</strong> -6.000 TL yerine +3.240 TL</li>
             </ul>
           </div>
@@ -71,7 +70,7 @@ const BlogArticle5 = () => {
 
           <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">1. Cazip (ama karlı) fiyatlar belirleyin</h3>
           <p className="text-gray-700 mb-6 leading-relaxed">
-            Yaygın hata: sadece %10 veya %20 indirim sunmak. TILKAPP kullanıcıları gerçek fırsatlar arıyor.
+            Yaygın hata: sadece %10 veya %20 indirim sunmak. KapKurtar kullanıcıları gerçek fırsatlar arıyor.
           </p>
           <div className="bg-white border-2 border-[#00A690] rounded-lg p-6 my-6">
             <p className="font-bold text-gray-900 mb-2">Önerimiz:</p>
@@ -85,17 +84,13 @@ const BlogArticle5 = () => {
 
           <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">2. Tekliflerinizi doğru zamanda yayınlayın</h3>
           <p className="text-gray-700 mb-6 leading-relaxed">
-            TILKAPP istatistikleri, sabahın sonlarında (10:00-12:00) yayınlanan tekliflerin
-            öğleden sonra yayınlananlardan 3 kat daha fazla rezervasyon sağladığını gösteriyor.
+            Tekliflerinizi gün içinde erken yayınlamak, müşterilere planlama ve rezervasyon için
+            daha fazla zaman tanır. Satılmayacağını öngördüğünüz ürünleri mümkün olduğunca erken paylaşın.
           </p>
-          <blockquote className="border-l-4 border-[#00A690] pl-6 my-8 italic text-gray-700">
-            "Saat 11:00 civarında tekliflerimi 18:00'de teslim için yayınlamaya başladığımdan beri,
-            satılmayan ürünlerimin %90'ını satıyorum, eskiden %40'tı." - Ahmet, Konyaaltı'nda manav
-          </blockquote>
 
           <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">3. Fotoğraflarınıza özen gösterin</h3>
           <p className="text-gray-700 mb-6 leading-relaxed">
-            İştah açıcı bir fotoğraf satış şansını 4 kat artırıyor. Güzel bir fotoğraf için 2 dakika ayırın:
+            İştah açıcı bir fotoğraf satış şansını önemli ölçüde artırır. Güzel bir fotoğraf için 2 dakika ayırın:
           </p>
           <ul className="space-y-2 text-gray-700 ml-6 mb-6">
             <li>• Doğal ışık (pencere yakını)</li>
@@ -106,7 +101,7 @@ const BlogArticle5 = () => {
 
           <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">4. Doğru satış modunu seçin</h3>
           <p className="text-gray-700 mb-6 leading-relaxed">
-            TILKAPP iki mod sunuyor: rezervasyon veya "ilk gelen". Faaliyet alanınıza göre seçin:
+            KapKurtar iki mod sunuyor: rezervasyon veya "ilk gelen". Faaliyet alanınıza göre seçin:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
             <div className="bg-green-50 rounded-lg p-6">
@@ -135,7 +130,7 @@ const BlogArticle5 = () => {
             </div>
           </div>
 
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">5. TILKAPP müşterilerinizi sadık hale getirin</h3>
+          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">5. KapKurtar müşterilerinizi sadık hale getirin</h3>
           <p className="text-gray-700 mb-6 leading-relaxed">
             Memnun müşteri geri gelir! Ara sıra alışveriş yapanı sadık müşteriye dönüştürmek için birkaç ipucu:
           </p>
@@ -147,32 +142,11 @@ const BlogArticle5 = () => {
           </ul>
 
           <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
-            <Users className="inline w-6 h-6 mr-2 text-[#00A690]" />
-            Partner işletme referansları
-          </h2>
-
-          <div className="bg-gray-100 rounded-lg p-6 my-8">
-            <p className="text-gray-700 italic mb-3">
-              "TILKAPP kayıplarımı %70 azaltmamı sağladı. Ayrıca düzenli müşterilerim
-              normal fiyattan asla almayacakları yeni ürünleri keşfediyorlar."
-            </p>
-            <p className="text-sm text-gray-600">- Fatma, Lara'da şarküteri</p>
-          </div>
-
-          <div className="bg-gray-100 rounded-lg p-6 my-8">
-            <p className="text-gray-700 italic mb-3">
-              "Başta ürünlerimi değersizleştirmekten korkuyordum. Şimdi anlıyorum:
-              %50 indirimle satmak %100 kayıpla atmaktan sonsuz kat daha iyi!"
-            </p>
-            <p className="text-sm text-gray-600">- Mehmet, Muratpaşa'da fırın-pastane</p>
-          </div>
-
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
             <Smartphone className="inline w-6 h-6 mr-2 text-[#00A690]" />
             İşletme uygulamasını etkili kullanın
           </h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
-            TILKAPP işletme uygulaması hızlı ve sezgisel olacak şekilde tasarlandı.
+            KapKurtar işletme uygulaması hızlı ve sezgisel olacak şekilde tasarlandı.
             2 dakikadan kısa sürede eksiksiz bir teklif yayınlayabilirsiniz.
           </p>
 
@@ -209,7 +183,7 @@ const BlogArticle5 = () => {
           </div>
 
           <div className="bg-[#00A690] text-white rounded-lg p-8 my-12 text-center">
-            <h3 className="text-2xl font-bold mb-4">TILKAPP'a katılmaya hazır mısınız?</h3>
+            <h3 className="text-2xl font-bold mb-4">KapKurtar'a katılmaya hazır mısınız?</h3>
             <p className="mb-6 text-[#FFFFF0]">
               Ücretsiz kayıt olun ve satılmayan ürünlerinizi bugünden değerlendirmeye başlayın
             </p>

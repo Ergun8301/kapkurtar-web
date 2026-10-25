@@ -1,4 +1,3 @@
-import React from 'react';
 import { TrendingUp, Users, Leaf, ArrowRight } from 'lucide-react';
 
 const ForMerchantsSection = () => {
@@ -69,19 +68,19 @@ const ForMerchantsSection = () => {
           <div className="relative">
             <img
               src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600"
-              alt="Restaurant kitchen"
+              alt="Restoran mutfağı"
               className="rounded-lg shadow-lg"
             />
             
             {/* Floating Stats */}
             <div className="absolute -bottom-6 -left-6 bg-white rounded-lg shadow-lg p-4">
-              <div className="text-2xl font-bold text-[#00A690]">25%</div>
-              <div className="text-sm text-gray-600">Ortalama Gelir Artışı</div>
+              <div className="text-2xl font-bold text-[#00A690]">Ek Gelir</div>
+              <div className="text-sm text-gray-600">Satılmayan ürünlerden</div>
             </div>
 
             <div className="absolute -top-6 -right-6 bg-white rounded-lg shadow-lg p-4">
-              <div className="text-2xl font-bold text-[#00A690]">500+</div>
-              <div className="text-sm text-gray-600">Ortak Restoran</div>
+              <div className="text-2xl font-bold text-[#00A690]">Yerel</div>
+              <div className="text-sm text-gray-600">Restoran, fırın ve marketler</div>
             </div>
           </div>
         </div>

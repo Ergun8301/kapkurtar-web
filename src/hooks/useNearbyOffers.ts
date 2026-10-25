@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import type { GetOffersNearbyDynamicResponse } from '../types/supabase';
 
 export interface NearbyOffer {
   id: string;
@@ -22,6 +21,24 @@ export interface NearbyOffer {
   offer_lat?: number;
   offer_lng?: number;
   created_at?: string;
+}
+
+// Ligne renvoyée par la RPC get_offers_nearby_dynamic_v2
+interface NearbyOfferRow {
+  id: string;
+  merchant_id: string;
+  merchant_name?: string | null;
+  title: string;
+  description?: string | null;
+  image_url?: string | null;
+  price_before: number | string;
+  price_after: number | string;
+  discount_percent: number;
+  available_from?: string | null;
+  available_until?: string | null;
+  quantity: number;
+  distance_meters: number;
+  created_at?: string | null;
 }
 
 interface UseNearbyOffersOptions {
@@ -58,7 +75,6 @@ export function useNearbyOffers({
 
       const radiusMeters = Math.round(radiusKm * 1000);
 
-      // ✅ Correction : nouvelle fonction RPC
       const { data, error: rpcError } = await supabase.rpc('get_offers_nearby_dynamic_v2', {
         p_client_id: clientId,
         p_radius_meters: radiusMeters
@@ -66,7 +82,7 @@ export function useNearbyOffers({
 
       if (rpcError) {
         console.error('Erreur RPC Supabase:', rpcError);
-        setError('Impossible de charger les offres à proximité');
+        setError('Yakındaki teklifler yüklenemedi');
         setOffers([]);
         return;
       }
@@ -76,16 +92,15 @@ export function useNearbyOffers({
         return;
       }
 
-      // ✅ Correction : adaptation aux nouveaux champs (id, distance_meters, etc.)
-      const mappedOffers: NearbyOffer[] = (data as GetOffersNearbyDynamicResponse[]).map((offer) => ({
-        id: offer.id, // anciennement offer.offer_id
+      const mappedOffers: NearbyOffer[] = (data as NearbyOfferRow[]).map((offer) => ({
+        id: offer.id,
         merchant_id: offer.merchant_id,
         merchant_name: offer.merchant_name || '',
         title: offer.title,
         description: offer.description || '',
         image_url: offer.image_url || null,
-        price_before: parseFloat(offer.price_before),
-        price_after: parseFloat(offer.price_after),
+        price_before: parseFloat(String(offer.price_before)),
+        price_after: parseFloat(String(offer.price_after)),
         discount_percent: offer.discount_percent,
         available_from: offer.available_from || '',
         available_until: offer.available_until || '',
@@ -97,7 +112,7 @@ export function useNearbyOffers({
       setOffers(mappedOffers);
     } catch (err) {
       console.error('Erreur JS côté client:', err);
-      setError('Impossible de charger les offres à proximité');
+      setError('Yakındaki teklifler yüklenemedi');
     } finally {
       setLoading(false);
     }

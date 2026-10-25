@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, User, Phone, Camera } from 'lucide-react';
+import { User, Phone, Camera } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
 import { uploadImageToSupabase } from '../lib/uploadImage';
+import { toTurkishError } from '../lib/errorMessages';
 
 interface ProfileCompletionModalProps {
   isOpen: boolean;
@@ -39,7 +40,7 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
 
     const MAX_SIZE = 5 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
-      setError('Photo trop volumineuse (max. 5 Mo)');
+      setError('Fotoğraf çok büyük (maks. 5 MB)');
       return;
     }
 
@@ -54,7 +55,7 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
     e.preventDefault();
 
     if (!formData.first_name.trim() || !formData.last_name.trim()) {
-      setError('Prénom et nom sont obligatoires');
+      setError('Ad ve soyad zorunludur');
       return;
     }
 
@@ -62,31 +63,35 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
     setError('');
 
     try {
-      let photoUrl = null;
+      const updates: {
+        first_name: string;
+        last_name: string;
+        phone: string | null;
+        profile_photo_url?: string;
+      } = {
+        first_name: formData.first_name.trim(),
+        last_name: formData.last_name.trim(),
+        phone: formData.phone.trim() || null,
+      };
 
-      // Upload photo si présente
+      // Upload photo si présente (sinon on ne touche pas à la photo existante)
       if (photoFile) {
         const path = `${userId}/avatar_${Date.now()}.jpg`;
-        photoUrl = await uploadImageToSupabase(photoFile, 'profile-avatars', path);
+        updates.profile_photo_url = await uploadImageToSupabase(photoFile, 'profile-avatars', path);
       }
 
       // Mise à jour du profil
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({
-          first_name: formData.first_name.trim(),
-          last_name: formData.last_name.trim(),
-          phone: formData.phone.trim() || null,
-          profile_photo_url: photoUrl,
-        })
+        .update(updates)
         .eq('auth_id', userId);
 
       if (updateError) throw updateError;
 
       onComplete();
-    } catch (err: any) {
+    } catch (err) {
       console.error('Erreur complétion profil:', err);
-      setError(err.message || 'Erreur lors de la sauvegarde');
+      setError(toTurkishError(err, 'Kaydetme sırasında hata oluştu'));
     } finally {
       setIsLoading(false);
     }
@@ -102,9 +107,9 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
               <User className="w-6 h-6 text-[#00A690]" />
             </div>
             <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-900">Bienvenue ! 🎉</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Hoş geldiniz! 🎉</h2>
               <p className="text-sm text-gray-600 mt-1">
-                Complétez votre profil pour finaliser votre inscription
+                Kaydınızı tamamlamak için profilinizi doldurun
               </p>
             </div>
           </div>
@@ -133,12 +138,12 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
                 <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
               </label>
             </div>
-            <p className="text-xs text-gray-500 mt-2">Photo de profil (optionnelle)</p>
+            <p className="text-xs text-gray-500 mt-2">Profil fotoğrafı (isteğe bağlı)</p>
           </div>
 
-          {/* Email (lecture seule) */}
+          {/* Email (salt okunur) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">E-posta</label>
             <input
               type="email"
               value={userEmail}
@@ -147,10 +152,10 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
             />
           </div>
 
-          {/* Prénom */}
+          {/* Ad */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Prénom <span className="text-red-500">*</span>
+              Ad <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -160,16 +165,16 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
                 value={formData.first_name}
                 onChange={handleInputChange}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
-                placeholder="Ex: Jean"
+                placeholder="Örn: Ahmet"
                 required
               />
             </div>
           </div>
 
-          {/* Nom */}
+          {/* Soyad */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Nom <span className="text-red-500">*</span>
+              Soyad <span className="text-red-500">*</span>
             </label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -179,16 +184,16 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
                 value={formData.last_name}
                 onChange={handleInputChange}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
-                placeholder="Ex: Dupont"
+                placeholder="Örn: Yılmaz"
                 required
               />
             </div>
           </div>
 
-          {/* Téléphone (optionnel) */}
+          {/* Telefon (isteğe bağlı) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Téléphone <span className="text-gray-400 text-xs">(optionnel)</span>
+              Telefon <span className="text-gray-400 text-xs">(isteğe bağlı)</span>
             </label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -198,7 +203,7 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
                 value={formData.phone}
                 onChange={handleInputChange}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
-                placeholder="Ex: 06 12 34 56 78"
+                placeholder="Örn: 0532 123 45 67"
               />
             </div>
           </div>
@@ -206,11 +211,11 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
           {/* Info */}
           <div className="bg-green-100 border border-green-300 rounded-lg p-4">
             <p className="text-sm text-[#00A690]">
-              ℹ️ Ces informations seront visibles par les commerçants lors de vos réservations.
+              ℹ️ Bu bilgiler rezervasyonlarınızda işletmeler tarafından görülecektir.
             </p>
           </div>
 
-          {/* Bouton de validation */}
+          {/* Onay butonu */}
           <button
             type="submit"
             disabled={isLoading}
@@ -219,15 +224,15 @@ const ProfileCompletionModal: React.FC<ProfileCompletionModalProps> = ({
             {isLoading ? (
               <div className="flex items-center justify-center">
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                Enregistrement...
+                Kaydediliyor...
               </div>
             ) : (
-              'Valider et continuer'
+              'Onayla ve devam et'
             )}
           </button>
 
           <p className="text-xs text-center text-gray-500">
-            Ces informations pourront être modifiées ultérieurement dans votre profil.
+            Bu bilgiler daha sonra profilinizden değiştirilebilir.
           </p>
         </form>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Shield, FileText, Lock } from 'lucide-react';
 
 const LegalPage = () => {
@@ -86,7 +86,7 @@ const LegalPage = () => {
             <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-4">
               <li>İşletmelerin satılmayan ürün tekliflerini yayınlaması</li>
               <li>Tüketicilerin bu ürünleri indirimli fiyatlarla rezerve edip satın alması</li>
-              <li>Ödemelerin ve işlemlerin yönetimi</li>
+              <li>Rezervasyonların yönetimi (ödeme, teslim alırken işletmede yapılır)</li>
             </ul>
 
             <h3 className="text-2xl font-bold text-gray-900 mt-8 mb-4">4. Kayıt ve Kullanıcı Hesabı</h3>
@@ -105,8 +105,8 @@ const LegalPage = () => {
               <strong>Tüketiciler için:</strong>
             </p>
             <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-4">
-              <li>Siparişleri kararlaştırılan saatlerde teslim almak</li>
-              <li>Rezerve edilen ürünler için ödeme yapmak</li>
+              <li>Rezerve edilen ürünleri teklifin teslim alma süresi bitmeden teslim almak</li>
+              <li>Rezerve edilen ürünlerin ödemesini teslim alırken işletmede yapmak</li>
               <li>Rezervasyon sistemini kötüye kullanmamak</li>
             </ul>
             <p className="text-gray-700 mb-4">
@@ -120,13 +120,13 @@ const LegalPage = () => {
 
             <h3 className="text-2xl font-bold text-gray-900 mt-8 mb-4">6. İşlemler ve Ödemeler</h3>
             <p className="text-gray-700 mb-4">
-              <strong>6.1.</strong> Ödemeler platform aracılığıyla güvenli bir şekilde gerçekleştirilir.
+              <strong>6.1.</strong> Ödeme, ürün teslim alınırken doğrudan işletmede yapılır. Platform üzerinden online ödeme alınmaz.
             </p>
             <p className="text-gray-700 mb-4">
               <strong>6.2.</strong> KapKurtar gerçekleştirilen her işlemden %15 komisyon alır.
             </p>
             <p className="text-gray-700 mb-4">
-              <strong>6.3.</strong> İade politikamızda tanımlanan koşullara göre geri ödemeler mümkündür.
+              <strong>6.3.</strong> Ödeme işletmeye yapıldığından, iade ve geri ödeme talepleri ilgili işletme ile çözülür.
             </p>
 
             <h3 className="text-2xl font-bold text-gray-900 mt-8 mb-4">7. Sorumluluk</h3>
@@ -175,7 +175,6 @@ const LegalPage = () => {
             <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-4">
               <li><strong>Kimlik verileri:</strong> Ad, soyad, e-posta, telefon numarası</li>
               <li><strong>Konum verileri:</strong> Adres, GPS konumu (izin verilirse)</li>
-              <li><strong>Ödeme verileri:</strong> Banka bilgileri (hizmet sağlayıcımız tarafından güvenli şekilde işlenir)</li>
               <li><strong>Kullanım verileri:</strong> Sipariş geçmişi, tercihler</li>
             </ul>
 
@@ -183,7 +182,7 @@ const LegalPage = () => {
             <p className="text-gray-700 mb-4">Verileriniz şunlar için kullanılır:</p>
             <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-4">
               <li>Hizmetlerimizi sağlamak ve geliştirmek</li>
-              <li>Siparişlerinizi ve ödemelerinizi işlemek</li>
+              <li>Rezervasyonlarınızı işlemek</li>
               <li>Size ilgili bildirimler göndermek</li>
               <li>Deneyiminizi kişiselleştirmek</li>
               <li>Platformun güvenliğini sağlamak</li>
@@ -195,7 +194,7 @@ const LegalPage = () => {
             </p>
             <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-4">
               <li>Siparişlerinizle ilgili işletmeler (ad, sipariş numarası)</li>
-              <li>Hizmet sağlayıcılarımız (ödeme, barındırma) sıkı gizlilik sözleşmesi altında</li>
+              <li>Hizmet sağlayıcılarımız (barındırma) sıkı gizlilik sözleşmesi altında</li>
               <li>Kanun gerektiriyorsa yasal makamlar</li>
             </ul>
 

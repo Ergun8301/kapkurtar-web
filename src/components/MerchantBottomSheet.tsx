@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { X, MapPin, Phone, Navigation, Star, Clock, Package } from 'lucide-react';
+import { X, MapPin, Phone, Navigation, Package } from 'lucide-react';
+import { formatTL } from '../lib/errorMessages';
+
+// Valeurs factices écrites par défaut en base (ne pas afficher)
+const PLACEHOLDER_VALUES = ['à définir', 'position gps', 'gps konumu', 'belirtilmemiş'];
+const cleanPart = (value?: string | null) => {
+  const v = (value || '').trim();
+  return v && !PLACEHOLDER_VALUES.includes(v.toLowerCase()) ? v : '';
+};
 
 interface Offer {
   offer_id: string;
@@ -55,6 +63,9 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
   if (!merchantId || offers.length === 0) return null;
 
   const merchant = offers[0];
+  const merchantAddress = [cleanPart(merchant.merchant_street), cleanPart(merchant.merchant_city)]
+    .filter(Boolean)
+    .join(', ');
 
   const handleClose = () => {
     setIsOpen(false);
@@ -185,14 +196,12 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                 referrerPolicy="no-referrer"
               />
             ) : (
-  <img
-    src="https://zhabjdyzawffsmvziojl.supabase.co/storage/v1/object/public/logos/FAVICON%20MINI%20rond%20fond%20vert.png"
-    alt="KapKurtar"
-    className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0"
-    crossOrigin="anonymous"
-    referrerPolicy="no-referrer"
-  />
-)}
+              <img
+                src="/images/merchant-default.webp"
+                alt="KapKurtar"
+                className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0"
+              />
+            )}
 
             {/* Infos */}
             <div className="flex-1 min-w-0">
@@ -200,27 +209,11 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                 {merchant.merchant_name}
               </h2>
 
-              {/* Avis (visuel uniquement) */}
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="w-4 h-4 fill-gray-300 text-gray-300" />
-                  ))}
-                </div>
-                <span className="text-xs text-gray-500">Yakında kullanılabilir</span>
-              </div>
-
               {/* Adresse */}
-              {merchant.merchant_street && 
-               merchant.merchant_street !== 'Position GPS' && 
-               merchant.merchant_street !== 'À définir' && (
+              {merchantAddress && (
                 <div className="flex items-start gap-2 text-sm text-gray-600 mb-2">
                   <MapPin className="w-4 h-4 text-[#00A690] flex-shrink-0 mt-0.5" />
-                  <span>
-                    {merchant.merchant_street}
-                    {merchant.merchant_city && merchant.merchant_city !== 'À définir' && 
-                      `, ${merchant.merchant_city}`}
-                  </span>
+                  <span>{merchantAddress}</span>
                 </div>
               )}
 
@@ -291,10 +284,10 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                     {/* Prix */}
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-bold text-[#00A690] text-lg">
-                        {offer.price_after.toFixed(2)}₺
+                        {formatTL(offer.price_after)}
                       </span>
                       <span className="line-through text-gray-400 text-sm">
-                        {offer.price_before.toFixed(2)}₺
+                        {formatTL(offer.price_before)}
                       </span>
                     </div>
 

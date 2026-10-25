@@ -1,31 +1,30 @@
-import React from 'react';
 import { Leaf, Store, Users, MapPin } from 'lucide-react';
 
 const ImpactSection = () => {
   const stats = [
     {
       icon: Leaf,
-      value: '25',
-      unit: 'ton',
-      label: 'kurtarılan gıda'
+      value: 'Daha az',
+      unit: 'israf',
+      label: 'Satılmayan gıdalar çöpe gitmek yerine yeni sahiplerini bulur'
     },
     {
       icon: Store,
-      value: '150+',
-      unit: '',
-      label: 'ortak işletme'
+      value: 'Yerel',
+      unit: 'işletmeler',
+      label: 'Mahallenizdeki restoran, fırın ve marketlerle birlikte'
     },
     {
       icon: Users,
-      value: '8000+',
-      unit: '',
-      label: 'aktif kullanıcı'
+      value: 'Herkes',
+      unit: 'için',
+      label: 'Kaliteli gıdaya indirimli fiyatlarla erişim'
     },
     {
       icon: MapPin,
-      value: '5',
-      unit: 'şehir',
-      label: '2025\'te kapsanan'
+      value: 'Antalya',
+      unit: 'bölgesi',
+      label: 'Şu anda hizmet verdiğimiz bölge, yeni şehirler yakında'
     }
   ];
 
@@ -34,7 +33,7 @@ const ImpactSection = () => {
       {/* Logo Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img
-          src="https://zhabjdyzawffsmvziojl.supabase.co/storage/v1/object/public/logos/FAVICON%20MINI%20rond.png"
+          src="/images/logo-round.webp"
           alt=""
           className="w-[500px] h-[500px] opacity-[0.03] grayscale select-none"
         />

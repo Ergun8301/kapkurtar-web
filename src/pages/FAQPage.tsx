@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 
 const FAQPage = () => {
@@ -23,7 +23,7 @@ const FAQPage = () => {
         },
         {
           question: 'Ne kadar tasarruf edebilirim?',
-          answer: 'Ortalama olarak, normal fiyatlara göre %30 ile %70 arasında tasarruf edersiniz. Kesin indirimler işletmelere ve mevcudiyete göre değişir.'
+          answer: 'İndirim oranını her işletme kendisi belirler; işletmeler genellikle %30 ile %70 arasında indirim uygular. Her teklifin indirimli fiyatı uygulamada görünür.'
         },
         {
           question: 'Arama yarıçapı nedir?',
@@ -31,7 +31,7 @@ const FAQPage = () => {
         },
         {
           question: 'Rezervasyonumu iptal edebilir miyim?',
-          answer: 'Rezervasyonlu teklifler için, teslim alma saatinden 30 dakika öncesine kadar iptal edebilirsiniz. Bu sürenin ardından, iptal politikamıza göre ücretler uygulanabilir.'
+          answer: 'Evet, rezervasyonunuzu teslim almadan önce uygulama üzerinden iptal edebilirsiniz. Ödeme ürünü teslim alırken işletmede yapıldığı için önceden herhangi bir ücret tahsil edilmez.'
         }
       ]
     },
@@ -48,11 +48,11 @@ const FAQPage = () => {
         },
         {
           question: 'Fiyatlarımı nasıl belirlerim?',
-          answer: 'İndirimli fiyatlarınızı özgürce belirlersiniz. Satılmayan ürünlerinizin değerini artırırken müşterileri çekmek için %30 ile %70 arasında indirim öneriyoruz.'
+          answer: 'İndirimli fiyatlarınızı özgürce belirlersiniz. İşletmeler genellikle %30 ile %70 arasında indirim uygular.'
         },
         {
           question: 'KapKurtar komisyon alıyor mu?',
-          answer: 'Evet, KapKurtar platformu sürdürmek için her satıştan küçük bir komisyon alır. Fiyatlandırma detayları kayıt sırasında paylaşılır.'
+          answer: 'Evet, KapKurtar platformu sürdürmek için gerçekleşen her satıştan %15 komisyon alır. Satış olmadığında herhangi bir ücret ödemezsiniz.'
         },
         {
           question: 'Satış modunu seçebilir miyim?',
@@ -69,7 +69,7 @@ const FAQPage = () => {
         },
         {
           question: 'KapKurtar ücretsiz mi?',
-          answer: 'Evet, uygulamanın indirilmesi ve kullanımı müşteriler için tamamen ücretsizdir. Yalnızca satın aldığınız ürünler için ödeme yaparsınız.'
+          answer: 'Evet, uygulamanın indirilmesi ve kullanımı müşteriler için tamamen ücretsizdir. Yalnızca satın aldığınız ürünler için, ürünü teslim alırken işletmede ödeme yaparsınız.'
         },
         {
           question: 'Destek ekibiyle nasıl iletişime geçebilirim?',

@@ -23,7 +23,6 @@ export function useRealtimeNotifications() {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        console.log("🏪 Marchand connecté:", user.id);
         setUserId(user.id);
       }
     };
@@ -45,7 +44,6 @@ export function useRealtimeNotifications() {
       if (error) {
         console.error("❌ Erreur chargement notifications:", error);
       } else if (data) {
-        console.log(`✅ Notifications chargées: ${data.length}`);
         setNotifications(data);
         setUnreadCount(data.filter((n) => !n.is_read).length);
       }
@@ -58,7 +56,6 @@ export function useRealtimeNotifications() {
   useEffect(() => {
     if (!userId) return;
 
-    console.log("🔌 Connexion Realtime MARCHAND:", userId);
 
     const channel: RealtimeChannel = supabase
       .channel(`merchant_notifications_${userId}`)
@@ -75,11 +72,9 @@ export function useRealtimeNotifications() {
           const merchantTypes = ["reservation", "offer_expired", "stock_empty", "system"];
           
           if (!merchantTypes.includes(newNotif.type)) {
-            console.log("⚠️ Type ignoré:", newNotif.type);
             return;
           }
 
-          console.log("🟢 Nouvelle notification:", newNotif.title);
           setNotifications((prev) => [newNotif, ...prev]);
           if (!newNotif.is_read) setUnreadCount((count) => count + 1);
 
@@ -87,22 +82,18 @@ export function useRealtimeNotifications() {
             const audio = new Audio('https://cdn.jsdelivr.net/gh/naptha/talkify-tts-voices@master/sounds/notification.mp3');
             audio.volume = 0.5;
             await audio.play();
-            console.log('🔊 Son joué');
-          } catch (err) {
-            console.warn('🔇 Son bloqué');
+          } catch {
+            // Lecture audio bloquée par le navigateur
           }
         }
       )
       .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          console.log("✅ Canal Realtime MARCHAND actif");
-        } else if (status === "CHANNEL_ERROR") {
+        if (status === "CHANNEL_ERROR") {
           console.error("❌ Erreur canal Realtime");
         }
       });
 
     return () => {
-      console.log("🔌 Déconnexion canal MARCHAND");
       supabase.removeChannel(channel);
     };
   }, [userId]);

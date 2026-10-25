@@ -1,4 +1,3 @@
-import React from 'react';
 import { Heart, Users, TrendingUp, MapPin } from 'lucide-react';
 
 const AboutPage = () => {
@@ -74,8 +73,8 @@ const AboutPage = () => {
               satılmayan ürünlerini atmak yerine değerlendirebilecekleri bir platform oluşturmak.
             </p>
             <p className="mb-4">
-              Lansmanımızdan bu yana, 25 tondan fazla gıdayı kurtarmayı başardık ve
-              150'den fazla işletmeyi binlerce memnun müşteriyle buluşturduk. Ama bu sadece başlangıç.
+              Bugün Antalya'daki yerel işletmeleri, satılmayan ürünlerini indirimli fiyatlarla
+              değerlendirmek isteyen müşterilerle buluşturuyoruz. Ama bu sadece başlangıç.
             </p>
             <p>
               Hedefimiz mi? Türkiye'de israf karşıtı hareketin referansı olmak ve bir ekonomik
@@ -86,23 +85,23 @@ const AboutPage = () => {
 
         {/* Impact Numbers */}
         <div className="bg-[#00A690] rounded-xl p-8 md:p-12 text-white mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Etkimiz Rakamlarla</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Hedeflerimiz</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold mb-2">150+</div>
-              <div className="text-[#FFFFF0]">Ortak işletme</div>
+              <div className="text-4xl font-bold mb-2">Yerel</div>
+              <div className="text-[#FFFFF0]">İşletmeleri desteklemek</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">8 000+</div>
-              <div className="text-[#FFFFF0]">Aktif kullanıcı</div>
+              <div className="text-4xl font-bold mb-2">Uygun</div>
+              <div className="text-[#FFFFF0]">Fiyatlı kaliteli gıda</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">25 ton</div>
-              <div className="text-[#FFFFF0]">Kurtarılan gıda</div>
+              <div className="text-4xl font-bold mb-2">Daha az</div>
+              <div className="text-[#FFFFF0]">Gıda israfı</div>
             </div>
             <div>
-              <div className="text-4xl font-bold mb-2">5 şehir</div>
-              <div className="text-[#FFFFF0]">2025'te planlanıyor</div>
+              <div className="text-4xl font-bold mb-2">Yeni</div>
+              <div className="text-[#FFFFF0]">Şehirlere yayılmak</div>
             </div>
           </div>
         </div>
@@ -125,26 +124,21 @@ const AboutPage = () => {
           </div>
           <div className="text-center mb-8">
             <p className="text-lg text-gray-600 mb-6">
-              Şu anda Antalya ve çevresinde aktif olan KapKurtar, Türk Akdeniz bölgesinde
-              hızlı bir genişleme planlıyor.
+              Şu anda Antalya ve çevresinde aktif olan KapKurtar, ilerleyen dönemde
+              Türkiye'nin diğer şehirlerine de yayılmayı planlıyor.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="border-2 border-[#00A690] rounded-lg p-6">
               <h3 className="font-bold text-lg text-gray-900 mb-2">📍 Şu anda</h3>
               <ul className="text-gray-700 space-y-1">
-                <li>• Antalya merkez (Muratpaşa, Konyaaltı, Kepez)</li>
-                <li>• Manavgat</li>
-                <li>• Alanya (devreye alınıyor)</li>
+                <li>• Antalya ve çevresi</li>
               </ul>
             </div>
             <div className="border-2 border-gray-300 rounded-lg p-6">
-              <h3 className="font-bold text-lg text-gray-900 mb-2">🚀 Yakında (2025)</h3>
+              <h3 className="font-bold text-lg text-gray-900 mb-2">🚀 Yakında</h3>
               <ul className="text-gray-700 space-y-1">
-                <li>• Side</li>
-                <li>• Belek</li>
-                <li>• Kaş</li>
-                <li>• Diğer sahil şehirleri</li>
+                <li>• Türkiye'nin diğer şehirleri</li>
               </ul>
             </div>
           </div>

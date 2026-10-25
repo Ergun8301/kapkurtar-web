@@ -38,7 +38,7 @@ export function useClientLocation(clientId: string | null): UseClientLocationRet
 
       if (fetchError) {
         console.error('Error fetching client location:', fetchError);
-        setError('Impossible de récupérer votre position');
+        setError('Konumunuz alınamadı');
         return;
       }
 
@@ -47,7 +47,7 @@ export function useClientLocation(clientId: string | null): UseClientLocationRet
       }
     } catch (err) {
       console.error('Error in fetchClientLocation:', err);
-      setError('Erreur lors de la récupération de votre position');
+      setError('Konumunuz alınırken bir hata oluştu');
     } finally {
       setLoading(false);
     }
@@ -55,12 +55,12 @@ export function useClientLocation(clientId: string | null): UseClientLocationRet
 
   const requestGeolocation = async (): Promise<void> => {
     if (!clientId) {
-      setError('Vous devez être connecté pour utiliser la géolocalisation');
+      setError('Konum özelliğini kullanmak için giriş yapmalısınız');
       return;
     }
 
     if (!navigator.geolocation) {
-      setError('La géolocalisation n\'est pas supportée par votre navigateur');
+      setError('Tarayıcınız konum özelliğini desteklemiyor');
       return;
     }
 
@@ -82,7 +82,7 @@ export function useClientLocation(clientId: string | null): UseClientLocationRet
 
             if (updateError) {
               console.error('Error updating client location:', updateError);
-              setError('Impossible de sauvegarder votre position');
+              setError('Konumunuz kaydedilemedi');
               reject(updateError);
             } else {
               setLocation(`POINT(${longitude} ${latitude})`);
@@ -90,7 +90,7 @@ export function useClientLocation(clientId: string | null): UseClientLocationRet
             }
           } catch (err) {
             console.error('Error saving location:', err);
-            setError('Erreur lors de la sauvegarde de votre position');
+            setError('Konumunuz kaydedilirken bir hata oluştu');
             reject(err);
           } finally {
             setLoading(false);
@@ -98,17 +98,17 @@ export function useClientLocation(clientId: string | null): UseClientLocationRet
         },
         (err) => {
           console.error('Geolocation error:', err);
-          let errorMessage = 'Impossible d\'obtenir votre position';
+          let errorMessage = 'Konumunuz alınamadı';
 
           switch (err.code) {
             case err.PERMISSION_DENIED:
-              errorMessage = 'Vous avez refusé l\'accès à votre position';
+              errorMessage = 'Konum erişimine izin vermediniz. Tarayıcı ayarlarından konum iznini açabilirsiniz.';
               break;
             case err.POSITION_UNAVAILABLE:
-              errorMessage = 'Votre position n\'est pas disponible';
+              errorMessage = 'Konumunuz şu anda kullanılamıyor';
               break;
             case err.TIMEOUT:
-              errorMessage = 'La demande de position a expiré';
+              errorMessage = 'Konum isteği zaman aşımına uğradı';
               break;
           }
 

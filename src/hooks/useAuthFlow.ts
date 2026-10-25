@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabaseClient';
-import { logoutNoNav } from '../lib/logout'; // ✅ ajouté
+import { logoutNoNav } from '../lib/logout';
 import type { EnsureProfileExistsResponse, UserRole } from '../types/supabase';
 
 interface AuthFlowState {
@@ -35,7 +35,7 @@ export function useAuthFlow() {
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (_event, session) => {
         if (!mounted) return;
 
         if (session?.user) {
@@ -83,7 +83,7 @@ export function useAuthFlow() {
         loading: false,
         initialized: true
       });
-    } catch (error) {
+    } catch {
       setState(prev => ({
         ...prev,
         user,
@@ -94,7 +94,7 @@ export function useAuthFlow() {
   };
 
   const updateLocation = async (lon: number, lat: number) => {
-    if (!state.user) return { success: false, error: 'Not authenticated' };
+    if (!state.user) return { success: false, error: 'Oturum açılmamış. Lütfen giriş yapın.' };
 
     try {
       const { error } = await supabase.rpc('profiles_update_location', {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Bell } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
@@ -118,15 +118,15 @@ export function NotificationBell({ userType }: NotificationBellProps) {
           setOpen(false);
           setSelectedReservationId(reservationId);
         } else {
-          console.warn('❌ Notification sans reservation_id valide - probablement une ancienne notification');
-          alert('❌ Bu bildirim çok eski ve rezervasyon detaylarını içermiyor.');
+          // Ancienne notification sans reservation_id
+          alert('Bu bildirim eski bir bildirim olduğu için rezervasyon detaylarını içermiyor.');
         }
       } else if (
         (notification.type === "offer_expired" || notification.type === "stock_empty") &&
         notification.data?.offer_id
       ) {
         setOpen(false);
-        navigate(`/merchant/offers`);
+        navigate("/merchant/dashboard");
       }
     }
   };
@@ -204,7 +204,7 @@ export function NotificationBell({ userType }: NotificationBellProps) {
           className={`relative p-2 rounded-full hover:bg-gray-100 transition-all ${
             shake ? "animate-shake" : ""
           }`}
-          aria-label="Notifications"
+          aria-label="Bildirimler"
         >
           <Bell
             className="w-6 h-6 text-[#FFFFF0] hover:text-[#F75C00] transition-colors duration-300"

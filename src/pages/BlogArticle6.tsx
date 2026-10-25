@@ -1,4 +1,3 @@
-import React from 'react';
 import { Calendar, User, ArrowLeft, ChefHat } from 'lucide-react';
 
 const BlogArticle6 = () => {
@@ -215,7 +214,7 @@ const BlogArticle6 = () => {
           <div className="bg-gray-100 rounded-lg p-8 my-12 text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Yakınınızda indirimli ekmek bulun</h3>
             <p className="text-gray-700 mb-6">
-              TILKAPP ile gün sonunda fırın ekmeğini %50 indirimle satın alın
+              KapKurtar ile gün sonunda fırın ekmeğini indirimli fiyatlarla satın alın
             </p>
             <a
               href="/offers"

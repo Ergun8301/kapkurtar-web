@@ -1,4 +1,3 @@
-import React from 'react';
 import { Calendar, User, ArrowLeft, Apple, Leaf, Snowflake, Sun } from 'lucide-react';
 
 const BlogArticle8 = () => {
@@ -290,9 +289,9 @@ const BlogArticle8 = () => {
           </div>
 
           <div className="bg-gray-100 rounded-lg p-8 my-12 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">TILKAPP ile akıllıca alışveriş yapın</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">KapKurtar ile akıllıca alışveriş yapın</h3>
             <p className="text-gray-700 mb-6">
-              %50 indirimli hafif solmuş meyve ve sebzeler mi? Smoothie, çorba ve kompostolar için mükemmel!
+              İndirimli fiyatlarla hafif solmuş meyve ve sebzeler mi? Smoothie, çorba ve kompostolar için mükemmel!
             </p>
             <a
               href="/offers"

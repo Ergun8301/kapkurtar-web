@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, ArrowRight, Smartphone } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 const HeroBanner = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -8,26 +8,27 @@ const HeroBanner = () => {
     {
       id: 1,
       image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      alt: 'Fresh Mediterranean Bowl'
+      alt: 'Taze Akdeniz kasesi'
     },
     {
       id: 2,
       image: 'https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      alt: 'Artisan Pizza'
+      alt: 'Taş fırın pizza'
     },
     {
       id: 3,
       image: 'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      alt: 'Gourmet Burger'
+      alt: 'Gurme burger'
     },
     {
       id: 4,
       image: 'https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg',
-      alt: 'Fresh Bakery Products'
+      alt: 'Taze fırın ürünleri'
     },
     {
       id: 5,
-      image: 'https://images.pexels.com/photos/8931660/pexels-photo-8931660.jpeg'
+      image: 'https://images.pexels.com/photos/8931660/pexels-photo-8931660.jpeg',
+      alt: 'Taze yiyecekler'
     }
   ];
 
@@ -74,7 +75,6 @@ const HeroBanner = () => {
           </h1> 
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-            {/* ✅ Corrected redirection here */}
             <a
               href="/offers"
               className="bg-[#00A690] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#F75C00] transition-colors duration-300 inline-flex items-center text-lg shadow-lg"
@@ -96,6 +96,7 @@ const HeroBanner = () => {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
+        aria-label="Önceki görsel"
         className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all z-10"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -103,6 +104,7 @@ const HeroBanner = () => {
 
       <button
         onClick={nextSlide}
+        aria-label="Sonraki görsel"
         className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all z-10"
       >
         <ChevronRight className="w-6 h-6" />
@@ -114,6 +116,7 @@ const HeroBanner = () => {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
+            aria-label={`${index + 1}. görsel`}
             className={`w-3 h-3 rounded-full transition-all ${
               index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
             }`}

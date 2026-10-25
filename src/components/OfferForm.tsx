@@ -36,6 +36,45 @@ interface OfferFormProps {
   isSubmitting?: boolean;
 }
 
+// Formate une date en valeur "YYYY-MM-DDTHH:mm" (heure locale) pour <input type="datetime-local">
+const toLocalInputValue = (date: Date): string => {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+    `T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  );
+};
+
+// Convertit une valeur datetime-local (heure locale) en ISO UTC pour la base
+const localInputToISO = (value: string): string => new Date(value).toISOString();
+
+const DURATION_MINUTES: Record<string, number> = {
+  '30min': 30,
+  '1h': 60,
+  '2h': 120,
+  '4h': 240,
+};
+
+// Calcule la fin à partir du début et de la durée choisie (heure locale)
+const computeEndDate = (data: FormData): string | null => {
+  const startDate = data.startNow ? new Date() : new Date(data.available_from);
+  if (isNaN(startDate.getTime())) return null;
+
+  if (data.duration === 'allday') {
+    const endOfDay = new Date(startDate);
+    endOfDay.setHours(23, 59, 0, 0);
+    return toLocalInputValue(endOfDay);
+  }
+
+  const minutes =
+    data.duration === 'custom'
+      ? parseInt(data.customDuration) || 0
+      : DURATION_MINUTES[data.duration] || 0;
+  if (minutes <= 0) return null;
+
+  return toLocalInputValue(new Date(startDate.getTime() + minutes * 60000));
+};
+
 export const OfferForm: React.FC<OfferFormProps> = ({
   mode,
   initialData,
@@ -73,36 +112,36 @@ export const OfferForm: React.FC<OfferFormProps> = ({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Les toasts disparaissent après 3 s
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 3000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
   useEffect(() => {
     if (mode === 'edit' && initialData) {
-      const formatDateForInput = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toISOString().slice(0, 16);
-      };
-
-      // ✅ Détecter si l'offre est expirée
+      // Détecter si l'offre est expirée
       const now = new Date();
       const availableUntil = new Date(initialData.available_until);
       const isExpired = now > availableUntil;
 
-      // ✅ Si expirée, réinitialiser les dates à maintenant + 2h
+      // Si expirée, réinitialiser les dates à maintenant + 2h
       let availableFrom: string;
       let availableUntilFormatted: string;
 
       if (isExpired) {
-        console.log('🔄 Offre expirée détectée → Réinitialisation des dates');
-        availableFrom = now.toISOString().slice(0, 16);
-        const twoHoursLater = new Date(now.getTime() + 120 * 60000);
-        availableUntilFormatted = twoHoursLater.toISOString().slice(0, 16);
-        
-        // ✅ Informer l'utilisateur
+        availableFrom = toLocalInputValue(now);
+        availableUntilFormatted = toLocalInputValue(new Date(now.getTime() + 120 * 60000));
+
         setToast({
-          message: '⏰ Süresi dolmuş teklif → Tarihler sıfırlandı (şimdi + 2s)',
+          message: '⏰ Süresi dolmuş teklif → Tarihler sıfırlandı (şimdi + 2 saat)',
           type: 'success',
         });
       } else {
-        availableFrom = formatDateForInput(initialData.available_from);
-        availableUntilFormatted = formatDateForInput(initialData.available_until);
+        // Les dates de la base (ISO UTC) sont affichées en heure locale
+        availableFrom = toLocalInputValue(new Date(initialData.available_from));
+        availableUntilFormatted = toLocalInputValue(availableUntil);
       }
 
       setFormData({
@@ -130,8 +169,8 @@ export const OfferForm: React.FC<OfferFormProps> = ({
         price_before: '',
         price_after: '',
         quantity: '',
-        available_from: now.toISOString().slice(0, 16),
-        available_until: twoHoursLater.toISOString().slice(0, 16),
+        available_from: toLocalInputValue(now),
+        available_until: toLocalInputValue(twoHoursLater),
         startNow: true,
         duration: '2h',
         customDuration: '',
@@ -150,71 +189,30 @@ export const OfferForm: React.FC<OfferFormProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-
-    if (name === 'duration' || name === 'customDuration') {
-      updateEndDate(value, name === 'duration' ? 'duration' : 'custom');
-    }
-  };
-
-  const updateEndDate = (durationValue: string, type: 'duration' | 'custom') => {
-    const startDate = formData.startNow
-      ? new Date()
-      : new Date(formData.available_from);
-    if (isNaN(startDate.getTime())) return;
-
-    let minutes = 0;
-    if (type === 'duration') {
-      switch (durationValue) {
-        case '30min':
-          minutes = 30;
-          break;
-        case '1h':
-          minutes = 60;
-          break;
-        case '2h':
-          minutes = 120;
-          break;
-        case '4h':
-          minutes = 240;
-          break;
-        case 'allday':
-          const endOfDay = new Date(startDate);
-          endOfDay.setHours(23, 59, 0, 0);
-          setFormData((prev) => ({
-            ...prev,
-            available_until: endOfDay.toISOString().slice(0, 16),
-          }));
-          return;
-        case 'custom':
-          minutes = parseInt(formData.customDuration) || 0;
-          break;
-        default:
-          return;
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      // En création, la fin suit le début et la durée choisie
+      if (
+        mode === 'create' &&
+        (name === 'duration' || name === 'customDuration' || name === 'available_from')
+      ) {
+        const end = computeEndDate(next);
+        if (end) next.available_until = end;
       }
-    } else {
-      minutes = parseInt(durationValue) || 0;
-    }
-
-    const endDate = new Date(startDate.getTime() + minutes * 60000);
-    setFormData((prev) => ({
-      ...prev,
-      available_until: endDate.toISOString().slice(0, 16),
-    }));
+      return next;
+    });
   };
 
   const handleStartNowChange = (checked: boolean) => {
     setFormData((prev) => {
-      const newData = { ...prev, startNow: checked };
+      const next = { ...prev, startNow: checked };
       if (checked) {
-        const now = new Date();
-        newData.available_from = now.toISOString().slice(0, 16);
+        next.available_from = toLocalInputValue(new Date());
+        const end = computeEndDate(next);
+        if (end) next.available_until = end;
       }
-      return newData;
+      return next;
     });
-    if (checked && formData.duration) {
-      setTimeout(() => updateEndDate(formData.duration, 'duration'), 0);
-    }
   };
 
   const convertHeicToJpeg = async (file: File): Promise<File> => {
@@ -231,7 +229,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
           ctx?.drawImage(img, 0, 0);
           canvas.toBlob((blob) => {
             if (blob) resolve(blob);
-            else reject(new Error('Conversion failed'));
+            else reject(new Error('HEIC dönüştürülemedi'));
           }, 'image/jpeg', 0.92);
         };
         
@@ -287,7 +285,6 @@ export const OfferForm: React.FC<OfferFormProps> = ({
     if (file.type === 'image/heic' || file.type === 'image/heif') {
       try {
         processedFile = await convertHeicToJpeg(file);
-        console.log('✅ HEIC converti en JPEG');
       } catch (error) {
         setToast({
           message:
@@ -298,7 +295,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
       }
     }
 
-    setFormData({ ...formData, image: processedFile });
+    setFormData((prev) => ({ ...prev, image: processedFile }));
     const reader = new FileReader();
     reader.onloadend = () => {
       setFormData((prev) => ({
@@ -309,8 +306,53 @@ export const OfferForm: React.FC<OfferFormProps> = ({
     reader.readAsDataURL(processedFile);
   };
 
+  const showError = (message: string) => setToast({ message, type: 'error' });
+
   const handleSubmit = async () => {
-    await onSubmit(formData);
+    const priceBefore = parseFloat(formData.price_before);
+    const priceAfter = parseFloat(formData.price_after);
+    const quantity = Number(formData.quantity);
+
+    if (!Number.isFinite(priceBefore) || priceBefore <= 0) {
+      showError('Orijinal fiyat 0\'dan büyük olmalıdır');
+      return;
+    }
+    if (!Number.isFinite(priceAfter) || priceAfter <= 0) {
+      showError('İndirimli fiyat 0\'dan büyük olmalıdır');
+      return;
+    }
+    if (priceAfter >= priceBefore) {
+      showError('İndirimli fiyat orijinal fiyattan düşük olmalıdır');
+      return;
+    }
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      showError('Miktar en az 1 olmalıdır');
+      return;
+    }
+
+    const startNow = mode === 'create' && formData.startNow;
+    const startDate = startNow ? new Date() : new Date(formData.available_from);
+    const endDate = new Date(formData.available_until);
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      showError('Lütfen geçerli bir başlangıç ve bitiş tarihi girin');
+      return;
+    }
+    if (endDate <= startDate) {
+      showError('Bitiş zamanı başlangıçtan sonra olmalıdır');
+      return;
+    }
+    if (endDate <= new Date()) {
+      showError('Bitiş zamanı geçmişte olamaz');
+      return;
+    }
+
+    // Les champs datetime-local sont en heure locale : on envoie de l'ISO (UTC)
+    await onSubmit({
+      ...formData,
+      available_from: startNow ? startDate.toISOString() : localInputToISO(formData.available_from),
+      available_until: localInputToISO(formData.available_until),
+    });
   };
 
   const isFormValid =
@@ -390,7 +432,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                     className="max-h-48 mx-auto rounded"
                   />
                   <button
-                    onClick={() => setFormData({ ...formData, image: null, imagePreview: '' })}
+                    onClick={() => setFormData((prev) => ({ ...prev, image: null, imagePreview: '' }))}
                     className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full"
                   >
                     <X className="w-4 h-4" />
@@ -442,7 +484,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                   <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">
                     {mode === 'create'
-                      ? 'Fotoğraf çek veya görsel seç'
+                      ? 'Görsel seç'
                       : 'Fotoğrafı değiştir (isteğe bağlı)'}
                   </p>
                   <input
@@ -505,7 +547,8 @@ export const OfferForm: React.FC<OfferFormProps> = ({
               value={formData.quantity}
               onChange={handleInputChange}
               placeholder="10"
-              min="0"
+              min="1"
+              step="1"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
             />
           </div>

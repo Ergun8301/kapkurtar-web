@@ -1,4 +1,3 @@
-import React from 'react';
 import { Calendar, User, ArrowLeft, Heart, TrendingDown, Utensils } from 'lucide-react';
 
 const BlogArticle9 = () => {
@@ -109,17 +108,17 @@ const BlogArticle9 = () => {
 
           <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">1. Taze meyve ve sebzeye kolay erişim</h3>
           <p className="text-gray-700 mb-4 leading-relaxed">
-            Partner manavlar düzenli olarak hafif solmuş veya fazla meyve ve sebzeleri
-            %50 / %70 indirimle sunuyor.
+            Manavlar hafif solmuş veya fazla meyve ve sebzeleri
+            indirimli fiyatlarla sunabiliyor.
           </p>
           <div className="bg-green-50 rounded-lg p-6 my-6">
             <p className="text-sm text-gray-700 mb-3">
-              <strong>Somut örnek:</strong> Konyaaltı'nda bir manav her akşam çeşitli 3kg sebze sepeti
-              (domates, salatalık, biber, patlıcan) 60 TL yerine 25 TL'ye sunuyor.
+              <strong>Örnek:</strong> Bir manav akşamları domates, salatalık, biber ve patlıcandan
+              oluşan karışık bir sebze sepetini indirimli fiyatla sunabilir.
             </p>
             <p className="text-sm text-gray-700">
-              <strong>Sonuç:</strong> 4 kişilik bir aile için bu ayda sadece sebzelerde
-              420 TL tasarruf anlamına geliyor!
+              <strong>Sonuç:</strong> Kalabalık bir aile için sebze harcamalarında
+              kayda değer bir tasarruf sağlayabilir!
             </p>
           </div>
 
@@ -130,8 +129,8 @@ const BlogArticle9 = () => {
           </p>
           <div className="bg-blue-50 rounded-lg p-6 my-6">
             <p className="text-sm text-gray-700 mb-3">
-              <strong>Örnek:</strong> Muratpaşa'da bir restoran 19:00-20:00 arası tam menüyü
-              (çorba + ana yemek + garnitür) 85 TL yerine 40 TL'ye sunuyor.
+              <strong>Örnek:</strong> Bir restoran servis sonunda tam menüyü
+              (çorba + ana yemek + garnitür) indirimli fiyatla sunabilir.
             </p>
             <p className="text-sm text-gray-700">
               <strong>Beslenme kalitesi:</strong> Taze sebzeler, kaliteli proteinler, bol porsiyonlar.
@@ -148,40 +147,6 @@ const BlogArticle9 = () => {
             <p className="text-sm text-gray-700">
               <strong>Bilinmesi gereken:</strong> Bir günlük ekmek tamamen tüketilebilir ve
               tüm besin değerlerini korur. Daha az nemli olduğu için sindirim için bile daha iyidir!
-            </p>
-          </div>
-
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">Referans: Ayşe'nin gıda bütçesi</h2>
-          <div className="bg-gray-100 rounded-lg p-6 my-8">
-            <p className="text-gray-700 mb-4">
-              38 yaşında, 3 çocuk annesi, Antalya'da öğretmen olan Ayşe, KapKurtar'ı 8 aydır kullanıyor.
-              Gıda bütçesini nasıl dönüştürdüğü:
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
-              <div className="bg-red-50 rounded p-4">
-                <h4 className="font-bold text-gray-900 mb-3">❌ KapKurtar öncesi</h4>
-                <ul className="text-sm text-gray-700 space-y-2">
-                  <li>• Aylık bütçe: 5.200 TL</li>
-                  <li>• Meyve/sebze: Haftada maksimum 2 kez</li>
-                  <li>• Hazır yemek: asla (çok pahalı)</li>
-                  <li>• İsraf: ~300 TL/ay</li>
-                </ul>
-              </div>
-              <div className="bg-green-50 rounded p-4">
-                <h4 className="font-bold text-gray-900 mb-3">✅ KapKurtar ile</h4>
-                <ul className="text-sm text-gray-700 space-y-2">
-                  <li>• Aylık bütçe: 3.800 TL</li>
-                  <li>• Meyve/sebze: Haftada 4-5 kez</li>
-                  <li>• Hazır yemek: Haftada 2 kez</li>
-                  <li>• İsraf: neredeyse yok</li>
-                </ul>
-              </div>
-            </div>
-
-            <p className="text-gray-700 italic">
-              "Her ay tasarruf ettiğimiz 1.400 TL ile çocukların spor aktivitelerini yeniden başlatabildik.
-              Ve eskisinden daha çeşitli yiyoruz!"
             </p>
           </div>
 

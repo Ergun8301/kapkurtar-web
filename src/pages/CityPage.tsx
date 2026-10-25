@@ -21,7 +21,7 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
       {/* Meta tags SEO */}
       <SEO
         title={`${cityTurkish}'da Ucuz Yemek Fırsatları | KapKurtar`}
-        description={`${cityTurkish}'da %70 indirimli yemek fırsatları. Restoranlar, fırınlar ve marketlerden fazla gıda. Gıda israfını önle, tasarruf et!`}
+        description={`${cityTurkish}'da indirimli fiyatlarla yemek fırsatları. Restoranlar, fırınlar ve marketlerden fazla gıda. Gıda israfını önle, tasarruf et!`}
         canonical={`/${city}`}
         keywords={`${cityTurkish} ucuz yemek, ${cityTurkish} indirimli yemek, ${city} fazla gıda, ${city} restoran fırsatları`}
       />
@@ -40,7 +40,7 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
               {cityTurkish}'da Ucuz Yemek Fırsatları
             </h1>
             <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-              {cityTurkish}'daki restoranlar, fırınlar ve marketlerden %70'e varan indirimli yemek fırsatları.
+              {cityTurkish}'daki restoranlar, fırınlar ve marketlerden indirimli fiyatlarla yemek fırsatları.
               Gıda israfını önle, cüzdanını koru!
             </p>
             <button
@@ -71,7 +71,7 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-4">
-              {cityTurkish}'da KapKurtar ile günde ortalama %70 indirim fırsatlarından yararlanabilirsiniz.
+              {cityTurkish}'da KapKurtar ile her gün indirimli fiyatlarla sunulan fırsatlardan yararlanabilirsiniz.
               Akşam saatlerinde restoranlardan arta kalan lezzetli yemekler, fırınlardan taze ekmek ve
               pastalar, marketlerden son kullanma tarihi yaklaşan ancak tamamen taze ürünler sizi bekliyor.
             </p>
@@ -104,7 +104,7 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
                 <ShoppingBag className="w-12 h-12 text-[#00A690] mx-auto mb-4" />
                 <h3 className="font-bold text-lg text-gray-900 mb-2">Marketler</h3>
                 <p className="text-sm text-gray-600">
-                  Kaliteli ürünlerde %70'e varan indirimler
+                  Kaliteli ürünlerde indirimli fiyatlar
                 </p>
               </div>
             </div>
@@ -119,7 +119,7 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
             {cityTurkish}'da Fırsatları Kaçırmayın
           </h2>
           <p className="text-lg text-gray-700 mb-8">
-            Hemen başlayın ve ilk siparişinizde %70 tasarruf edin
+            Hemen başlayın, indirimli fiyatlarla tasarruf edin
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button

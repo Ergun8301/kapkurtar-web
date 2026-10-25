@@ -26,12 +26,10 @@ export function useClientNotifications() {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        console.log("❌ Aucun utilisateur connecté");
         setUserId(null);
         return;
       }
 
-      console.log("👤 Client connecté (auth.uid()):", user.id);
       setUserId(user.id);
     })();
   }, []);
@@ -41,7 +39,6 @@ export function useClientNotifications() {
     if (!userId) return;
 
     (async () => {
-      console.log("📥 Chargement des notifications pour:", userId);
       
       const { data, error } = await supabase
         .from("notifications")
@@ -54,7 +51,6 @@ export function useClientNotifications() {
       if (error) {
         console.error("❌ Erreur chargement notifications:", error);
       } else {
-        console.log(`✅ Notifications client chargées: ${data.length}`);
         setNotifications(data);
         setUnreadCount(data.filter((n) => !n.is_read).length);
       }
@@ -65,7 +61,6 @@ export function useClientNotifications() {
   useEffect(() => {
     if (!userId) return;
 
-    console.log("🔌 Connexion Realtime CLIENT:", userId);
 
     const channel: RealtimeChannel = supabase
       .channel(`client_notifications_${userId}`)
@@ -82,12 +77,9 @@ export function useClientNotifications() {
           const clientTypes = ["offer", "offer_nearby", "system"];
           
           if (!clientTypes.includes(newNotif.type)) {
-            console.log("⚠️ Type ignoré:", newNotif.type);
             return;
           }
 
-          console.log("🟢 Nouvelle notification CLIENT:", newNotif.title);
-          console.log("📦 Payload complet:", newNotif);
           
           // 🔊 Jouer le son
           try {
@@ -104,11 +96,7 @@ export function useClientNotifications() {
         }
       )
       .subscribe((status) => {
-        console.log("📡 Statut canal CLIENT:", status);
-        
-        if (status === "SUBSCRIBED") {
-          console.log("✅ Canal Realtime CLIENT actif");
-        } else if (status === "CHANNEL_ERROR") {
+        if (status === "CHANNEL_ERROR") {
           console.error("❌ Erreur Realtime CLIENT");
         } else if (status === "CLOSED") {
           console.warn("⚠️ Canal CLIENT fermé");
@@ -118,7 +106,6 @@ export function useClientNotifications() {
       });
 
     return () => {
-      console.log("🔌 Déconnexion canal CLIENT");
       supabase.removeChannel(channel);
     };
   }, [userId]); // ✅ CORRECTION : Enlevé 'play' des dépendances

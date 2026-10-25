@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,7 +10,7 @@ import {
 import { HelmetProvider } from 'react-helmet-async';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import ScrollToTop from "./components/ScrollToTop"; // ← AJOUTE CETTE LIGNE
+import ScrollToTop from "./components/ScrollToTop";
 import { AddProductProvider } from "./contexts/AddProductContext";
 import { supabase } from "./lib/supabaseClient";
 
@@ -23,14 +23,11 @@ import AuthCallbackPage from "./pages/AuthCallbackPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import MerchantForgotPasswordPage from "./pages/MerchantForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import ProfileCompletePage from "./pages/ProfileCompletePage";
 import MerchantDashboardPage from "./pages/MerchantDashboardPage";
 import ClientProfilePage from "./pages/ClientProfilePage";
 import ClientDashboardPage from "./pages/ClientDashboardPage";
 
 // ✅ Pages utilisateurs
-import FavoritesPage from "./pages/FavoritesPage";
-import ReviewsPage from "./pages/ReviewsPage";
 import DownloadPage from "./pages/DownloadPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -78,15 +75,12 @@ const authRoutes = [
   '/merchant/forgot-password',
   '/reset-password',
   '/auth/callback',
-  '/profile/complete',
 ];
 
 // Routes client uniquement
 const clientOnlyRoutes = [
   '/customer/dashboard',
   '/client/profile',
-  '/favorites',
-  '/reviews',
 ];
 
 // Routes marchand uniquement
@@ -208,12 +202,6 @@ function App() {
               <Route path="/client/profile" element={<ClientProfilePage />} />
               <Route path="/customer/dashboard" element={<ClientDashboardPage />} />
 
-              {/* ❤️ Favoris */}
-              <Route path="/favorites" element={<FavoritesPage />} />
-
-              {/* ⭐ Avis */}
-              <Route path="/reviews" element={<ReviewsPage />} />
-
               {/* 🔐 Authentification */}
               <Route path="/customer/auth" element={<CustomerAuthPage />} />
               <Route path="/merchant/auth" element={<MerchantAuthPage />} />
@@ -221,9 +209,6 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/merchant/forgot-password" element={<MerchantForgotPasswordPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
-
-              {/* 👤 Compléter profil */}
-              <Route path="/profile/complete" element={<ProfileCompletePage />} />
 
               {/* 🏪 Tableau de bord marchand */}
               <Route path="/merchant/dashboard" element={<MerchantDashboardPage />} />
@@ -260,6 +245,9 @@ function App() {
                 path="/customer/teaser"
                 element={<Navigate to="/offers" replace />}
               />
+              <Route path="/favorites" element={<Navigate to="/offers" replace />} />
+              <Route path="/reviews" element={<Navigate to="/offers" replace />} />
+              <Route path="/profile/complete" element={<Navigate to="/offers" replace />} />
 
               {/* 404 */}
               <Route path="*" element={<NotFoundPage />} />
