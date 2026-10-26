@@ -52,7 +52,7 @@ interface Reservation {
 const ClientDashboardPage = () => {
   useClientNotifications(); // Pour les notifications de la cloche
   
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   
   const [clientId, setClientId] = useState<string | null>(null);
@@ -67,6 +67,8 @@ const ClientDashboardPage = () => {
 
   useEffect(() => {
     const fetchClientId = async () => {
+      // Attendre la restauration de la session avant de rediriger
+      if (authLoading) return;
       if (!user) {
         navigate('/customer/auth');
         return;
@@ -95,7 +97,7 @@ const ClientDashboardPage = () => {
     };
 
     fetchClientId();
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   useEffect(() => {
     const fetchReservations = async () => {
