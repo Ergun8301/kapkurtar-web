@@ -18,6 +18,7 @@ import { supabase } from "../lib/supabaseClient";
 import { NotificationBell } from "./NotificationBell";
 import { logoutUser } from "../lib/logout";
 import DownloadAppModal from "./DownloadAppModal";
+import Logo from "./brand/Logo";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -124,26 +125,22 @@ const Header = () => {
   if (user && isMerchant === null) return null;
 
   return (
-    <header className="bg-[#00A690] shadow-sm border-b border-[#00A690] sticky top-0 z-40">
+    <header className="bg-kk-night shadow-sm border-b border-white/10 sticky top-0 z-40">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <button onClick={handleLogoClick} className="flex items-center space-x-3 cursor-pointer">
-            <img
-              src="/images/logo-header.webp"
-              alt="KapKurtar"
-              className="h-12 w-auto"
-            />
+            <span className="sm:hidden"><Logo tone="light" size={26} /></span><span className="hidden sm:inline-flex"><Logo tone="light" size={34} /></span>
           </button>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {navigation.map((item) => (
-                <a key={item.name} href={item.href} className="text-[#FFFFF0] hover:text-[#F75C00] px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300">
+                <a key={item.name} href={item.href} className="text-white hover:text-kk-lime px-3 py-2 rounded-full text-sm font-medium transition-colors duration-300">
                   {item.name}
                 </a>
               ))}
               <button
                 onClick={() => setShowDownloadModal(true)}
-                className="bg-[#00A690] text-white hover:bg-[#F75C00] px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 border border-white/20 flex items-center space-x-2"
+                className="kk-btn-primary px-4 py-2 text-sm flex items-center space-x-2"
               >
                 <Download className="w-4 h-4" />
                 <span>Uygulamayı İndir</span>
@@ -153,13 +150,13 @@ const Header = () => {
 
           <div className="flex items-center space-x-4">
             {loading ? (
-              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
+              <div className="w-8 h-8 kk-skeleton-dark rounded-full"></div>
             ) : user ? (
               <>
                 <NotificationBell userType={isMerchant ? "merchant" : "client"} />
                 <div className="relative" ref={userMenuRef}>
-                  <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center space-x-2 text-[#FFFFF0] hover:text-[#F75C00] transition-colors duration-300">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-[#FFFFF0]">
+                  <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center space-x-2 text-white hover:text-kk-lime transition-colors duration-300">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-kk-lime">
                       {profilePhotoUrl ? (
                         <img
                           src={profilePhotoUrl}
@@ -171,7 +168,7 @@ const Header = () => {
                           }}
                         />
                       ) : (
-                        <span className="text-[#00A690] font-bold text-xs">
+                        <span className="text-kk-night font-bold text-xs">
                           {getUserInitials()}
                         </span>
                       )}
@@ -180,14 +177,14 @@ const Header = () => {
                     <ChevronDown className="w-4 h-4" />
                   </button>
                   {isUserMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl py-2 z-50 border border-black/5 overflow-hidden">
                       {isMerchant ? (
                         <>
-                          <button onClick={() => { setIsUserMenuOpen(false); navigate("/merchant/dashboard"); }} className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <button onClick={() => { setIsUserMenuOpen(false); navigate("/merchant/dashboard"); }} className="flex items-center w-full px-4 py-2 text-sm text-kk-night hover:bg-kk-paper transition-colors">
                             <LayoutDashboard className="w-4 h-4 mr-2" />
                             Kontrol Paneli
                           </button>
-                          <button onClick={() => { setIsUserMenuOpen(false); window.dispatchEvent(new CustomEvent("openMerchantProfileModal")); }} className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <button onClick={() => { setIsUserMenuOpen(false); window.dispatchEvent(new CustomEvent("openMerchantProfileModal")); }} className="flex items-center w-full px-4 py-2 text-sm text-kk-night hover:bg-kk-paper transition-colors">
                             <Settings className="w-4 h-4 mr-2" />
                             Ayarlar
                           </button>
@@ -199,7 +196,7 @@ const Header = () => {
                               setIsUserMenuOpen(false);
                               navigate("/customer/dashboard");
                             }}
-                            className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            className="flex items-center w-full px-4 py-2 text-sm text-kk-night hover:bg-kk-paper transition-colors"
                           >
                             <Package className="w-4 h-4 mr-2" />
                             Rezervasyonlarım
@@ -209,15 +206,15 @@ const Header = () => {
                               setIsUserMenuOpen(false);
                               navigate("/client/profile");
                             }}
-                            className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            className="flex items-center w-full px-4 py-2 text-sm text-kk-night hover:bg-kk-paper transition-colors"
                           >
                             <User className="w-4 h-4 mr-2" />
                             Profilim
                           </button>
                         </>
                       )}
-                      <hr className="my-1" />
-                      <button onClick={handleSignOut} className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                      <hr className="my-1 border-black/5" />
+                      <button onClick={handleSignOut} className="flex items-center w-full px-4 py-2 text-sm text-kk-coral-text hover:bg-kk-coral/10 transition-colors">
                         <LogOut className="w-4 h-4 mr-2" />
                         Çıkış Yap
                       </button>
@@ -227,19 +224,19 @@ const Header = () => {
               </>
             ) : (
               <div className="relative" ref={userMenuRef}>
-                <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="bg-[#FFFFF0] text-[#00A690] px-3 py-2 rounded-lg text-sm font-bold hover:bg-[#F75C00] hover:text-white transition-colors duration-300 inline-flex items-center whitespace-nowrap">
+                <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="bg-white/10 text-white px-4 py-2 rounded-full text-sm font-bold border border-white/10 hover:bg-white/20 transition-colors duration-300 inline-flex items-center whitespace-nowrap">
                   Giriş Yap
                   <ChevronDown className="w-4 h-4 ml-1" />
                 </button>
                 {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
-                    <div className="px-4 py-2 text-xs text-gray-500 uppercase tracking-wide font-semibold">Hesap Türünü Seçin</div>
-                    <button onClick={() => { setIsUserMenuOpen(false); navigate("/customer/auth"); }} className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl py-2 z-50 border border-black/5 overflow-hidden">
+                    <div className="px-4 py-2 text-xs text-gray-600 uppercase tracking-wide font-semibold">Hesap Türünü Seçin</div>
+                    <button onClick={() => { setIsUserMenuOpen(false); navigate("/customer/auth"); }} className="flex items-center w-full px-4 py-3 text-sm text-kk-night hover:bg-kk-paper transition-colors">
                       <User className="w-4 h-4 mr-3" />
                       Müşteri Girişi
                       <ArrowRight className="w-4 h-4 ml-auto" />
                     </button>
-                    <button onClick={() => { setIsUserMenuOpen(false); navigate("/merchant/auth"); }} className="flex items-center w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">
+                    <button onClick={() => { setIsUserMenuOpen(false); navigate("/merchant/auth"); }} className="flex items-center w-full px-4 py-3 text-sm text-kk-night hover:bg-kk-paper transition-colors">
                       <Store className="w-4 h-4 mr-3" />
                       İşletme Girişi
                       <ArrowRight className="w-4 h-4 ml-auto" />
@@ -250,13 +247,13 @@ const Header = () => {
             )}
             <button
               onClick={() => setShowDownloadModal(true)}
-              className="md:hidden bg-[#00A690] text-white hover:bg-[#F75C00] px-2 py-2 rounded-md text-sm font-medium transition-colors duration-300 border border-white/20 flex items-center space-x-1"
+              className="md:hidden kk-btn-primary px-3 py-2 text-sm flex items-center space-x-1"
               aria-label="Uygulamayı İndir"
             >
               <Download className="w-4 h-4" />
               <span>İndir</span>
             </button>
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 rounded-md text-[#FFFFF0] hover:text-white transition-colors duration-300">
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2 rounded-full text-white hover:text-kk-lime hover:bg-white/10 transition-colors duration-300" aria-label="Menü">
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -265,14 +262,14 @@ const Header = () => {
 
       {/* ✅ MENU MOBILE - C'ÉTAIT ÇA QUI MANQUAIT */}
       {isMenuOpen && (
-        <div className="md:hidden bg-[#00A690] border-t border-white/20">
+        <div className="md:hidden bg-kk-night border-t border-white/10">
           <div className="px-4 py-4 space-y-3">
             {navigation.map((item) => (
 
                <a key={item.name}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-3 py-2 text-[#FFFFF0] hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-300"
+                className="block px-3 py-2 text-white hover:text-kk-lime hover:bg-white/5 rounded-full transition-colors duration-300"
               >
                 {item.name}
               </a>
@@ -283,7 +280,7 @@ const Header = () => {
                 setShowDownloadModal(true);
                 setIsMenuOpen(false);
               }}
-              className="w-full text-left px-3 py-2 text-[#FFFFF0] hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-300 flex items-center space-x-2"
+              className="w-full text-left px-3 py-2 text-white hover:text-kk-lime hover:bg-white/5 rounded-full transition-colors duration-300 flex items-center space-x-2"
             >
               <Download className="w-4 h-4" />
               <span>Uygulamayı İndir</span>
@@ -291,18 +288,18 @@ const Header = () => {
 
             {!user && (
               <>
-                <hr className="border-white/20 my-2" />
+                <hr className="border-white/10 my-2" />
                 <a
                   href="/customer/auth"
                   onClick={() => setIsMenuOpen(false)}
-                  className="block px-3 py-2 text-[#FFFFF0] hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-300"
+                  className="block px-3 py-2 text-white hover:text-kk-lime hover:bg-white/5 rounded-full transition-colors duration-300"
                 >
                   Müşteri Girişi
                 </a>
                 <a
                   href="/merchant/auth"
                   onClick={() => setIsMenuOpen(false)}
-                  className="block px-3 py-2 text-[#FFFFF0] hover:text-white hover:bg-white/10 rounded-lg transition-colors duration-300"
+                  className="block px-3 py-2 text-white hover:text-kk-lime hover:bg-white/5 rounded-full transition-colors duration-300"
                 >
                   İşletme Girişi
                 </a>

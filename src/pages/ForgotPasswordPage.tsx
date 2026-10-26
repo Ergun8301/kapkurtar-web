@@ -34,12 +34,12 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF5] flex flex-col">
+    <div className="min-h-screen bg-kk-paper flex flex-col">
       <div className="flex-1 flex items-center justify-center py-8 px-4">
         <div className="w-full max-w-md space-y-6">
           <button
             onClick={() => navigate('/customer/auth')}
-            className="inline-flex items-center text-[#3A6932] hover:text-[#2d5226] font-medium mb-4"
+            className="inline-flex items-center text-kk-night hover:text-kk-mint-text font-semibold mb-4 bg-white rounded-full border border-black/10 px-4 py-2 shadow-sm"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Girişe Dön
@@ -47,11 +47,11 @@ const ForgotPasswordPage = () => {
 
           <div className="text-center mb-8">
             <div className="flex items-center justify-center mb-6">
-              <div className="w-16 h-16 bg-[#3A6932] rounded-2xl flex items-center justify-center shadow-lg">
-                <Mail className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 bg-kk-night rounded-2xl flex items-center justify-center shadow-lg">
+                <Mail className="w-8 h-8 text-kk-lime" />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl md:text-4xl font-display font-extrabold tracking-tight text-kk-night mb-2">
               Şifremi unuttum?
             </h1>
             <p className="text-gray-600">
@@ -59,13 +59,13 @@ const ForgotPasswordPage = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl shadow-xl p-6 space-y-6">
+          <div className="kk-card p-6 md:p-8 space-y-6">
             {success && (
-              <div className="p-4 bg-green-50 border-l-4 border-green-500 rounded-lg flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+              <div className="p-4 bg-kk-mint/10 border-l-4 border-kk-mint rounded-2xl flex items-start">
+                <CheckCircle className="w-5 h-5 text-kk-mint-text mr-3 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-semibold text-green-700">E-posta Gönderildi!</p>
-                  <p className="text-sm text-green-600 mt-1">
+                  <p className="text-sm font-semibold text-kk-mint-text">E-posta Gönderildi!</p>
+                  <p className="text-sm text-kk-mint-text mt-1">
                     E-postanızı kontrol edin ve şifrenizi sıfırlamak için talimatları izleyin.
                   </p>
                 </div>
@@ -73,14 +73,14 @@ const ForgotPasswordPage = () => {
             )}
 
             {error && (
-              <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
-                <p className="text-sm text-red-700">{error}</p>
+              <div className="p-4 bg-red-50 border-l-4 border-kk-coral rounded-2xl">
+                <p className="text-sm text-kk-coral-text">{error}</p>
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-kk-night mb-2">
                   E-posta Adresi
                 </label>
                 <div className="relative">
@@ -89,7 +89,7 @@ const ForgotPasswordPage = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3A6932] focus:border-transparent text-base"
+                    className="kk-input pl-12 pr-4 py-4 text-base"
                     placeholder="email@ornek.com"
                     required
                     disabled={isLoading || success}
@@ -100,11 +100,11 @@ const ForgotPasswordPage = () => {
               <button
                 type="submit"
                 disabled={isLoading || success}
-                className="w-full bg-[#3A6932] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#2d5226] transition-all shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full kk-btn-primary py-4 text-lg"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
-                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className="w-6 h-6 border-2 border-kk-night border-t-transparent rounded-full animate-spin mr-2"></div>
                     Gönderiliyor...
                   </div>
                 ) : success ? (
@@ -119,7 +119,7 @@ const ForgotPasswordPage = () => {
               <div className="text-center pt-4">
                 <button
                   onClick={() => navigate('/customer/auth')}
-                  className="text-[#3A6932] hover:text-[#2d5226] font-semibold text-sm"
+                  className="text-kk-mint-text hover:underline font-semibold text-sm"
                 >
                   Girişe Dön →
                 </button>
@@ -133,7 +133,7 @@ const ForgotPasswordPage = () => {
                 E-postayı almadınız mı?{' '}
                 <button
                   onClick={() => setSuccess(false)}
-                  className="text-[#3A6932] hover:text-[#2d5226] font-semibold"
+                  className="text-kk-mint-text hover:underline font-semibold"
                 >
                   Tekrar Dene
                 </button>

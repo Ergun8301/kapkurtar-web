@@ -150,8 +150,8 @@ const ClientProfilePage = () => {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A690]"></div>
+      <div className="min-h-screen bg-kk-paper flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-kk-mint border-t-transparent"></div>
       </div>
     );
   }
@@ -160,14 +160,14 @@ const ClientProfilePage = () => {
     JSON.stringify(profile) !== JSON.stringify(editedProfile);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-kk-paper py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Toast */}
         {toast && (
           <div
-            className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${
-              toast.type === 'success' ? 'bg-[#00A690]' : 'bg-red-500'
-            } text-white`}
+            className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-full shadow-lg font-semibold ${
+              toast.type === 'success' ? 'bg-kk-night text-white' : 'bg-kk-coral text-kk-night'
+            }`}
           >
             {toast.message}
           </div>
@@ -176,26 +176,26 @@ const ClientProfilePage = () => {
         {/* Geri butonu */}
         <button
           onClick={() => navigate('/offers')}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors duration-300"
+          className="inline-flex items-center text-kk-night hover:text-kk-mint-text font-semibold bg-white rounded-full border border-black/10 shadow-sm px-4 py-2 mb-6 transition-colors"
         >
           <ArrowLeft className="w-5 h-5 mr-2" />
           Tekliflere Dön
         </button>
 
         {/* Ana profil kartı */}
-        <div className="bg-white rounded-lg shadow-md p-8">
+        <div className="kk-card p-8 md:p-8">
           {/* Header */}
           <div className="flex items-center mb-8">
-            <div className="w-12 h-12 bg-[#FFFFF0] rounded-full flex items-center justify-center mr-4">
-              <User className="w-6 h-6 text-[#00A690]" />
+            <div className="w-12 h-12 bg-kk-night rounded-2xl flex items-center justify-center mr-4">
+              <User className="w-6 h-6 text-kk-lime" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Profilim</h1>
+            <h1 className="text-3xl font-display font-extrabold tracking-tight text-kk-night">Profilim</h1>
           </div>
 
           {/* Profil fotoğrafı */}
           <div className="flex flex-col items-center mb-8">
             <div className="relative">
-              <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+              <div className="w-32 h-32 rounded-full overflow-hidden bg-kk-paper ring-4 ring-white shadow-md flex items-center justify-center">
                 {photoPreview ? (
                   <img src={photoPreview} alt="Profil" className="w-full h-full object-cover" />
                 ) : (
@@ -203,14 +203,14 @@ const ClientProfilePage = () => {
                 )}
               </div>
               <label
-                className={`absolute bottom-0 right-0 bg-[#00A690] rounded-full p-2 cursor-pointer hover:bg-[#F75C00] transition-colors duration-300 shadow-lg ${
+                className={`absolute bottom-0 right-0 bg-kk-lime rounded-full p-2 cursor-pointer hover:bg-kk-lime-dark transition-colors shadow-lg ${
                   isUploadingPhoto ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
                 {isUploadingPhoto ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-kk-night border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <Camera className="w-5 h-5 text-white" />
+                  <Camera className="w-5 h-5 text-kk-night" />
                 )}
                 <input
                   type="file"
@@ -221,30 +221,30 @@ const ClientProfilePage = () => {
                 />
               </label>
             </div>
-            <p className="text-sm text-gray-500 mt-3">Fotoğrafı değiştirmek için simgeye tıklayın</p>
+            <p className="text-sm text-gray-600 mt-3">Fotoğrafı değiştirmek için simgeye tıklayın</p>
           </div>
 
           {/* Form */}
           <div className="space-y-6">
             {/* E-posta (salt okunur) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">E-posta</label>
+              <label className="block text-sm font-semibold text-kk-night mb-2">E-posta</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="email"
                   value={editedProfile?.email || ''}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
+                  className="kk-input pl-10 pr-4 py-3 bg-gray-50 text-gray-600"
                   disabled
                 />
               </div>
-              <p className="text-xs text-gray-400 mt-1">E-posta değiştirilemez</p>
+              <p className="text-xs text-gray-500 mt-1">E-posta değiştirilemez</p>
             </div>
 
             {/* Ad */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Ad <span className="text-red-500">*</span>
+              <label className="block text-sm font-semibold text-kk-night mb-2">
+                Ad <span className="text-kk-coral-text">*</span>
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -253,7 +253,7 @@ const ClientProfilePage = () => {
                   name="first_name"
                   value={editedProfile?.first_name || ''}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                  className="kk-input pl-10 pr-4 py-3"
                   placeholder="Ad"
                   required
                 />
@@ -262,8 +262,8 @@ const ClientProfilePage = () => {
 
             {/* Soyad */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Soyad <span className="text-red-500">*</span>
+              <label className="block text-sm font-semibold text-kk-night mb-2">
+                Soyad <span className="text-kk-coral-text">*</span>
               </label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -272,7 +272,7 @@ const ClientProfilePage = () => {
                   name="last_name"
                   value={editedProfile?.last_name || ''}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                  className="kk-input pl-10 pr-4 py-3"
                   placeholder="Soyad"
                   required
                 />
@@ -281,8 +281,8 @@ const ClientProfilePage = () => {
 
             {/* Telefon */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Telefon <span className="text-gray-400 text-xs">(isteğe bağlı)</span>
+              <label className="block text-sm font-semibold text-kk-night mb-2">
+                Telefon <span className="text-gray-500 text-xs">(isteğe bağlı)</span>
               </label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -291,7 +291,7 @@ const ClientProfilePage = () => {
                   name="phone"
                   value={editedProfile?.phone || ''}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                  className="kk-input pl-10 pr-4 py-3"
                   placeholder="Örn: 0532 123 45 67"
                 />
               </div>
@@ -299,21 +299,21 @@ const ClientProfilePage = () => {
 
             {/* Eylem butonları */}
             {hasChanges && (
-              <div className="flex gap-4 pt-6 border-t border-gray-200">
+              <div className="flex gap-4 pt-6 border-t border-black/5">
                 <button
                   onClick={handleCancel}
-                  className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-300 font-medium"
+                  className="flex-1 kk-btn-ghost px-6 py-3"
                 >
                   İptal
                 </button>
                 <button
                   onClick={handleSaveChanges}
                   disabled={isSaving}
-                  className="flex-1 px-6 py-3 bg-[#00A690] text-white rounded-lg hover:bg-[#F75C00] transition-colors duration-300 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="flex-1 kk-btn-primary px-6 py-3"
                 >
                   {isSaving ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      <div className="w-5 h-5 border-2 border-kk-night border-t-transparent rounded-full animate-spin mr-2" />
                       Kaydediliyor...
                     </>
                   ) : (

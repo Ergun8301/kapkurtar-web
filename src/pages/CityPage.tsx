@@ -17,7 +17,7 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-kk-paper">
       {/* Meta tags SEO */}
       <SEO
         title={`${cityTurkish}'da Ucuz Yemek Fırsatları | KapKurtar`}
@@ -30,22 +30,22 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
       <StructuredData type="localBusiness" city={city} cityTurkish={cityTurkish} />
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-[#00A690] to-[#008C7A] text-white py-16">
+      <div className="bg-kk-night text-white py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex justify-center items-center mb-6">
-              <MapPin className="w-16 h-16" />
+              <MapPin className="w-16 h-16 p-3.5 rounded-full bg-kk-lime text-kk-night" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              {cityTurkish}'da Ucuz Yemek Fırsatları
+            <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+              <span className="text-kk-lime">{cityTurkish}</span>'da Ucuz Yemek Fırsatları
             </h1>
-            <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-white/70 mb-8 max-w-3xl mx-auto">
               {cityTurkish}'daki restoranlar, fırınlar ve marketlerden indirimli fiyatlarla yemek fırsatları.
               Gıda israfını önle, cüzdanını koru!
             </p>
             <button
               onClick={() => navigate('/offers')}
-              className="bg-[#F75C00] text-white px-8 py-4 rounded-lg font-bold hover:bg-[#FF7A29] transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all inline-flex items-center"
+              className="kk-btn-primary px-8 py-4 text-lg"
             >
               Fırsatları Keşfet
               <ArrowRight className="w-5 h-5 ml-2" />
@@ -55,10 +55,10 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
       </div>
 
       {/* Content Section - SEO Text */}
-      <div className="bg-white py-16">
+      <div className="bg-kk-paper py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-lg max-w-none">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+          <div className="prose prose-lg max-w-none kk-card p-6 md:p-10">
+            <h2 className="font-display text-3xl md:text-4xl font-extrabold tracking-tight text-kk-night mb-6">
               {cityTurkish}'da KapKurtar ile Tasarruf Edin
             </h2>
 
@@ -84,25 +84,25 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
 
             {/* Categories */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 not-prose">
-              <div className="bg-gray-50 p-6 rounded-xl text-center hover:shadow-md transition-shadow">
-                <Utensils className="w-12 h-12 text-[#00A690] mx-auto mb-4" />
-                <h3 className="font-bold text-lg text-gray-900 mb-2">Restoranlar</h3>
+              <div className="bg-kk-paper p-6 rounded-3xl text-center hover:shadow-md transition-shadow">
+                <Utensils className="w-14 h-14 p-3 rounded-full bg-kk-mint text-kk-night mx-auto mb-4" />
+                <h3 className="font-display font-extrabold text-lg text-kk-night mb-2">Restoranlar</h3>
                 <p className="text-sm text-gray-600">
                   {cityTurkish}'daki restoranlardan günlük yemek fırsatları
                 </p>
               </div>
 
-              <div className="bg-gray-50 p-6 rounded-xl text-center hover:shadow-md transition-shadow">
-                <Store className="w-12 h-12 text-[#00A690] mx-auto mb-4" />
-                <h3 className="font-bold text-lg text-gray-900 mb-2">Fırınlar</h3>
+              <div className="bg-kk-paper p-6 rounded-3xl text-center hover:shadow-md transition-shadow">
+                <Store className="w-14 h-14 p-3 rounded-full bg-kk-mint text-kk-night mx-auto mb-4" />
+                <h3 className="font-display font-extrabold text-lg text-kk-night mb-2">Fırınlar</h3>
                 <p className="text-sm text-gray-600">
                   Taze ekmek ve pastalar için indirimli fırsatlar
                 </p>
               </div>
 
-              <div className="bg-gray-50 p-6 rounded-xl text-center hover:shadow-md transition-shadow">
-                <ShoppingBag className="w-12 h-12 text-[#00A690] mx-auto mb-4" />
-                <h3 className="font-bold text-lg text-gray-900 mb-2">Marketler</h3>
+              <div className="bg-kk-paper p-6 rounded-3xl text-center hover:shadow-md transition-shadow">
+                <ShoppingBag className="w-14 h-14 p-3 rounded-full bg-kk-mint text-kk-night mx-auto mb-4" />
+                <h3 className="font-display font-extrabold text-lg text-kk-night mb-2">Marketler</h3>
                 <p className="text-sm text-gray-600">
                   Kaliteli ürünlerde indirimli fiyatlar
                 </p>
@@ -113,25 +113,25 @@ const CityPage: React.FC<CityPageProps> = ({ city, cityTurkish }) => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-[#F7F2E7] py-16">
+      <div className="bg-kk-night text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            {cityTurkish}'da Fırsatları Kaçırmayın
+          <h2 className="font-display text-3xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+            {cityTurkish}'da Fırsatları <span className="text-kk-lime">Kaçırmayın</span>
           </h2>
-          <p className="text-lg text-gray-700 mb-8">
+          <p className="text-lg text-white/70 mb-8">
             Hemen başlayın, indirimli fiyatlarla tasarruf edin
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={() => navigate('/offers')}
-              className="bg-[#00A690] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#008C7A] transition-colors duration-300 inline-flex items-center justify-center"
+              className="kk-btn-primary px-8 py-4"
             >
               Fırsatları Gör
               <ArrowRight className="w-5 h-5 ml-2" />
             </button>
             <button
               onClick={() => navigate('/download')}
-              className="bg-white border-2 border-[#00A690] text-[#00A690] px-8 py-4 rounded-lg font-semibold hover:bg-[#00A690] hover:text-white transition-colors duration-300"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 border border-white/20 text-white px-8 py-4 font-semibold hover:bg-white/20 transition-colors"
             >
               Uygulamayı İndir
             </button>

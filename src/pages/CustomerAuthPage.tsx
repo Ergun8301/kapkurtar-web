@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useAuthFlow } from '../hooks/useAuthFlow';
 import ProfileCompletionModal from '../components/ProfileCompletionModal';
 import { toTurkishError } from '../lib/errorMessages';
+import Logo from '../components/brand/Logo';
 
 type AuthMode = 'login' | 'register';
 
@@ -141,8 +142,8 @@ const CustomerAuthPage = () => {
   // ✅ 7. Loader
   if (authLoading && !initialized) {
     return (
-      <div className="min-h-screen bg-[#FAFAF5] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3A6932]"></div>
+      <div className="min-h-screen bg-kk-paper flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-kk-mint border-t-transparent"></div>
       </div>
     );
   }
@@ -160,19 +161,22 @@ const CustomerAuthPage = () => {
         />
       )}
 
-      <div className="min-h-screen bg-[#FAFAF5] flex flex-col">
+      <div className="min-h-screen bg-kk-paper flex flex-col">
         <div className="flex-1 flex items-center justify-center py-8 px-4">
           <div className="w-full max-w-md space-y-6">
             <button
               onClick={() => navigate('/')}
-              className="inline-flex items-center text-[#3A6932] hover:text-[#2d5226] font-medium mb-4"
+              className="inline-flex items-center text-kk-night hover:text-kk-mint-text font-semibold bg-white rounded-full border border-black/10 shadow-sm px-4 py-2 mb-4"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Geri
             </button>
 
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <div className="flex justify-center mb-6">
+                <Logo size={40} tone="dark" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-display font-extrabold tracking-tight text-kk-night mb-2">
                 {mode === 'login' ? 'Hoş Geldiniz' : 'KapKurtar\'a Katılın'}
               </h1>
               <p className="text-gray-600">
@@ -182,24 +186,24 @@ const CustomerAuthPage = () => {
               </p>
             </div>
 
-            <div className="bg-white rounded-3xl shadow-xl p-6 space-y-6">
-              <div className="flex bg-gray-100 rounded-2xl p-1">
+            <div className="kk-card p-6 md:p-8 space-y-6">
+              <div className="flex bg-kk-paper border border-black/5 rounded-full p-1">
                 <button
                   onClick={() => setMode('login')}
-                  className={`flex-1 py-3 font-semibold rounded-xl ${
+                  className={`flex-1 py-3 font-semibold rounded-full transition-all ${
                     mode === 'login'
-                      ? 'bg-white text-[#3A6932] shadow-md'
-                      : 'text-gray-500'
+                      ? 'bg-kk-night text-white shadow-md'
+                      : 'text-gray-600 hover:text-kk-night'
                   }`}
                 >
                   Giriş
                 </button>
                 <button
                   onClick={() => setMode('register')}
-                  className={`flex-1 py-3 font-semibold rounded-xl ${
+                  className={`flex-1 py-3 font-semibold rounded-full transition-all ${
                     mode === 'register'
-                      ? 'bg-white text-[#3A6932] shadow-md'
-                      : 'text-gray-500'
+                      ? 'bg-kk-night text-white shadow-md'
+                      : 'text-gray-600 hover:text-kk-night'
                   }`}
                 >
                   Kayıt
@@ -207,14 +211,14 @@ const CustomerAuthPage = () => {
               </div>
 
               {error && (
-                <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
-                  <p className="text-sm text-red-700">{error}</p>
+                <div className="p-4 bg-red-50 border-l-4 border-kk-coral rounded-2xl">
+                  <p className="text-sm text-kk-coral-text">{error}</p>
                 </div>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">E-posta</label>
+                  <label className="block text-sm font-semibold text-kk-night mb-2">E-posta</label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <input
@@ -222,7 +226,7 @@ const CustomerAuthPage = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3A6932] focus:border-transparent text-base"
+                      className="kk-input pl-12 pr-4 py-4 text-base"
                       placeholder="email@ornek.com"
                       required
                     />
@@ -230,7 +234,7 @@ const CustomerAuthPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-kk-night mb-2">
                     Şifre
                   </label>
                   <div className="relative">
@@ -240,7 +244,7 @@ const CustomerAuthPage = () => {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className="w-full pl-12 pr-14 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#3A6932] focus:border-transparent text-base"
+                      className="kk-input pl-12 pr-14 py-4 text-base"
                       placeholder="••••••••"
                       required
                       minLength={6}
@@ -248,7 +252,7 @@ const CustomerAuthPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-kk-night"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
@@ -258,7 +262,7 @@ const CustomerAuthPage = () => {
                       <button
                         type="button"
                         onClick={() => navigate('/forgot-password')}
-                        className="text-sm text-[#3A6932] hover:text-[#2d5226] font-medium"
+                        className="text-sm text-kk-mint-text hover:underline font-semibold"
                       >
                         Şifremi unuttum?
                       </button>
@@ -269,11 +273,11 @@ const CustomerAuthPage = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-[#3A6932] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#2d5226] transition-all shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="w-full kk-btn-primary py-4 text-lg"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
-                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      <div className="w-6 h-6 border-2 border-kk-night border-t-transparent rounded-full animate-spin mr-2"></div>
                       Yükleniyor...
                     </div>
                   ) : mode === 'login' ? (
@@ -286,17 +290,17 @@ const CustomerAuthPage = () => {
 
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
+                  <div className="w-full border-t border-black/10"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500 font-medium">Veya şununla devam edin</span>
+                  <span className="px-4 bg-white text-gray-600 font-medium">Veya şununla devam edin</span>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={handleGoogleAuth}
-                className="w-full flex items-center justify-center px-4 py-4 border-2 border-gray-200 rounded-xl hover:bg-gray-50 transition-all font-semibold"
+                className="w-full flex items-center justify-center px-4 py-3.5 bg-white border border-black/15 rounded-full hover:bg-black/5 transition-all font-semibold text-kk-night"
               >
                 <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
                   <path

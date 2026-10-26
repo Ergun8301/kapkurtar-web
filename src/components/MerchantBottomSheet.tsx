@@ -152,8 +152,8 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 z-[1500] ${
-          isOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'
+        className={`fixed inset-0 bg-kk-night/60 backdrop-blur-sm transition-opacity duration-300 z-[1500] ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={handleClose}
       />
@@ -162,7 +162,7 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
       <div
         className={`fixed bg-white shadow-2xl transition-all duration-300 z-[1500] ${
           isOpen ? 'translate-y-0 translate-x-0' : 'translate-y-full md:translate-y-0 md:translate-x-full'
-        } md:top-0 md:right-0 md:h-full md:w-[500px] bottom-0 left-0 right-0 rounded-t-2xl md:rounded-none max-h-[80vh] md:max-h-full overflow-y-auto`}
+        } md:top-0 md:right-0 md:h-full md:w-[500px] bottom-0 left-0 right-0 rounded-t-3xl md:rounded-none md:rounded-l-3xl max-h-[80vh] md:max-h-full overflow-y-auto`}
         style={{
           transform: isDragging ? `translateY(${currentY}px)` : undefined,
         }}
@@ -171,27 +171,28 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
         onTouchEnd={handleTouchEnd}
       >
         {/* Handle (mobile uniquement) */}
-        <div className="md:hidden sticky top-0 bg-white pt-3 pb-2 flex justify-center border-b border-gray-200">
-          <div className="w-12 h-1.5 bg-gray-300 rounded-full"></div>
+        <div className="md:hidden sticky top-0 z-10 bg-kk-night pt-3 pb-2 flex justify-center">
+          <div className="w-12 h-1.5 bg-white/30 rounded-full"></div>
         </div>
 
         {/* Close Button (desktop uniquement) */}
         <button
           onClick={handleClose}
-          className="hidden md:block absolute top-4 right-4 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors z-10"
+          className="hidden md:block absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
+          aria-label="Kapat"
         >
-          <X className="w-5 h-5 text-gray-600" />
+          <X className="w-5 h-5 text-white" />
         </button>
 
         {/* Header Marchand */}
-        <div className="p-4 md:p-6 border-b border-gray-200 bg-gray-50">
+        <div className="p-4 md:p-6 bg-kk-night text-white">
           <div className="flex items-start gap-4">
             {/* Logo */}
             {merchant.merchant_logo_url ? (
               <img
                 src={merchant.merchant_logo_url}
                 alt={merchant.merchant_name}
-                className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0"
+                className="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover ring-2 ring-white/20 bg-white shadow-lg flex-shrink-0"
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer"
               />
@@ -199,20 +200,20 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
               <img
                 src="/images/merchant-default.webp"
                 alt="KapKurtar"
-                className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0"
+                className="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover ring-2 ring-white/20 bg-white shadow-lg flex-shrink-0"
               />
             )}
 
             {/* Infos */}
             <div className="flex-1 min-w-0">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-xl md:text-2xl font-display font-extrabold tracking-tight text-white mb-2 md:pr-10">
                 {merchant.merchant_name}
               </h2>
 
               {/* Adresse */}
               {merchantAddress && (
-                <div className="flex items-start gap-2 text-sm text-gray-600 mb-2">
-                  <MapPin className="w-4 h-4 text-[#00A690] flex-shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 text-sm text-white/70 mb-2">
+                  <MapPin className="w-4 h-4 text-kk-mint flex-shrink-0 mt-0.5" />
                   <span>{merchantAddress}</span>
                 </div>
               )}
@@ -221,7 +222,7 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
               {merchant.merchant_phone && (
                 <a
                   href={`tel:${merchant.merchant_phone}`}
-                  className="flex items-center gap-2 text-sm text-[#00A690] hover:text-[#00A690] font-medium mb-3"
+                  className="flex items-center gap-2 text-sm text-kk-mint hover:text-white font-medium mb-3"
                 >
                   <Phone className="w-4 h-4" />
                   {merchant.merchant_phone}
@@ -231,7 +232,7 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
               {/* Bouton Itinéraire */}
               <button
   onClick={handleGetDirections}
-  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#00A690] hover:bg-[#F75C00] text-[#FFFFF0] rounded-lg font-semibold transition-colors duration-300 shadow-md"
+  className="w-full kk-btn-primary px-4 py-2.5"
 >
                 <Navigation className="w-4 h-4" />
                 Yol Tarifi
@@ -242,8 +243,8 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
 
         {/* Liste des offres */}
         <div className="p-4 md:p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Package className="w-5 h-5 text-[#00A690]" />
+          <h3 className="text-lg font-display font-extrabold tracking-tight text-kk-night mb-4 flex items-center gap-2">
+            <Package className="w-5 h-5 text-kk-mint-text" />
             {offers.length} teklif mevcut
           </h3>
 
@@ -255,21 +256,21 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                   onOfferClick(offer);
                   handleClose();
                 }}
-                className="bg-white rounded-lg border border-gray-200 hover:border-[#00A690] hover:shadow-md transition-all cursor-pointer overflow-hidden"
+                className="group bg-white rounded-3xl border border-black/5 shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden"
               >
-                <div className="flex">
+                <div className="flex gap-1 p-2">
                   {/* Image */}
                   {offer.image_url && (
-                    <div className="relative w-24 h-24 md:w-28 md:h-28 flex-shrink-0">
+                    <div className="relative w-28 h-28 md:w-32 md:h-32 flex-shrink-0 rounded-2xl overflow-hidden">
                       <img
                         src={offer.image_url}
                         alt={offer.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover kk-photo-zoom"
                         crossOrigin="anonymous"
                         referrerPolicy="no-referrer"
                       />
                       {/* Badge réduction */}
-                      <div className="absolute bottom-1 right-1 bg-red-600 text-white px-1.5 py-0.5 rounded text-xs font-bold">
+                      <div className="absolute top-1.5 left-1.5 kk-chip bg-kk-lime text-kk-night font-bold">
                         -{getDiscountPercent(offer.price_before, offer.price_after)}%
                       </div>
                     </div>
@@ -277,16 +278,16 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
 
                   {/* Info */}
                   <div className="flex-1 p-3">
-                    <h4 className="font-bold text-gray-900 mb-1 line-clamp-2 text-sm md:text-base">
+                    <h4 className="font-display font-bold text-kk-night mb-1 line-clamp-2 text-sm md:text-base">
                       {offer.title}
                     </h4>
 
                     {/* Prix */}
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-bold text-[#00A690] text-lg">
+                      <span className="font-display font-extrabold text-kk-night text-xl">
                         {formatTL(offer.price_after)}
                       </span>
-                      <span className="line-through text-gray-400 text-sm">
+                      <span className="line-through text-gray-500 text-sm">
                         {formatTL(offer.price_before)}
                       </span>
                     </div>
@@ -295,17 +296,17 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
                         {offer.available_until && (
-                          <span className="text-gray-700 font-semibold">
+                          <span className="kk-chip bg-kk-coral text-kk-night font-semibold">
                             {getTimeRemaining(offer.available_until)}
                           </span>
                         )}
-                        <span className="flex items-center gap-1 text-gray-600">
-                          <Package className="w-3 h-3" />
+                        <span className="flex items-center gap-1 text-gray-700">
+                          <Package className="w-3 h-3 text-kk-mint-text" />
                           Stok: {offer.quantity}
                         </span>
                       </div>
                       {offer.available_until && (
-                        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
                           <div
                             className={`h-full transition-all duration-300 rounded-full ${
                               getProgressPercent(offer.available_from, offer.available_until) < 33 ? 'animate-pulse-fast' :
@@ -314,8 +315,8 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                             }`}
                             style={{
                               width: `${getProgressPercent(offer.available_from, offer.available_until)}%`,
-                              backgroundColor: getProgressPercent(offer.available_from, offer.available_until) < 33 ? '#ef4444' :
-                                              getProgressPercent(offer.available_from, offer.available_until) < 67 ? '#f59e0b' : '#16a34a'
+                              backgroundColor: getProgressPercent(offer.available_from, offer.available_until) < 33 ? '#FF5B3A' :
+                                              getProgressPercent(offer.available_from, offer.available_until) < 67 ? '#f59e0b' : '#00E0B8'
                             }}
                           />
                         </div>

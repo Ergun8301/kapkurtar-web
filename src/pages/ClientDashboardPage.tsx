@@ -52,7 +52,7 @@ interface Reservation {
 const ClientDashboardPage = () => {
   useClientNotifications(); // Pour les notifications de la cloche
   
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   
   const [clientId, setClientId] = useState<string | null>(null);
@@ -67,6 +67,8 @@ const ClientDashboardPage = () => {
 
   useEffect(() => {
     const fetchClientId = async () => {
+      // Attendre la restauration de la session avant de rediriger
+      if (authLoading) return;
       if (!user) {
         navigate('/customer/auth');
         return;
@@ -95,7 +97,7 @@ const ClientDashboardPage = () => {
     };
 
     fetchClientId();
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -261,16 +263,16 @@ const ClientDashboardPage = () => {
     const merchantStreet = cleanPart(reservation.merchant_street);
 
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+      <div className="kk-card overflow-hidden hover:shadow-lg transition-shadow">
         {/* Mobile Layout */}
-        <div className="md:hidden p-3">
+        <div className="md:hidden p-4">
           {/* Produit */}
           <div className="flex gap-3 mb-3">
             {reservation.offer_image_url && (
               <img
                 src={reservation.offer_image_url}
                 alt={reservation.offer_title}
-                className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                className="w-24 h-24 rounded-2xl object-cover flex-shrink-0"
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
@@ -279,20 +281,20 @@ const ClientDashboardPage = () => {
               />
             )}
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-gray-900 text-sm mb-1 line-clamp-1">
+              <h3 className="font-display font-bold text-kk-night text-base mb-1 line-clamp-1">
                 {reservation.offer_title}
               </h3>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-base font-bold text-[#00A690]">{formatTL(reservation.total_price)}</span>
-                <span className="text-xs text-gray-400">×{reservation.quantity}</span>
+                <span className="text-lg font-display font-extrabold text-kk-night">{formatTL(reservation.total_price)}</span>
+                <span className="text-xs text-gray-500">×{reservation.quantity}</span>
               </div>
-              <div className="text-xs text-gray-500 space-y-0.5">
+              <div className="text-xs text-gray-600 space-y-1">
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   {formatDate(reservation.created_at)}
                 </div>
                 {isPending && (
-                  <div className="flex items-center gap-1 text-[#00A690] font-medium">
+                  <div className="kk-chip bg-kk-lime text-kk-night font-semibold">
                     <Clock className="w-3 h-3" />
                     {getTimeRemaining(reservation.available_until)}
                   </div>
@@ -303,31 +305,31 @@ const ClientDashboardPage = () => {
 
           {/* Status Badge */}
           {isCompleted && (
-            <div className="mb-3 flex items-center gap-2 text-xs text-[#00A690] bg-green-100 px-3 py-2 rounded-lg">
+            <div className="mb-3 inline-flex items-center gap-2 text-xs text-kk-night bg-kk-mint px-3 py-1.5 rounded-full">
               <CheckCircle className="w-4 h-4" />
-              <span className="font-medium">Rezervasyon Teslim Alındı</span>
+              <span className="font-semibold">Rezervasyon Teslim Alındı</span>
             </div>
           )}
           {isExpired && (
-            <div className="mb-3 flex items-center gap-2 text-xs text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+            <div className="mb-3 inline-flex items-center gap-2 text-xs text-gray-700 bg-gray-100 px-3 py-1.5 rounded-full">
               <XCircle className="w-4 h-4" />
-              <span className="font-medium">Rezervasyon Süresi Doldu</span>
+              <span className="font-semibold">Rezervasyon Süresi Doldu</span>
             </div>
           )}
           {isCancelled && (
-            <div className="mb-3 flex items-center gap-2 text-xs text-red-700 bg-red-50 px-3 py-2 rounded-lg">
+            <div className="mb-3 inline-flex items-center gap-2 text-xs text-kk-night bg-kk-coral px-3 py-1.5 rounded-full">
               <X className="w-4 h-4" />
-              <span className="font-medium">Rezervasyon İptal Edildi</span>
+              <span className="font-semibold">Rezervasyon İptal Edildi</span>
             </div>
           )}
 
           {/* Marchand compact */}
-          <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-100">
+          <div className="flex items-center gap-2 mb-3 pb-3 border-b border-black/5">
             {reservation.merchant_logo_url ? (
               <img
                 src={reservation.merchant_logo_url}
                 alt={reservation.merchant_name}
-                className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                className="w-8 h-8 rounded-full object-cover ring-1 ring-black/10"
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
@@ -335,14 +337,14 @@ const ClientDashboardPage = () => {
                 }}
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-[#00A690] flex items-center justify-center text-white font-bold text-xs">
+              <div className="w-8 h-8 rounded-full bg-kk-mint flex items-center justify-center text-kk-night font-bold text-xs">
                 {reservation.merchant_name?.[0]}
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-xs text-gray-900 truncate">{reservation.merchant_name}</p>
+              <p className="font-semibold text-xs text-kk-night truncate">{reservation.merchant_name}</p>
               {merchantCity && (
-                <p className="text-xs text-gray-500 flex items-center gap-1">
+                <p className="text-xs text-gray-600 flex items-center gap-1">
                   <MapPin className="w-3 h-3 flex-shrink-0" />
                   <span className="truncate">{merchantCity}</span>
                 </p>
@@ -355,48 +357,48 @@ const ClientDashboardPage = () => {
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => handleGetDirections(reservation.merchant_lat, reservation.merchant_lng)}
-                className="flex flex-col items-center justify-center gap-1 p-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors duration-300"
+                className="flex flex-col items-center justify-center gap-1 px-2 py-2 bg-white hover:bg-gray-50 border border-black/10 rounded-full transition-colors duration-300"
               >
-                <Navigation className="w-4 h-4 text-[#00A690]" />
-                <span className="text-xs text-gray-700 font-medium">Yol</span>
+                <Navigation className="w-4 h-4 text-kk-mint-text" />
+                <span className="text-xs text-kk-night font-semibold">Yol</span>
               </button>
               {reservation.merchant_phone && (
                 <a
                   href={`tel:${reservation.merchant_phone}`}
-                  className="flex flex-col items-center justify-center gap-1 p-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors duration-300"
+                  className="flex flex-col items-center justify-center gap-1 px-2 py-2 bg-white hover:bg-gray-50 border border-black/10 rounded-full transition-colors duration-300"
                 >
-                  <Phone className="w-4 h-4 text-[#00A690]" />
-                  <span className="text-xs text-gray-700 font-medium">Ara</span>
+                  <Phone className="w-4 h-4 text-kk-mint-text" />
+                  <span className="text-xs text-kk-night font-semibold">Ara</span>
                 </a>
               )}
               <button
                 onClick={() => setCancelConfirm(reservation.reservation_id)}
-                className="flex flex-col items-center justify-center gap-1 p-2 bg-white hover:bg-gray-50 border border-red-200 rounded-lg transition-colors duration-300"
+                className="flex flex-col items-center justify-center gap-1 px-2 py-2 bg-white hover:bg-red-50 border border-kk-coral/40 rounded-full transition-colors duration-300"
               >
-                <X className="w-4 h-4 text-red-600" />
-                <span className="text-xs text-gray-700 font-medium">İptal</span>
+                <X className="w-4 h-4 text-kk-coral-text" />
+                <span className="text-xs text-kk-night font-semibold">İptal</span>
               </button>
             </div>
           ) : (
             <button
               onClick={() => handleArchiveReservation(reservation.reservation_id)}
-              className="w-full flex items-center justify-center gap-1 p-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors duration-300"
+              className="w-full flex items-center justify-center gap-1 px-3 py-2 bg-white hover:bg-gray-50 border border-black/10 rounded-full transition-colors duration-300"
             >
-              <Archive className="w-4 h-4 text-gray-600" />
-              <span className="text-xs text-gray-700 font-medium">Arşivle</span>
+              <Archive className="w-4 h-4 text-gray-700" />
+              <span className="text-xs text-kk-night font-semibold">Arşivle</span>
             </button>
           )}
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden md:grid md:grid-cols-12 md:gap-4 md:p-4">
+        <div className="hidden md:grid md:grid-cols-12 md:gap-4 md:p-5">
           {/* GAUCHE : Produit */}
           <div className="col-span-4 flex gap-3">
             {reservation.offer_image_url && (
               <img
                 src={reservation.offer_image_url}
                 alt={reservation.offer_title}
-                className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                className="w-28 h-28 rounded-2xl object-cover flex-shrink-0"
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
@@ -406,21 +408,21 @@ const ClientDashboardPage = () => {
             )}
             <div className="flex-1 min-w-0 flex flex-col justify-between">
               <div>
-                <h3 className="font-bold text-gray-900 text-sm mb-1 line-clamp-2">
+                <h3 className="font-display font-bold text-kk-night text-base mb-1 line-clamp-2">
                   {reservation.offer_title}
                 </h3>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg font-bold text-[#00A690]">{formatTL(reservation.total_price)}</span>
-                  <span className="text-xs text-gray-400">{formatTL(reservation.offer_price)} × {reservation.quantity}</span>
+                  <span className="text-xl font-display font-extrabold text-kk-night">{formatTL(reservation.total_price)}</span>
+                  <span className="text-xs text-gray-500">{formatTL(reservation.offer_price)} × {reservation.quantity}</span>
                 </div>
               </div>
-              <div className="space-y-0.5 text-xs text-gray-500">
+              <div className="space-y-1 text-xs text-gray-600">
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   {formatDate(reservation.created_at)}
                 </div>
                 {isPending && (
-                  <div className="flex items-center gap-1 text-[#00A690] font-medium">
+                  <div className="kk-chip bg-kk-lime text-kk-night font-semibold">
                     <Clock className="w-3 h-3" />
                     {getTimeRemaining(reservation.available_until)}
                   </div>
@@ -430,40 +432,40 @@ const ClientDashboardPage = () => {
           </div>
 
           {/* CENTRE : Actions */}
-          <div className="col-span-3 flex flex-col gap-1.5 justify-center px-3 border-l border-r border-gray-100">
+          <div className="col-span-3 flex flex-col gap-1.5 justify-center px-3 border-l border-r border-black/5">
             {isPending ? (
               <>
                 <button
                   onClick={() => handleGetDirections(reservation.merchant_lat, reservation.merchant_lng)}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors duration-300"
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 border border-black/10 rounded-full transition-colors duration-300"
                 >
-                  <Navigation className="w-4 h-4 text-[#00A690]" />
-                  <span className="text-sm text-gray-700 font-medium">Yol Tarifi</span>
+                  <Navigation className="w-4 h-4 text-kk-mint-text" />
+                  <span className="text-sm text-kk-night font-semibold">Yol Tarifi</span>
                 </button>
                 {reservation.merchant_phone && (
                   <a
                     href={`tel:${reservation.merchant_phone}`}
-                    className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors duration-300"
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 border border-black/10 rounded-full transition-colors duration-300"
                   >
-                    <Phone className="w-4 h-4 text-[#00A690]" />
-                    <span className="text-sm text-gray-700 font-medium">Ara</span>
+                    <Phone className="w-4 h-4 text-kk-mint-text" />
+                    <span className="text-sm text-kk-night font-semibold">Ara</span>
                   </a>
                 )}
                 <button
                   onClick={() => setCancelConfirm(reservation.reservation_id)}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 border border-red-200 rounded-lg transition-colors duration-300"
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-red-50 border border-kk-coral/40 rounded-full transition-colors duration-300"
                 >
-                  <X className="w-4 h-4 text-red-600" />
-                  <span className="text-sm text-gray-700 font-medium">İptal Et</span>
+                  <X className="w-4 h-4 text-kk-coral-text" />
+                  <span className="text-sm text-kk-night font-semibold">İptal Et</span>
                 </button>
               </>
             ) : (
               <button
                 onClick={() => handleArchiveReservation(reservation.reservation_id)}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 border border-gray-200 rounded-lg transition-colors duration-300"
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 border border-black/10 rounded-full transition-colors duration-300"
               >
-                <Archive className="w-4 h-4 text-gray-600" />
-                <span className="text-sm text-gray-700 font-medium">Arşivle</span>
+                <Archive className="w-4 h-4 text-gray-700" />
+                <span className="text-sm text-kk-night font-semibold">Arşivle</span>
               </button>
             )}
           </div>
@@ -474,7 +476,7 @@ const ClientDashboardPage = () => {
               <img
                 src={reservation.merchant_logo_url}
                 alt={reservation.merchant_name}
-                className="w-14 h-14 rounded-full object-cover border border-gray-200 flex-shrink-0"
+                className="w-14 h-14 rounded-full object-cover ring-1 ring-black/10 flex-shrink-0"
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
@@ -482,26 +484,26 @@ const ClientDashboardPage = () => {
                 }}
               />
             ) : (
-              <div className="w-14 h-14 rounded-full bg-[#00A690] flex items-center justify-center text-white font-bold text-xl flex-shrink-0">
+              <div className="w-14 h-14 rounded-full bg-kk-mint flex items-center justify-center text-kk-night font-bold text-xl flex-shrink-0">
                 {reservation.merchant_name?.[0]}
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-sm text-gray-900 mb-1 truncate">{reservation.merchant_name}</p>
+              <p className="font-bold text-sm text-kk-night mb-1 truncate">{reservation.merchant_name}</p>
               {merchantCity && (
-                <p className="text-xs text-gray-500 flex items-center gap-1 mb-1">
+                <p className="text-xs text-gray-600 flex items-center gap-1 mb-1">
                   <MapPin className="w-3 h-3 flex-shrink-0" />
                   <span className="truncate">{merchantCity}</span>
                 </p>
               )}
               {reservation.merchant_phone && (
-                <p className="text-xs text-gray-500 flex items-center gap-1 mb-1">
+                <p className="text-xs text-gray-600 flex items-center gap-1 mb-1">
                   <Phone className="w-3 h-3 flex-shrink-0" />
                   <span className="truncate">{reservation.merchant_phone}</span>
                 </p>
               )}
               {merchantStreet && (
-                <p className="text-xs text-gray-400 line-clamp-1">
+                <p className="text-xs text-gray-500 line-clamp-1">
                   {merchantStreet}
                 </p>
               )}
@@ -510,21 +512,21 @@ const ClientDashboardPage = () => {
 
           {/* Status Badge Desktop */}
           {isCompleted && (
-            <div className="col-span-12 -mt-2 flex items-center gap-2 text-xs text-[#00A690] bg-green-100 px-3 py-2 rounded-lg">
+            <div className="col-span-12 -mt-1 justify-self-start inline-flex items-center gap-2 text-xs text-kk-night bg-kk-mint px-3 py-1.5 rounded-full">
               <CheckCircle className="w-4 h-4" />
-              <span className="font-medium">Rezervasyon Başarıyla Teslim Alındı</span>
+              <span className="font-semibold">Rezervasyon Başarıyla Teslim Alındı</span>
             </div>
           )}
           {isExpired && (
-            <div className="col-span-12 -mt-2 flex items-center gap-2 text-xs text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+            <div className="col-span-12 -mt-1 justify-self-start inline-flex items-center gap-2 text-xs text-gray-700 bg-gray-100 px-3 py-1.5 rounded-full">
               <XCircle className="w-4 h-4" />
-              <span className="font-medium">Rezervasyon Süresi Doldu - Stok Otomatik Serbest Bırakıldı</span>
+              <span className="font-semibold">Rezervasyon Süresi Doldu - Stok Otomatik Serbest Bırakıldı</span>
             </div>
           )}
           {isCancelled && (
-            <div className="col-span-12 -mt-2 flex items-center gap-2 text-xs text-red-700 bg-red-50 px-3 py-2 rounded-lg">
+            <div className="col-span-12 -mt-1 justify-self-start inline-flex items-center gap-2 text-xs text-kk-night bg-kk-coral px-3 py-1.5 rounded-full">
               <X className="w-4 h-4" />
-              <span className="font-medium">Rezervasyon İptal Edildi - Stok Serbest Bırakıldı</span>
+              <span className="font-semibold">Rezervasyon İptal Edildi - Stok Serbest Bırakıldı</span>
             </div>
           )}
         </div>
@@ -534,10 +536,14 @@ const ClientDashboardPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A690] mx-auto mb-4"></div>
-          <p className="text-gray-600">Yükleniyor...</p>
+      <div className="min-h-screen bg-kk-paper pb-20">
+        <div className="max-w-6xl mx-auto px-4 py-6 space-y-4" aria-busy="true">
+          <div className="kk-skeleton rounded-3xl h-20" />
+          <div className="kk-skeleton rounded-full h-6 w-56" />
+          <div className="kk-skeleton rounded-3xl h-44 md:h-36" />
+          <div className="kk-skeleton rounded-3xl h-44 md:h-36" />
+          <div className="kk-skeleton rounded-3xl h-44 md:h-36" />
+          <p className="sr-only">Yükleniyor...</p>
         </div>
       </div>
     );
@@ -545,16 +551,16 @@ const ClientDashboardPage = () => {
 
   if (profileNotFound) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center max-w-md w-full">
-          <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Müşteri profili bulunamadı</h3>
+      <div className="min-h-screen bg-kk-paper flex items-center justify-center px-4">
+        <div className="kk-card p-8 text-center max-w-md w-full">
+          <Package className="w-12 h-12 text-kk-mint-text mx-auto mb-3" />
+          <h3 className="text-xl font-display font-extrabold tracking-tight text-kk-night mb-2">Müşteri profili bulunamadı</h3>
           <p className="text-sm text-gray-600 mb-4">
             Rezervasyonlarınızı görmek için müşteri hesabınızla giriş yapın.
           </p>
           <button
             onClick={() => navigate('/customer/auth')}
-            className="px-6 py-2.5 bg-[#00A690] hover:bg-[#F75C00] text-white rounded-lg font-semibold transition-colors duration-300"
+            className="kk-btn-primary px-6 py-2.5"
           >
             Giriş Yap
           </button>
@@ -564,25 +570,25 @@ const ClientDashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-kk-paper pb-20">
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-20 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${
-          toast.type === 'success' ? 'bg-[#00A690]' : 'bg-red-500'
-        } text-white`}>
+        <div className={`fixed top-20 right-4 z-50 px-6 py-3 rounded-full shadow-lg font-semibold ${
+          toast.type === 'success' ? 'bg-kk-night text-white' : 'bg-kk-coral text-kk-night'
+        }`}>
           {toast.message}
         </div>
       )}
 
       {/* Cancel Confirmation Modal */}
       {cancelConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6">
+        <div className="fixed inset-0 bg-kk-night/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-[#FFFFF0] rounded-full flex items-center justify-center flex-shrink-0">
-                <X className="w-6 h-6 text-[#00A690]" />
+              <div className="w-12 h-12 bg-kk-coral rounded-full flex items-center justify-center flex-shrink-0">
+                <X className="w-6 h-6 text-kk-night" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900">Rezervasyonu İptal Et?</h3>
+              <h3 className="text-lg font-display font-extrabold tracking-tight text-kk-night">Rezervasyonu İptal Et?</h3>
             </div>
             <p className="text-sm text-gray-600 mb-6">
               Stok serbest bırakılacak ve işletme bilgilendirilecek. Fikrinizi değiştirirseniz tekrar rezervasyon yapabilirsiniz.
@@ -590,13 +596,13 @@ const ClientDashboardPage = () => {
             <div className="flex gap-3">
               <button
                 onClick={() => setCancelConfirm(null)}
-                className="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors text-sm"
+                className="flex-1 kk-btn-ghost px-4 py-2.5 text-sm"
               >
                 Hayır, Tut
               </button>
               <button
                 onClick={() => handleCancelReservation(cancelConfirm)}
-                className="flex-1 px-4 py-2.5 bg-[#00A690] hover:bg-[#F75C00] text-white rounded-lg font-medium transition-colors text-sm"
+                className="flex-1 kk-btn-dark px-4 py-2.5 text-sm"
               >
                 Evet, İptal Et
               </button>
@@ -607,29 +613,29 @@ const ClientDashboardPage = () => {
 
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Profil */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="bg-kk-night text-white rounded-3xl shadow-sm p-5 mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-700 rounded-full flex items-center justify-center text-xl text-white font-bold">
+            <div className="w-12 h-12 bg-kk-mint rounded-2xl flex items-center justify-center text-xl text-kk-night font-display font-extrabold">
               {user?.email?.[0].toUpperCase()}
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">Hesabım</h1>
-              <p className="text-sm text-gray-600">{user?.email}</p>
+              <h1 className="text-xl font-display font-extrabold tracking-tight text-white">Hesabım</h1>
+              <p className="text-sm text-white/70">{user?.email}</p>
             </div>
           </div>
         </div>
 
         {/* Réservations */}
         <div>
-          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Package className="w-5 h-5 text-[#00A690]" />
+          <h2 className="text-2xl font-display font-extrabold tracking-tight text-kk-night mb-4 flex items-center gap-2">
+            <Package className="w-6 h-6 text-kk-mint-text" />
             Rezervasyonlarım ({visibleReservations.length})
           </h2>
 
           {visibleReservations.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm border-2 border-dashed border-gray-300 p-8 text-center">
-              <Package className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="kk-card p-8 text-center">
+              <Package className="w-12 h-12 text-kk-mint-text mx-auto mb-3" />
+              <h3 className="text-xl font-display font-extrabold tracking-tight text-kk-night mb-2">
                 Rezervasyon Yok
               </h3>
               <p className="text-sm text-gray-600 mb-4">
@@ -637,7 +643,7 @@ const ClientDashboardPage = () => {
               </p>
               <button
                 onClick={() => navigate('/offers')}
-                className="px-6 py-2.5 bg-[#00A690] hover:bg-[#F75C00] text-white rounded-lg font-semibold transition-colors duration-300"
+                className="kk-btn-primary px-6 py-2.5"
               >
                 Teklifleri Keşfet
               </button>
@@ -647,8 +653,8 @@ const ClientDashboardPage = () => {
               {/* En attente */}
               {pendingReservations.length > 0 && (
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-[#00A690]" />
+                  <h3 className="text-base font-display font-bold text-kk-night mb-3 flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-kk-night" />
                     Beklemede ({pendingReservations.length})
                   </h3>
                   <div className="space-y-3">
@@ -662,8 +668,8 @@ const ClientDashboardPage = () => {
               {/* Récupérées */}
               {completedReservations.length > 0 && (
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-[#00A690]" />
+                  <h3 className="text-base font-display font-bold text-kk-night mb-3 flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-kk-mint-text" />
                     Teslim Alındı ({completedReservations.length})
                   </h3>
                   <div className="space-y-3">
@@ -677,8 +683,8 @@ const ClientDashboardPage = () => {
               {/* Annulées */}
               {cancelledReservations.length > 0 && (
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <X className="w-4 h-4 text-red-600" />
+                  <h3 className="text-base font-display font-bold text-kk-night mb-3 flex items-center gap-2">
+                    <X className="w-4 h-4 text-kk-coral-text" />
                     İptal Edildi ({cancelledReservations.length})
                   </h3>
                   <div className="space-y-3 opacity-75">
@@ -692,7 +698,7 @@ const ClientDashboardPage = () => {
               {/* Expirées */}
               {expiredReservations.length > 0 && (
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <h3 className="text-base font-display font-bold text-kk-night mb-3 flex items-center gap-2">
                     <XCircle className="w-4 h-4 text-gray-600" />
                     Süresi Doldu ({expiredReservations.length})
                   </h3>

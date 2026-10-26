@@ -1,3 +1,4 @@
+import { LogoMark } from "../components/brand/Logo";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import mapboxgl, { Map, Marker } from "mapbox-gl";
@@ -715,9 +716,9 @@ export default function OffersPage() {
       el.style.borderRadius = "50%";
       el.style.border = "3px solid #fff";
       el.style.cursor = "pointer";
-      el.style.boxShadow = "0 3px 8px rgba(0,0,0,0.3)";
+      el.style.boxShadow = "0 6px 16px rgba(13,14,18,0.35)";
       el.style.overflow = "hidden";
-      el.style.backgroundColor = "#f5f5f5";
+      el.style.backgroundColor = "#F4F2EC";
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
@@ -786,10 +787,10 @@ export default function OffersPage() {
 
   if (!center || !Number.isFinite(center[0]) || !Number.isFinite(center[1])) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-100px)] bg-gray-50">
+      <div className="flex items-center justify-center h-[calc(100vh-100px)] bg-kk-paper">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A690] mx-auto mb-4"></div>
-          <p className="text-gray-600">Harita yükleniyor...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-kk-mint border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-700 font-medium">Harita yükleniyor...</p>
         </div>
       </div>
     );
@@ -798,47 +799,55 @@ export default function OffersPage() {
   const OfferCard = ({ offer, isMobile = false }: { offer: Offer; isMobile?: boolean }) => (
     <div
       key={offer.offer_id}
-      className={`flex bg-white rounded-lg shadow-sm hover:shadow-md transition overflow-hidden cursor-pointer ${
-        isMobile ? "h-24" : "h-28"
+      className={`group kk-card overflow-hidden cursor-pointer hover:shadow-lg transition-shadow ${
+        isMobile ? "flex gap-3 p-2.5" : "flex flex-col"
       }`}
       onClick={() => setSelectedOffer(offer)}
     >
-      {offer.image_url && (
-        <img
-          src={offer.image_url}
-          alt={offer.title}
-          className={`${isMobile ? "w-24 h-24" : "w-28 h-28"} object-cover flex-shrink-0`}
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).style.display = "none";
-          }}
-        />
-      )}
+      <div className={`relative overflow-hidden flex-shrink-0 bg-gray-100 ${isMobile ? "w-28 h-28 rounded-2xl" : "w-full aspect-[4/3]"}`}>
+        {!offer.image_url && (
+          <div className="absolute inset-0 flex items-center justify-center bg-kk-paper">
+            <LogoMark size={isMobile ? 40 : 56} className="opacity-60" />
+          </div>
+        )}
+        {offer.image_url && (
+          <img
+            src={offer.image_url}
+            alt={offer.title}
+            className="w-full h-full object-cover kk-photo-zoom"
+            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
+        )}
+        <div className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-kk-night/50 via-transparent to-transparent ${isMobile ? "hidden" : ""}`} />
+      </div>
 
-      <div className={`flex-1 ${isMobile ? "p-2" : "p-3"} flex flex-col justify-between`}>
-        <h3 className={`font-bold text-gray-900 ${isMobile ? "text-sm" : "text-base"} line-clamp-1`}>
+      <div className={`flex-1 min-w-0 flex flex-col justify-between ${isMobile ? "gap-1 py-0.5 pr-1" : "gap-2 p-4"}`}>
+        <h3 className={`font-display font-bold tracking-tight text-kk-night ${isMobile ? "text-sm" : "text-lg"} line-clamp-1`}>
           {offer.title}
         </h3>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`font-bold text-[#00A690] ${isMobile ? "text-base" : "text-lg"}`}>
+          <span className={`font-display font-extrabold text-kk-night ${isMobile ? "text-lg" : "text-2xl"}`}>
             {formatTL(offer.price_after)}
           </span>
-          <span className={`line-through text-gray-400 ${isMobile ? "text-xs" : "text-sm"}`}>
+          <span className={`line-through text-gray-500 ${isMobile ? "text-xs" : "text-sm"}`}>
             {formatTL(offer.price_before)}
           </span>
-          <span className="text-xs text-red-600 font-semibold bg-red-50 px-1.5 py-0.5 rounded whitespace-nowrap">
+          <span className="kk-chip bg-kk-lime text-kk-night px-2 py-0.5 whitespace-nowrap">
             -{getDiscountPercent(offer.price_before, offer.price_after)}%
           </span>
         </div>
 
         {offer.available_until && (
           <div className="space-y-1">
-            <div className={`${isMobile ? "text-[10px]" : "text-xs"} text-gray-700 font-semibold`}>
-              <span>{getTimeRemaining(offer.available_until)}</span>
+            <div className={`${isMobile ? "text-[10px]" : "text-xs"} flex`}>
+              <span className={`kk-chip bg-kk-coral text-kk-night px-2 py-0.5 ${isMobile ? "text-[10px]" : "text-xs"}`}>{getTimeRemaining(offer.available_until)}</span>
             </div>
-            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all duration-300 rounded-full ${
                   getProgressPercent(offer.available_from, offer.available_until) < 33 ? 'animate-pulse-fast' :
@@ -847,21 +856,20 @@ export default function OffersPage() {
                 }`}
                 style={{
                   width: `${getProgressPercent(offer.available_from, offer.available_until)}%`,
-                  backgroundColor: getProgressPercent(offer.available_from, offer.available_until) < 33 ? '#ef4444' :
-                                  getProgressPercent(offer.available_from, offer.available_until) < 67 ? '#f59e0b' : '#16a34a'
+                  backgroundColor: getProgressPercent(offer.available_from, offer.available_until) < 33 ? '#FF5B3A' :
+                                  getProgressPercent(offer.available_from, offer.available_until) < 67 ? '#f59e0b' : '#00E0B8'
                 }}
               />
             </div>
           </div>
         )}
-      </div>
 
-      <div className={`${isMobile ? "w-24 p-2" : "w-32 p-3"} border-l border-gray-100 flex flex-col items-center justify-center text-center bg-gray-50`}>
+      <div className={`flex items-center gap-2 min-w-0 ${isMobile ? "" : "pt-3 border-t border-black/5"}`}>
         {offer.merchant_logo_url ? (
           <img
             src={offer.merchant_logo_url}
             alt={offer.merchant_name}
-            className={`${isMobile ? "w-10 h-10" : "w-12 h-12"} rounded-full object-cover mb-1 border-2 border-white shadow-sm`}
+            className={`${isMobile ? "w-6 h-6" : "w-8 h-8"} rounded-full object-cover flex-shrink-0 ring-1 ring-black/10`}
             crossOrigin="anonymous"
             referrerPolicy="no-referrer"
             onError={(e) => {
@@ -870,8 +878,8 @@ export default function OffersPage() {
               const parent = target.parentElement;
               if (parent) {
                 const fallback = document.createElement("div");
-                fallback.className = `${isMobile ? "w-10 h-10" : "w-12 h-12"} rounded-full bg-gray-200 flex items-center justify-center mb-1`;
-                fallback.innerHTML = '<span class="text-lg">🏪</span>';
+                fallback.className = `${isMobile ? "w-6 h-6" : "w-8 h-8"} rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0`;
+                fallback.innerHTML = '<span class="text-xs">🏪</span>';
                 parent.insertBefore(fallback, parent.firstChild);
               }
             }}
@@ -880,25 +888,26 @@ export default function OffersPage() {
           <img
             src={MERCHANT_DEFAULT_LOGO}
             alt="KapKurtar"
-            className={`${isMobile ? "w-10 h-10" : "w-12 h-12"} rounded-full object-cover mb-1 border-2 border-white shadow-sm`}
+            className={`${isMobile ? "w-6 h-6" : "w-8 h-8"} rounded-full object-cover flex-shrink-0 ring-1 ring-black/10`}
           />
         )}
 
-        <p className={`font-semibold text-gray-900 ${isMobile ? "text-[10px]" : "text-xs"} line-clamp-2 mb-1 w-full px-1`}>
+        <p className={`font-semibold text-gray-800 ${isMobile ? "text-[11px]" : "text-sm"} truncate min-w-0`}>
           {offer.merchant_name}
         </p>
 
         {cleanPart(offer.merchant_city) && (
-          <p className={`text-gray-600 ${isMobile ? "text-[9px]" : "text-[10px]"} line-clamp-1 w-full px-1 mb-1`}>
+          <p className={`text-gray-600 ${isMobile ? "text-[10px]" : "text-xs"} truncate min-w-0 flex-1`}>
             📍 {cleanPart(offer.merchant_city)}
           </p>
         )}
 
         {viewMode === "nearby" && offer.distance_meters > 0 && (
-          <p className={`text-[#00A690] font-semibold ${isMobile ? "text-[10px]" : "text-xs"}`}>
+          <p className={`ml-auto flex-shrink-0 text-kk-mint-text font-semibold ${isMobile ? "text-[10px]" : "text-xs"}`}>
             {(offer.distance_meters / 1000).toFixed(1)} km
           </p>
         )}
+      </div>
       </div>
     </div>
   );
@@ -912,55 +921,55 @@ export default function OffersPage() {
         keywords="indirimli yemek, ucuz yemek harita, yakındaki fırsatlar, fazla gıda"
       />
       <div className="flex flex-col md:flex-row h-[calc(100vh-100px)]">
-        <div className="relative flex-1 min-h-0 border-r border-gray-200 h-1/2 md:h-full">
+        <div className="relative flex-1 min-h-0 border-r border-black/5 h-1/2 md:h-full">
           <div ref={mapContainerRef} style={{ width: "100%", height: "100%" }} />
 
           {geoError && (
-            <div className="absolute top-16 left-1/2 -translate-x-1/2 z-[1000] bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg max-w-[90%] text-center text-sm font-medium animate-pulse">
+            <div className="absolute top-16 left-1/2 -translate-x-1/2 z-[1000] bg-kk-coral text-kk-night px-5 py-3 rounded-full shadow-lg max-w-[90%] text-center text-sm font-semibold animate-pulse">
               {geoError}
             </div>
           )}
 
           {expiredOfferToast && (
-            <div className="absolute top-16 left-1/2 -translate-x-1/2 z-[1000] px-6 py-4 rounded-xl shadow-2xl max-w-[90%] text-center text-base font-semibold text-white animate-bounce"
-                 style={{ background: 'linear-gradient(135deg, #F75C00 0%, #ef4444 100%)' }}>
+            <div className="absolute top-16 left-1/2 -translate-x-1/2 z-[1000] px-6 py-4 rounded-3xl shadow-2xl max-w-[90%] text-center text-base font-semibold text-kk-night animate-bounce"
+                 style={{ background: '#FF5B3A' }}>
               {expiredOfferToast}
             </div>
           )}
 
         {viewMode === "nearby" && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[900] bg-white rounded-full shadow-lg px-4 py-2.5 flex items-center space-x-3 border-2 border-[#00A690]/20">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[900] bg-kk-night rounded-full shadow-lg px-4 py-2.5 flex items-center space-x-3 border border-white/10">
             <input
               type="range"
               min={1}
               max={30}
               value={radiusKm}
               onInput={(e) => handleRadiusChange(Number((e.target as HTMLInputElement).value))}
-              className="w-32 md:w-36 accent-[#00A690] cursor-pointer focus:outline-none"
+              className="w-32 md:w-36 accent-kk-lime cursor-pointer focus:outline-none"
             />
-            <span className="text-sm text-gray-900 font-bold whitespace-nowrap">{radiusKm} km</span>
+            <span className="text-sm text-white font-display font-extrabold whitespace-nowrap">{radiusKm} km</span>
           </div>
         )}
       </div>
 
-      <div className="flex-1 min-h-0 md:flex-none md:w-1/2 overflow-y-auto bg-gray-50 p-4">
+      <div className="flex-1 min-h-0 md:flex-none md:w-1/2 overflow-y-auto bg-kk-paper p-4">
         <div className="flex justify-center mb-6">
-          <div className="flex bg-gray-100 rounded-2xl overflow-hidden shadow-sm">
+          <div className="flex bg-white border border-black/5 rounded-full p-1 shadow-sm">
             <button
-              className={`px-5 py-2.5 text-sm font-semibold transition-all duration-200 ${
+              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 viewMode === "nearby"
-                  ? "bg-white text-[#00A690] shadow"
-                  : "text-gray-500 hover:text-[#00A690]"
+                  ? "bg-kk-night text-white shadow"
+                  : "bg-white text-gray-600 hover:text-kk-night"
               }`}
               onClick={() => handleViewModeChange("nearby")}
             >
               📍 Yakındaki Teklifler
             </button>
             <button
-              className={`px-5 py-2.5 text-sm font-semibold transition-all duration-200 ${
+              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 viewMode === "all"
-                  ? "bg-white text-[#00A690] shadow"
-                  : "text-gray-500 hover:text-[#00A690]"
+                  ? "bg-kk-night text-white shadow"
+                  : "bg-white text-gray-600 hover:text-kk-night"
               }`}
               onClick={() => handleViewModeChange("all")}
             >
@@ -970,20 +979,22 @@ export default function OffersPage() {
         </div>
 
         {offersLoading ? (
-          <div className="text-center mt-10">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#00A690] mx-auto mb-3"></div>
-            <p className="text-gray-600">Teklifler yükleniyor...</p>
+          <div className={isSmallScreen ? "space-y-3" : "grid grid-cols-1 lg:grid-cols-2 gap-4"} aria-busy="true">
+            <div className={`kk-skeleton rounded-3xl ${isSmallScreen ? "h-32" : "h-80"}`} />
+            <div className={`kk-skeleton rounded-3xl ${isSmallScreen ? "h-32" : "h-80"}`} />
+            <div className={`kk-skeleton rounded-3xl ${isSmallScreen ? "h-32" : "h-80"}`} />
+            <p className="sr-only">Teklifler yükleniyor...</p>
           </div>
         ) : offersError ? (
-          <p className="text-red-600 text-center mt-10 px-4">{offersError}</p>
+          <p className="kk-card text-kk-coral-text font-medium text-center mt-6 p-6">{offersError}</p>
         ) : offers.length === 0 ? (
-          <div className="text-center mt-10 px-4">
-            <p className="text-gray-500 mb-3">
+          <div className="kk-card text-center mt-6 p-6">
+            <p className="font-display font-bold text-lg text-kk-night mb-3">
               {viewMode === "nearby"
                 ? "Bu yarıçapta teklif bulunmuyor. Mesafeyi artırmayı deneyin!"
                 : "Şu anda yayında bir teklif bulunmuyor."}
             </p>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-600 mb-4">
               {showDownloadHint
                 ? "KapKurtar uygulamasını indirip bildirimleri açın: yakınınızdaki bir işletme teklif yayınladığında hemen haberdar olun."
                 : "Bildirimleri açık tutun: yakınınızdaki bir işletme teklif yayınladığında hemen haberdar olursunuz."}
@@ -993,14 +1004,14 @@ export default function OffersPage() {
                 href={GOOGLE_PLAY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-6 py-2.5 bg-[#00A690] hover:bg-[#F75C00] text-white rounded-lg font-semibold transition-colors duration-300"
+                className="kk-btn-primary px-6 py-2.5"
               >
                 Uygulamayı İndir
               </a>
             )}
           </div>
         ) : (
-          <div className={isSmallScreen ? "space-y-3" : "space-y-4"}>
+          <div className={isSmallScreen ? "space-y-3" : "grid grid-cols-1 lg:grid-cols-2 gap-4"}>
             {offers.map((o) => (
               <OfferCard key={o.offer_id} offer={o} isMobile={isSmallScreen} />
             ))}

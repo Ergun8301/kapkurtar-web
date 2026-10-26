@@ -153,3 +153,91 @@ h1, h2, h3, h4, h5, h6 {
 .animate-pulse-fast {
   animation: pulse-fast 0.8s ease-in-out infinite;
 }
+/* ===== Taze Gece — identité visuelle ===== */
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background-color: #F4F2EC;
+  color: #0D0E12;
+}
+
+h1, h2, h3, .font-display {
+  font-family: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #00A690;
+  outline-offset: 2px;
+}
+
+@layer components {
+  .kk-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-kk-lime px-6 py-3 font-display font-extrabold text-kk-night transition-all hover:bg-kk-lime-dark active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .kk-btn-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-kk-night px-6 py-3 font-semibold text-white transition-all hover:bg-kk-surface2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .kk-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-black/15 bg-white px-6 py-3 font-semibold text-kk-night transition-all hover:bg-black/5 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .kk-card {
+    @apply rounded-3xl border border-black/5 bg-white shadow-[0_8px_30px_rgba(13,14,18,0.06)];
+  }
+  .kk-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold;
+  }
+  .kk-input {
+    @apply w-full rounded-2xl border border-black/10 bg-white px-4 py-3 text-kk-night placeholder:text-gray-400 focus:border-kk-mint-deep focus:outline-none focus:ring-2 focus:ring-kk-mint/40;
+  }
+}
+
+/* Squelette de chargement */
+.kk-skeleton {
+  background: linear-gradient(90deg, #E8E6DF 0%, #F6F5F1 50%, #E8E6DF 100%);
+  background-size: 600px 100%;
+  animation: kk-shimmer 1.2s linear infinite;
+}
+.kk-skeleton-dark {
+  background: linear-gradient(90deg, #17191F 0%, #262A33 50%, #17191F 100%);
+  background-size: 600px 100%;
+  animation: kk-shimmer 1.2s linear infinite;
+}
+@keyframes kk-shimmer {
+  from { background-position: -300px 0; }
+  to { background-position: 300px 0; }
+}
+
+/* Apparition en cascade */
+.kk-fade-up {
+  animation: kk-fade-up 0.5s ease-out both;
+}
+@keyframes kk-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Zoom lent sur les photos */
+.kk-photo-zoom {
+  transition: transform 0.6s ease;
+}
+.group:hover .kk-photo-zoom {
+  transform: scale(1.06);
+}
+
+/* Point "en direct" */
+.kk-live-dot {
+  animation: kk-blink 1.4s ease-in-out infinite;
+}
+@keyframes kk-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kk-fade-up, .kk-skeleton, .kk-skeleton-dark, .kk-live-dot { animation: none; }
+  .kk-photo-zoom { transition: none; }
+}
