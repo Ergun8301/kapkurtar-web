@@ -312,7 +312,7 @@ const MerchantDashboardPage = () => {
   }, [merchantProfile]);
 
   useEffect(() => {
-    if (!showOnboardingModal || !modalReady || !mapContainerRef.current) {
+    if (loading || !showOnboardingModal || !modalReady || !mapContainerRef.current) {
       return;
     }
 
@@ -403,7 +403,7 @@ const MerchantDashboardPage = () => {
       markerRef.current = null;
       setMapLoaded(false);
     };
-  }, [showOnboardingModal, modalReady]);
+  }, [showOnboardingModal, modalReady, loading]);
 
   useEffect(() => {
     const checkExpiredOffers = async () => {
