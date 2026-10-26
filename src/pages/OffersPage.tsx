@@ -1,3 +1,4 @@
+import { LogoMark } from "../components/brand/Logo";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import mapboxgl, { Map, Marker } from "mapbox-gl";
@@ -803,8 +804,13 @@ export default function OffersPage() {
       }`}
       onClick={() => setSelectedOffer(offer)}
     >
-      {offer.image_url && (
-        <div className={`relative overflow-hidden flex-shrink-0 bg-gray-100 ${isMobile ? "w-28 h-28 rounded-2xl" : "w-full aspect-[4/3]"}`}>
+      <div className={`relative overflow-hidden flex-shrink-0 bg-gray-100 ${isMobile ? "w-28 h-28 rounded-2xl" : "w-full aspect-[4/3]"}`}>
+        {!offer.image_url && (
+          <div className="absolute inset-0 flex items-center justify-center bg-kk-paper">
+            <LogoMark size={isMobile ? 40 : 56} className="opacity-60" />
+          </div>
+        )}
+        {offer.image_url && (
           <img
             src={offer.image_url}
             alt={offer.title}
@@ -815,9 +821,9 @@ export default function OffersPage() {
               (e.currentTarget as HTMLImageElement).style.display = "none";
             }}
           />
-          <div className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-kk-night/50 via-transparent to-transparent ${isMobile ? "hidden" : ""}`} />
-        </div>
-      )}
+        )}
+        <div className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-kk-night/50 via-transparent to-transparent ${isMobile ? "hidden" : ""}`} />
+      </div>
 
       <div className={`flex-1 min-w-0 flex flex-col justify-between ${isMobile ? "gap-1 py-0.5 pr-1" : "gap-2 p-4"}`}>
         <h3 className={`font-display font-bold tracking-tight text-kk-night ${isMobile ? "text-sm" : "text-lg"} line-clamp-1`}>
