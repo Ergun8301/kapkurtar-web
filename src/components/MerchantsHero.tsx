@@ -5,24 +5,24 @@ const MerchantsHero = () => {
   const fallbackImageUrl = "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200";
 
   return (
-    <div className="relative bg-gradient-to-br from-[#00A690] via-[#00B89F] to-[#008C7A] text-white overflow-hidden">
+    <div className="relative bg-kk-night text-white overflow-hidden">
       <div className="absolute inset-0">
         <img
           src={heroImageUrl}
           alt="KapKurtar İşletmeler"
-          className="w-full h-full object-cover opacity-90"
+          className="w-full h-full object-cover opacity-40"
           onError={(e) => {
             e.currentTarget.src = fallbackImageUrl;
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00A690]/90 to-[#008C7A]/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-kk-night via-kk-night/85 to-kk-night/50"></div>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <div className="inline-block mb-6">
-              <span className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-semibold border border-white/30 flex items-center gap-2">
+              <span className="kk-chip bg-white/10 backdrop-blur-sm text-white px-4 py-2 text-sm font-semibold border border-white/10 flex items-center gap-2">
   <img 
     src="/images/logo-round-black.webp" 
     alt="KapKurtar" 
@@ -32,43 +32,43 @@ const MerchantsHero = () => {
 </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05]">
               İsrafı Gelire
               <br />
-              <span className="text-[#FFFFF0]">Dönüştürün</span>
+              <span className="text-kk-lime">Dönüştürün</span>
             </h1>
 
-            <p className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed">
+            <p className="text-xl md:text-2xl mb-8 text-white/70 leading-relaxed">
               Satılmayan gıdalarınızı atmak yerine <strong>KapKurtar</strong> ile satın.
               Yeni müşteriler kazanın, geliri artırın, çevreye katkıda bulunun.
             </p>
 
             <div className="grid grid-cols-3 gap-6 mb-8">
               <div className="text-center">
-                <div className="text-3xl font-black text-[#FFFFF0]">Yeni</div>
-                <div className="text-sm text-white/80">Müşteriler</div>
+                <div className="font-display text-3xl font-extrabold text-kk-lime">Yeni</div>
+                <div className="text-sm text-white/70">Müşteriler</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-black text-[#FFFFF0]">Daha Az</div>
-                <div className="text-sm text-white/80">İsraf</div>
+                <div className="font-display text-3xl font-extrabold text-kk-lime">Daha Az</div>
+                <div className="text-sm text-white/70">İsraf</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-black text-[#FFFFF0]">%0</div>
-                <div className="text-sm text-white/80">İlk 3 Ay</div>
+                <div className="font-display text-3xl font-extrabold text-kk-lime">%0</div>
+                <div className="text-sm text-white/70">İlk 3 Ay</div>
               </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href="/merchant/auth"
-                className="inline-flex items-center justify-center gap-2 bg-[#F75C00] hover:bg-[#E54B00] text-white px-8 py-4 rounded-xl font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105"
+                className="kk-btn-primary px-8 py-4 text-lg"
               >
                 <Zap className="w-6 h-6" />
                 Hemen Başlayın
               </a>
               <a
                 href="#pricing"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border-2 border-white/30 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 px-8 py-4 font-semibold text-lg transition-all"
               >
                 <TrendingUp className="w-6 h-6" />
                 Fiyatları Görün
@@ -77,39 +77,39 @@ const MerchantsHero = () => {
           </div>
 
           <div className="hidden lg:block">
-            <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-2xl">
+            <div className="bg-kk-surface/80 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl">
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-[#F75C00] rounded-xl flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-white" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-kk-lime rounded-2xl flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-kk-night" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Risk Sıfır</h3>
-                    <p className="text-white/80 text-sm">
+                    <h3 className="font-display font-extrabold text-lg mb-1">Risk Sıfır</h3>
+                    <p className="text-white/70 text-sm">
                       İlk 3 ay tamamen ücretsiz. Satış yapmadığınızda ödeme yok.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-[#F75C00] rounded-xl flex items-center justify-center">
-                    <Zap className="w-6 h-6 text-white" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-kk-lime rounded-2xl flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-kk-night" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Hızlı Başlangıç</h3>
-                    <p className="text-white/80 text-sm">
+                    <h3 className="font-display font-extrabold text-lg mb-1">Hızlı Başlangıç</h3>
+                    <p className="text-white/70 text-sm">
                       2 dakikada kayıt olun, hemen tekliflerinizi eklemeye başlayın.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-[#F75C00] rounded-xl flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-white" />
+                  <div className="flex-shrink-0 w-12 h-12 bg-kk-lime rounded-2xl flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-kk-night" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Gelir Artışı</h3>
-                    <p className="text-white/80 text-sm">
+                    <h3 className="font-display font-extrabold text-lg mb-1">Gelir Artışı</h3>
+                    <p className="text-white/70 text-sm">
                       Atılacak gıda yerine satış geliri elde edin.
                     </p>
                   </div>

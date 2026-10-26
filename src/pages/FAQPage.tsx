@@ -93,26 +93,26 @@ const FAQPage = () => {
   })).filter(category => category.faqs.length > 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-kk-paper">
       {/* Hero Section */}
-      <div className="bg-[#00A690] text-white py-16">
+      <div className="bg-kk-night text-white py-20 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Sıkça Sorulan Sorular
+          <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+            Sıkça Sorulan <span className="text-kk-lime">Sorular</span>
           </h1>
-          <p className="text-xl text-[#FFFFF0] mb-8">
+          <p className="text-xl text-white/70 mb-8">
             KapKurtar hakkındaki sorularınızın yanıtlarını hızlıca bulun
           </p>
 
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 z-10" />
             <input
               type="text"
               placeholder="Bir soru arayın..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#F75C00]"
+              className="kk-input rounded-full pl-12 pr-4 py-4"
             />
           </div>
         </div>
@@ -122,27 +122,27 @@ const FAQPage = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {filteredCategories.map((category, categoryIndex) => (
           <div key={categoryIndex} className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mb-6">
               {category.name}
             </h2>
             <div className="space-y-4">
               {category.faqs.map((faq, faqIndex) => {
                 const globalIndex = categoryIndex * 100 + faqIndex;
                 return (
-                  <div key={faqIndex} className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                  <div key={faqIndex} className="kk-card overflow-hidden">
                     <button
                       onClick={() => toggleFAQ(categoryIndex, faqIndex)}
-                      className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-300"
+                      className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-black/[0.02] transition-colors duration-300"
                     >
-                      <span className="font-medium text-gray-900 pr-4">{faq.question}</span>
+                      <span className="font-display font-bold text-kk-night pr-4">{faq.question}</span>
                       {openFAQ === globalIndex ? (
-                        <ChevronUp className="w-5 h-5 text-[#00A690] flex-shrink-0" />
+                        <ChevronUp className="w-8 h-8 p-1.5 rounded-full bg-kk-lime text-kk-night flex-shrink-0" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                        <ChevronDown className="w-8 h-8 p-1.5 rounded-full bg-gray-100 text-kk-night flex-shrink-0" />
                       )}
                     </button>
                     {openFAQ === globalIndex && (
-                      <div className="px-6 pb-4 border-t border-gray-100">
+                      <div className="px-6 pb-5 border-t border-black/5">
                         <p className="text-gray-600 pt-4">{faq.answer}</p>
                       </div>
                     )}
@@ -161,17 +161,17 @@ const FAQPage = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-white border-t border-gray-200 py-12">
+      <div className="bg-kk-night text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
+          <h3 className="font-display text-2xl md:text-4xl font-extrabold tracking-tight text-white mb-4">
             Cevabınızı bulamadınız mı?
           </h3>
-          <p className="text-gray-600 mb-8">
+          <p className="text-white/70 mb-8">
             Ekibimiz size yardımcı olmak için burada
           </p>
           <a
             href="/contact"
-            className="bg-[#00A690] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#F75C00] transition-colors inline-block"
+            className="kk-btn-primary px-8 py-3"
           >
             Bize ulaşın
           </a>

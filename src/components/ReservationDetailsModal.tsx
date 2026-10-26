@@ -123,29 +123,30 @@ export const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = (
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-[3000] flex items-center justify-center p-4"
+      className="fixed inset-0 bg-kk-night/60 backdrop-blur-sm z-[3000] flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative"
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-md relative overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#00A690] to-[#00615F] p-6 rounded-t-2xl relative">
+        <div className="bg-kk-night p-6 relative">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full transition-colors duration-300"
+            aria-label="Kapat"
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors duration-300"
           >
             <X className="w-5 h-5 text-white" />
           </button>
 
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-              <ShoppingBag className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 bg-kk-lime rounded-full flex items-center justify-center">
+              <ShoppingBag className="w-6 h-6 text-kk-night" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">Rezervasyon detayları</h2>
-              <p className="text-[#FFFFF0] text-sm">Yeni müşteri siparişi</p>
+              <h2 className="font-display text-xl font-extrabold tracking-tight text-white">Rezervasyon detayları</h2>
+              <p className="text-kk-muted text-sm">Yeni müşteri siparişi</p>
             </div>
           </div>
         </div>
@@ -154,24 +155,24 @@ export const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = (
         <div className="p-6">
           {loading ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A690] mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-kk-mint/20 border-t-kk-mint-deep mx-auto mb-4"></div>
               <p className="text-gray-600">Detaylar yükleniyor...</p>
             </div>
           ) : error ? (
             <div className="text-center py-8">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-kk-coral/15 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">❌</span>
               </div>
-              <p className="text-red-600 font-semibold mb-2">Hata</p>
+              <p className="text-kk-coral-text font-semibold mb-2">Hata</p>
               <p className="text-gray-600 text-sm">{error}</p>
             </div>
           ) : details ? (
             <div className="space-y-4">
               {/* Müşteri */}
-              <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="bg-gray-50 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <User className="w-5 h-5 text-gray-600" />
-                  <h3 className="font-bold text-gray-900">Müşteri</h3>
+                  <User className="w-5 h-5 text-kk-mint-text" />
+                  <h3 className="font-display font-extrabold text-kk-night">Müşteri</h3>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -184,7 +185,7 @@ export const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = (
                     <span className="text-sm text-gray-600">E-posta :</span>
                     <a
                       href={`mailto:${details.client.email}`}
-                      className="text-[#00A690] hover:text-[#00A690] text-sm font-medium"
+                      className="text-kk-mint-text hover:underline text-sm font-medium"
                     >
                       {details.client.email}
                     </a>
@@ -194,7 +195,7 @@ export const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = (
                       <span className="text-sm text-gray-600">Telefon :</span>
                       <a
                         href={`tel:${details.client.phone}`}
-                        className="text-[#00A690] hover:text-[#00A690] text-sm font-medium"
+                        className="text-kk-mint-text hover:underline text-sm font-medium"
                       >
                         {details.client.phone}
                       </a>
@@ -204,10 +205,10 @@ export const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = (
               </div>
 
               {/* Ürün */}
-              <div className="bg-green-100 rounded-lg p-4 border border-green-300">
+              <div className="bg-gray-50 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <Package className="w-5 h-5 text-[#00A690]" />
-                  <h3 className="font-bold text-gray-900">Ürün</h3>
+                  <Package className="w-5 h-5 text-kk-mint-text" />
+                  <h3 className="font-display font-extrabold text-kk-night">Ürün</h3>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -216,22 +217,22 @@ export const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = (
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Birim fiyatı :</span>
-                    <span className="font-bold text-[#00A690]">
+                    <span className="font-display font-extrabold text-kk-night">
                       {formatTL(details.offer.price_after)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Rezerve edilen miktar :</span>
-                    <span className="font-bold text-[#00A690] text-lg">{details.quantity}</span>
+                    <span className="kk-chip bg-kk-lime text-kk-night font-display font-extrabold text-base px-3 py-0.5">{details.quantity}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Kalan stok :</span>
                     <span className="font-semibold text-gray-900">{details.offer.quantity}</span>
                   </div>
-                  <div className="pt-2 border-t border-green-300 mt-2">
+                  <div className="pt-2 border-t border-black/10 mt-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold text-gray-700">Toplam :</span>
-                      <span className="font-bold text-[#00A690] text-xl">
+                      <span className="font-display font-extrabold text-kk-night text-2xl">
                         {formatTL(details.offer.price_after * details.quantity)}
                       </span>
                     </div>
@@ -240,17 +241,17 @@ export const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = (
               </div>
 
               {/* Tarih ve saat */}
-              <div className="bg-green-100 rounded-lg p-4 border border-green-300">
+              <div className="bg-gray-50 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Clock className="w-5 h-5 text-[#00A690]" />
-                  <h3 className="font-bold text-gray-900">Tarih ve saat</h3>
+                  <Clock className="w-5 h-5 text-kk-mint-text" />
+                  <h3 className="font-display font-extrabold text-kk-night">Tarih ve saat</h3>
                 </div>
                 <p className="text-sm text-gray-700">{formatDateTime(details.created_at)}</p>
               </div>
 
               {/* Info */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <p className="text-sm text-yellow-800">
+              <div className="bg-kk-lime/20 rounded-2xl p-4">
+                <p className="text-sm text-kk-night">
                   💡 Müşteri siparişini almaya gelecek. Hazırlamayı unutmayın!
                 </p>
               </div>
@@ -260,10 +261,10 @@ export const ReservationDetailsModal: React.FC<ReservationDetailsModalProps> = (
 
         {/* Footer */}
         {!loading && !error && details && (
-          <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-2xl">
+          <div className="border-t border-black/5 p-4 bg-white">
             <button
               onClick={onClose}
-              className="w-full py-3 bg-[#00A690] hover:bg-[#F75C00] text-white rounded-lg font-semibold transition-colors duration-300"
+              className="kk-btn-dark w-full py-3"
             >
               Kapat
             </button>

@@ -130,10 +130,10 @@ const AuthCallbackPage = () => {
 
   if (loading || isRedirecting) {
     return (
-      <div className="min-h-screen bg-[#FAFAF5] flex items-center justify-center">
+      <div className="min-h-screen bg-kk-paper flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3A6932] mx-auto mb-4"></div>
-          <p className="text-gray-600">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-kk-mint border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-700 font-medium">
             {isRedirecting ? "Yönlendiriliyor..." : "Giriş tamamlanıyor..."}
           </p>
         </div>
@@ -143,17 +143,17 @@ const AuthCallbackPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#FAFAF5] flex items-center justify-center px-4">
-        <div className="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full">
+      <div className="min-h-screen bg-kk-paper flex items-center justify-center px-4">
+        <div className="kk-card p-8 max-w-md w-full">
           <div className="text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-red-600 text-2xl">✕</span>
+            <div className="w-16 h-16 bg-kk-coral rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-kk-night text-2xl font-bold">✕</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Giriş hatası</h2>
+            <h2 className="text-2xl font-display font-extrabold tracking-tight text-kk-night mb-2">Giriş hatası</h2>
             <p className="text-gray-600 mb-6">{error}</p>
             <button
               onClick={() => navigate("/")}
-              className="w-full bg-[#3A6932] text-white py-3 rounded-xl font-semibold hover:bg-[#2d5226] transition-colors"
+              className="w-full kk-btn-primary py-3"
             >
               Ana Sayfaya Dön
             </button>

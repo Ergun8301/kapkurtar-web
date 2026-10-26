@@ -54,14 +54,14 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-kk-paper">
       {/* Hero Section */}
-      <div className="bg-[#00A690] text-white py-16">
+      <div className="bg-kk-night text-white py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Bize Ulaşın
+          <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+            Bize <span className="text-kk-lime">Ulaşın</span>
           </h1>
-          <p className="text-xl text-[#FFFFF0] max-w-2xl mx-auto">
+          <p className="text-xl text-white/70 max-w-2xl mx-auto">
             Bir sorunuz mu var? Bir öneriniz mi? Ekibimiz size yardımcı olmak için burada.
           </p>
         </div>
@@ -77,18 +77,18 @@ const ContactPage = () => {
               href="https://wa.me/33685507985?text=Merhaba%20KapKurtar,%20bir%20sorum%20var"
               target="_blank"
               rel="noopener noreferrer"
-              className="block bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow group"
+              className="block kk-card p-6 hover:shadow-xl transition-shadow group"
             >
               <div className="flex items-start">
-                <div className="bg-green-100 rounded-full p-3 group-hover:bg-green-200 transition-colors duration-300">
-                  <MessageSquare className="w-6 h-6 text-green-600" />
+                <div className="bg-kk-mint rounded-full p-3 group-hover:bg-kk-lime transition-colors duration-300">
+                  <MessageSquare className="w-6 h-6 text-kk-night" />
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">WhatsApp</h3>
+                  <h3 className="font-display text-lg font-extrabold text-kk-night mb-2">WhatsApp</h3>
                   <p className="text-gray-600 mb-3">
                     Hızlı yanıt için bize doğrudan WhatsApp üzerinden ulaşın
                   </p>
-                  <span className="text-[#00A690] font-medium group-hover:text-[#F75C00] transition-colors duration-300">
+                  <span className="text-kk-mint-text font-semibold group-hover:underline">
                     Mesaj gönder →
                   </span>
                 </div>
@@ -96,13 +96,13 @@ const ContactPage = () => {
             </a>
 
             {/* Email */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="kk-card p-6">
               <div className="flex items-start">
-                <div className="bg-blue-100 rounded-full p-3">
-                  <Mail className="w-6 h-6 text-blue-600" />
+                <div className="bg-kk-lilac rounded-full p-3">
+                  <Mail className="w-6 h-6 text-kk-night" />
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">E-posta</h3>
+                  <h3 className="font-display text-lg font-extrabold text-kk-night mb-2">E-posta</h3>
                   <p className="text-gray-600 mb-3">
                     Karşıdaki formu doldurun, 24 saat içinde size yanıt vereceğiz
                   </p>
@@ -111,13 +111,13 @@ const ContactPage = () => {
             </div>
 
             {/* Address */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="kk-card p-6">
               <div className="flex items-start">
-                <div className="bg-red-100 rounded-full p-3">
-                  <MapPin className="w-6 h-6 text-red-600" />
+                <div className="bg-kk-lime rounded-full p-3">
+                  <MapPin className="w-6 h-6 text-kk-night" />
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">Adres</h3>
+                  <h3 className="font-display text-lg font-extrabold text-kk-night mb-2">Adres</h3>
                   <p className="text-gray-600 text-sm">
                     Eski Hisar, 9501. Sk. No:3<br />
                     07600 Manavgat/Antalya<br />
@@ -130,17 +130,17 @@ const ContactPage = () => {
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-lg p-8">
+            <div className="kk-card p-6 md:p-8">
               {isSubmitted ? (
                 <div className="text-center py-12">
-                  <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Mesaj gönderildi!</h3>
+                  <CheckCircle className="w-16 h-16 text-kk-mint-text mx-auto mb-4" />
+                  <h3 className="font-display text-2xl font-extrabold text-kk-night mb-2">Mesaj gönderildi!</h3>
                   <p className="text-gray-600 mb-6">
                     Mesajınız için teşekkürler. En kısa sürede size yanıt vereceğiz.
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="bg-[#00A690] text-white px-6 py-2 rounded-lg hover:bg-[#F75C00] transition-colors duration-300"
+                    className="kk-btn-dark"
                   >
                     Başka bir mesaj gönder
                   </button>
@@ -148,7 +148,7 @@ const ContactPage = () => {
               ) : (
                 <form onSubmit={handleSubmit}>
                   <div className="mb-6">
-                    <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="name" className="block text-kk-night font-semibold text-sm mb-2">
                       Ad Soyad *
                     </label>
                     <input
@@ -158,13 +158,13 @@ const ContactPage = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                      className="kk-input"
                       placeholder="Adınız"
                     />
                   </div>
 
                   <div className="mb-6">
-                    <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="email" className="block text-kk-night font-semibold text-sm mb-2">
                       E-posta *
                     </label>
                     <input
@@ -174,13 +174,13 @@ const ContactPage = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                      className="kk-input"
                       placeholder="eposta@ornek.com"
                     />
                   </div>
 
                   <div className="mb-6">
-                    <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="subject" className="block text-kk-night font-semibold text-sm mb-2">
                       Konu *
                     </label>
                     <select
@@ -189,7 +189,7 @@ const ContactPage = () => {
                       value={formData.subject}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                      className="kk-input"
                     >
                       <option value="">Bir konu seçin</option>
                       <option value="question_client">Müşteri sorusu</option>
@@ -201,7 +201,7 @@ const ContactPage = () => {
                   </div>
 
                   <div className="mb-6">
-                    <label htmlFor="message" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="message" className="block text-kk-night font-semibold text-sm mb-2">
                       Mesaj *
                     </label>
                     <textarea
@@ -211,19 +211,19 @@ const ContactPage = () => {
                       onChange={handleChange}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                      className="kk-input"
                       placeholder="Mesajınız..."
                     />
                   </div>
 
                   {submitError && (
-                    <p className="text-sm text-red-600" role="alert">{submitError}</p>
+                    <p className="text-sm text-kk-coral-text" role="alert">{submitError}</p>
                   )}
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-[#00A690] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#F75C00] transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
+                    className="kk-btn-primary w-full mt-2"
                   >
                     {isSubmitting ? (
                       'Gönderiliyor...'

@@ -2,27 +2,27 @@ import { Calendar, User, ArrowLeft, ChefHat } from 'lucide-react';
 
 const BlogArticle6 = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-kk-paper">
+      <div className="bg-kk-night border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <a href="/blog" className="inline-flex items-center text-[#00A690] hover:text-[#F75C00] transition-colors duration-300">
+          <a href="/blog" className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 transition-colors duration-300">
             <ArrowLeft className="w-5 h-5 mr-2" />
             Bloga dön
           </a>
         </div>
       </div>
 
-      <div className="bg-white py-12">
+      <div className="bg-kk-night text-white pt-10 pb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
-            <span className="bg-[#00A690] text-white px-4 py-2 rounded-full text-sm font-medium">
+            <span className="kk-chip bg-kk-lime text-kk-night px-4 py-2 text-sm font-semibold">
               Tarifler
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6">
             Bayat ekmek: Yeniden kullanmanın 5 yaratıcı yolu
           </h1>
-          <div className="flex items-center text-gray-600 mb-8">
+          <div className="flex flex-wrap items-center text-kk-muted mb-8">
             <User className="w-5 h-5 mr-2" />
             <span className="mr-6">Şef Ayşe</span>
             <Calendar className="w-5 h-5 mr-2" />
@@ -33,32 +33,32 @@ const BlogArticle6 = () => {
           <img
             src="https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=1200"
             alt="Dönüştürülmüş bayat ekmek"
-            className="w-full h-96 object-cover rounded-xl shadow-lg"
+            className="w-full h-72 md:h-96 object-cover rounded-3xl shadow-2xl"
           />
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none kk-card p-6 md:p-10">
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             Artık sert ekmeğinizi atmayın! Bayat ekmeği lezzetli ve ekonomik
             yemeklere dönüştürmek için 5 tarif keşfedin.
           </p>
 
-          <blockquote className="border-l-4 border-[#00A690] pl-6 my-8 italic text-gray-700">
+          <blockquote className="border-l-4 border-kk-mint pl-6 my-8 italic text-gray-700">
             "Türkiye'de yılda ortalama 2,3 milyon ton gıda atıyoruz.
             Ekmek bu israfın önemli bir kısmını oluşturuyor. Oysa ona ikinci bir şans vermek için
             birkaç ipucu yeterli!"
           </blockquote>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4 flex items-center">
-            <ChefHat className="w-6 h-6 mr-2 text-[#00A690]" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4 flex items-center">
+            <ChefHat className="w-6 h-6 mr-2 text-kk-mint-text" />
             1. Süper çıtır ev yapımı krutonlar
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Ev yapımı krutonlar marketten alınanlara göre 10 kat daha iyi ve hazırlanması çok basit!
           </p>
-          <div className="bg-[#FFFFF0] rounded-lg p-6 my-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-6 my-6">
             <h3 className="font-bold text-gray-900 mb-3">Malzemeler:</h3>
             <ul className="space-y-1 text-gray-700 mb-4">
               <li>• Bayat ekmek (istediğiniz kadar)</li>
@@ -79,15 +79,15 @@ const BlogArticle6 = () => {
             💡 Salatalar, çorbalar için veya aperitifde atıştırmak için mükemmel!
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4 flex items-center">
-            <ChefHat className="w-6 h-6 mr-2 text-[#00A690]" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4 flex items-center">
+            <ChefHat className="w-6 h-6 mr-2 text-kk-mint-text" />
             2. Büyükanne usulü ekmek tatlısı
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Küçük büyük herkesi memnun edecek rahatlatıcı bir tatlı. Bu geleneksel Türk tatlısı (Ekmek Tatlısı)
             kuru ekmeği tatlı bir lezzete dönüştürür.
           </p>
-          <div className="bg-[#FFFFF0] rounded-lg p-6 my-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-6 my-6">
             <h3 className="font-bold text-gray-900 mb-3">Malzemeler (4 kişilik):</h3>
             <ul className="space-y-1 text-gray-700 mb-4">
               <li>• 300g bayat ekmek</li>
@@ -112,15 +112,15 @@ const BlogArticle6 = () => {
             🍯 İlık olarak vanilyalı dondurma veya krema ile servis yapın!
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4 flex items-center">
-            <ChefHat className="w-6 h-6 mr-2 text-[#00A690]" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4 flex items-center">
+            <ChefHat className="w-6 h-6 mr-2 text-kk-mint-text" />
             3. Ev yapımı galeta unu
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Ev yapımı galeta unu market unu galeta unundan daha ekonomik ve lezzetli.
             Hava geçirmez bir kavanozda birkaç ay saklanabilir.
           </p>
-          <div className="bg-[#FFFFF0] rounded-lg p-6 my-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-6 my-6">
             <h3 className="font-bold text-gray-900 mb-3">Çok basit yöntem:</h3>
             <ol className="space-y-2 text-gray-700">
               <li>1. Ekmeği 2-3 gün tamamen kurumaya bırakın</li>
@@ -133,14 +133,14 @@ const BlogArticle6 = () => {
             🍗 Et, balık, sebze panelemek veya yemeklerinizi gratinlemek için ideal!
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4 flex items-center">
-            <ChefHat className="w-6 h-6 mr-2 text-[#00A690]" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4 flex items-center">
+            <ChefHat className="w-6 h-6 mr-2 text-kk-mint-text" />
             4. Ekmekli köylü çorbası (Paçanga)
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Kış akşamları için mükemmel, kalın ve rahatlatıcı geleneksel bir Türk çorbası.
           </p>
-          <div className="bg-[#FFFFF0] rounded-lg p-6 my-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-6 my-6">
             <h3 className="font-bold text-gray-900 mb-3">Malzemeler (4 kişilik):</h3>
             <ul className="space-y-1 text-gray-700 mb-4">
               <li>• 200g bayat ekmek</li>
@@ -166,14 +166,14 @@ const BlogArticle6 = () => {
             🥖 Bir tutam zeytinyağı, doğranmış maydanoz ve kızarmış ekmekle servis edin!
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4 flex items-center">
-            <ChefHat className="w-6 h-6 mr-2 text-[#00A690]" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4 flex items-center">
+            <ChefHat className="w-6 h-6 mr-2 text-kk-mint-text" />
             5. Domatesli Türk bruschettası
           </h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Aperitif veya garnitür için mükemmel, hızlı ve lezzetli bir Akdeniz mezesi.
           </p>
-          <div className="bg-[#FFFFF0] rounded-lg p-6 my-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-6 my-6">
             <h3 className="font-bold text-gray-900 mb-3">Malzemeler (4 kişilik):</h3>
             <ul className="space-y-1 text-gray-700 mb-4">
               <li>• Dilimlenmiş bayat ekmek</li>
@@ -199,8 +199,8 @@ const BlogArticle6 = () => {
             🍅 Ekmeğin çıtır kalması için hemen yiyin!
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">Saklama tavsiyesi</h2>
-          <div className="bg-white border-2 border-[#00A690] rounded-lg p-6 my-8">
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">Saklama tavsiyesi</h2>
+          <div className="bg-white border-2 border-kk-mint rounded-3xl p-6 my-8">
             <p className="text-gray-700 mb-4">
               <strong>Profesyonel ipucu:</strong> Bayat ekmeğinizi hemen kullanmayacaksanız,
               dilimler halinde dondurun. Birkaç ay sonra bile kruton veya galeta unu yapmak için mükemmel olacaktır!
@@ -211,14 +211,14 @@ const BlogArticle6 = () => {
             </p>
           </div>
 
-          <div className="bg-gray-100 rounded-lg p-8 my-12 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Yakınınızda indirimli ekmek bulun</h3>
-            <p className="text-gray-700 mb-6">
+          <div className="not-prose bg-kk-night text-white rounded-3xl p-8 my-12 text-center">
+            <h3 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-white mb-4">Yakınınızda indirimli ekmek bulun</h3>
+            <p className="text-white/70 mb-6">
               KapKurtar ile gün sonunda fırın ekmeğini indirimli fiyatlarla satın alın
             </p>
             <a
               href="/offers"
-              className="bg-[#00A690] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#F75C00] transition-colors duration-300 inline-block"
+              className="kk-btn-primary px-8 py-3"
             >
               Teklifleri görüntüle
             </a>

@@ -151,9 +151,9 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
   const isOutOfStock = typeof offer.quantity === 'number' && offer.quantity <= 0;
   const merchantPlace = cleanPart(offer.merchant_city) || cleanPart(offer.merchant_street);
   
-  let progressColor = '#16a34a';
+  let progressColor = '#00E0B8';
   if (progressPercent < 66) progressColor = '#f59e0b';
-  if (progressPercent < 33) progressColor = '#ef4444';
+  if (progressPercent < 33) progressColor = '#FF5B3A';
 
   const handleGetDirections = () => {
     if (offer.offer_lng && offer.offer_lat) {
@@ -218,20 +218,20 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
   return (
     <>
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-[2000] flex items-center justify-center p-4"
+        className="fixed inset-0 bg-kk-night/60 backdrop-blur-sm z-[2000] flex items-center justify-center p-4"
         onClick={onClose}
       >
         <div
-          className={`bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[95vh] overflow-y-auto relative transition-opacity duration-200 ${
+          className={`bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto relative transition-opacity duration-200 ${
             isChanging ? 'opacity-0' : 'opacity-100'
           }`}
           onClick={(e) => e.stopPropagation()}
         >
           {toast && (
             <div
-              className={`fixed top-4 right-4 z-[9999] px-6 py-3 rounded-lg shadow-lg ${
-                toast.type === 'success' ? 'bg-[#00A690]' : 'bg-red-500'
-              } text-white`}
+              className={`fixed top-4 right-4 z-[9999] px-6 py-3 rounded-full shadow-lg font-semibold ${
+                toast.type === 'success' ? 'bg-kk-night text-white' : 'bg-kk-coral text-kk-night'
+              }`}
             >
               {toast.message}
             </div>
@@ -239,18 +239,37 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
+            className="absolute top-4 right-4 z-10 p-2 bg-white/90 backdrop-blur rounded-full shadow-lg hover:bg-white transition-colors duration-300"
+            aria-label="Kapat"
           >
-            <X className="w-5 h-5 text-gray-600" />
+            <X className="w-5 h-5 text-kk-night" />
           </button>
 
-          <div className="border-b border-gray-200 p-4 md:p-6 bg-gray-50">
-            <div className="flex items-center gap-4 flex-wrap">
+          {/* Photo header */}
+          {offer.image_url && (
+            <div className="relative h-64 md:h-80 rounded-t-3xl overflow-hidden">
+              <img
+                src={offer.image_url}
+                alt={offer.title}
+                className="w-full h-full object-cover"
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-kk-night/90 via-kk-night/20 to-transparent pointer-events-none" />
+              <div className="absolute top-4 left-4 kk-chip bg-kk-lime text-kk-night font-extrabold text-base px-3 py-1.5 shadow-lg">
+                -{getDiscountPercent(offer.price_before, offer.price_after)}%
+              </div>
+            </div>
+          )}
+
+          {/* Merchant row */}
+          <div className="border-b border-black/5 px-4 py-4 md:px-6">
+            <div className="flex items-center gap-3 flex-wrap">
               {offer.merchant_logo_url ? (
                 <img
                   src={offer.merchant_logo_url}
                   alt={offer.merchant_name}
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0"
+                  className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover ring-2 ring-white shadow-md bg-white flex-shrink-0"
                   crossOrigin="anonymous"
                   referrerPolicy="no-referrer"
                 />
@@ -258,24 +277,24 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                 <img
                   src="/images/merchant-default.webp"
                   alt="KapKurtar"
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-4 border-white shadow-lg flex-shrink-0"
+                  className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover ring-2 ring-white shadow-md bg-white flex-shrink-0"
                 />
               )}
 
               <div className="flex-1 min-w-0">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">{offer.merchant_name}</h2>
+                <h2 className="text-lg md:text-xl font-display font-extrabold tracking-tight text-kk-night mb-0.5">{offer.merchant_name}</h2>
                 
                 <div className="flex items-center gap-4 flex-wrap text-sm text-gray-600">
                   {merchantPlace && (
                     <div className="flex items-center gap-1">
-                      <MapPin className="w-4 h-4 text-[#00A690] flex-shrink-0" />
+                      <MapPin className="w-4 h-4 text-kk-mint-text flex-shrink-0" />
                       <span className="truncate">{merchantPlace}</span>
                     </div>
                   )}
                   {offer.merchant_phone && (
                     <a
                       href={`tel:${offer.merchant_phone}`}
-                      className="flex items-center gap-1 text-[#00A690] hover:text-[#00A690] font-medium"
+                      className="flex items-center gap-1 text-kk-mint-text hover:underline font-medium"
                     >
                       <Phone className="w-4 h-4" />
                       {offer.merchant_phone}
@@ -286,7 +305,8 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
               <button
                 onClick={handleGetDirections}
-                className="flex items-center gap-2 px-4 py-2 bg-[#00A690] hover:bg-[#F75C00] text-[#FFFFF0] rounded-lg font-semibold transition-colors duration-300 shadow-md flex-shrink-0"
+                className="kk-btn-dark px-4 py-2 text-sm flex-shrink-0"
+                aria-label="Yol Tarifi"
               >
                 <Navigation className="w-4 h-4" />
                 <span className="hidden md:inline">Yol Tarifi</span>
@@ -296,55 +316,29 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
           <div className="p-4 md:p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="relative">
-                {offer.image_url && (
-                  <div className="relative rounded-xl overflow-hidden shadow-lg">
-                    <img
-                      src={offer.image_url}
-                      alt={offer.title}
-                      className="w-full h-64 md:h-80 object-cover"
-                      crossOrigin="anonymous"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg font-bold text-lg shadow-lg">
-                      -{getDiscountPercent(offer.price_before, offer.price_after)}%
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col justify-between">
+              <div className="flex flex-col">
                 <div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">{offer.title}</h3>
+                  <h3 className="text-2xl md:text-3xl font-display font-extrabold tracking-tight text-kk-night mb-3">{offer.title}</h3>
 
                   {offer.description && (
                     <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-4">{offer.description}</p>
                   )}
                 </div>
 
-                <div className="flex items-baseline gap-3 bg-green-100 rounded-lg p-4 mb-4">
-                  <span className="text-3xl md:text-4xl font-bold text-[#00A690]">
-                    {formatTL(offer.price_after)}
-                  </span>
-                  <span className="text-lg md:text-xl text-gray-400 line-through">
-                    {formatTL(offer.price_before)}
-                  </span>
-                </div>
-
                 {offer.available_until && (
                   <div className="space-y-3 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <Clock className="w-4 h-4" />
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex items-center gap-2 text-kk-night bg-gray-50 rounded-2xl px-3 py-3">
+                        <Clock className="w-4 h-4 text-kk-coral-text flex-shrink-0" />
                         <span className="font-semibold">{getTimeRemaining(offer.available_until)} kalan</span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <Package className="w-4 h-4" />
+                      <div className="flex items-center gap-2 text-kk-night bg-gray-50 rounded-2xl px-3 py-3">
+                        <Package className="w-4 h-4 text-kk-mint-text flex-shrink-0" />
                         <span className="font-semibold">Stok: {offer.quantity}</span>
                       </div>
                     </div>
 
-                    <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div
                         className={`h-full transition-all duration-300 rounded-full ${
                           progressPercent < 10 ? 'animate-pulse' : ''
@@ -357,9 +351,20 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                     </div>
                   </div>
                 )}
+              </div>
 
-                <div className="mb-4 bg-gray-50 p-4 rounded-lg">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="flex flex-col justify-end">
+                <div className="flex items-baseline gap-3 bg-kk-paper rounded-2xl p-4 mb-4">
+                  <span className="text-3xl md:text-4xl font-display font-extrabold text-kk-night">
+                    {formatTL(offer.price_after)}
+                  </span>
+                  <span className="text-lg md:text-xl text-gray-500 line-through">
+                    {formatTL(offer.price_before)}
+                  </span>
+                </div>
+
+                <div className="mb-4 bg-gray-50 p-4 rounded-2xl">
+                  <label className="block text-sm font-semibold text-kk-night mb-2">
                     Miktar
                   </label>
                   <div className="flex items-center justify-between">
@@ -367,16 +372,17 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                       type="button"
                       onClick={() => setReservationQuantity(Math.max(1, reservationQuantity - 1))}
                       disabled={reservationQuantity <= 1}
-                      className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-xl font-bold"
+                      className="w-12 h-12 rounded-full bg-white border border-black/10 shadow-sm text-kk-night hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-xl font-bold"
+                      aria-label="Azalt"
                     >
                       −
                     </button>
 
                     <div className="flex flex-col items-center">
-                      <span className="text-2xl font-bold text-[#00A690]">
+                      <span className="text-3xl font-display font-extrabold text-kk-night">
                         {reservationQuantity}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-600">
                         {offer.quantity} adet mevcut
                       </span>
                     </div>
@@ -385,7 +391,8 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                       type="button"
                       onClick={() => setReservationQuantity(Math.min(offer.quantity || 1, reservationQuantity + 1))}
                       disabled={reservationQuantity >= (offer.quantity || 1)}
-                      className="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-xl font-bold"
+                      className="w-12 h-12 rounded-full bg-kk-night text-white shadow-sm hover:bg-kk-surface2 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center text-xl font-bold"
+                      aria-label="Artır"
                     >
                       +
                     </button>
@@ -395,15 +402,15 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                 <button
                   onClick={handleReserve}
                   disabled={isReserving || isOutOfStock}
-                  className={`w-full py-4 rounded-lg font-bold text-lg shadow-lg transition-all ${
+                  className={`w-full py-4 text-lg ${
                     isReserving || isOutOfStock
-                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-[#00A690] hover:bg-[#F75C00] text-white hover:shadow-xl'
+                      ? 'rounded-full font-bold bg-gray-200 text-gray-600 cursor-not-allowed'
+                      : 'kk-btn-primary shadow-lg'
                   }`}
                 >
                   {isReserving ? (
                     <div className="flex items-center justify-center gap-2">
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-5 h-5 border-2 border-gray-600 border-t-transparent rounded-full animate-spin"></div>
                       Rezervasyon yapılıyor...
                     </div>
                   ) : isOutOfStock ? (
@@ -417,9 +424,9 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
           </div>
 
           {merchantOffers.length > 0 && (
-            <div className="border-t border-gray-200 px-4 md:px-6 py-6 bg-gray-50">
-              <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Package className="w-5 h-5 text-[#00A690]" />
+            <div className="border-t border-black/5 px-4 md:px-6 py-6 bg-kk-paper">
+              <h4 className="text-xl font-display font-extrabold tracking-tight text-kk-night mb-4 flex items-center gap-2">
+                <Package className="w-5 h-5 text-kk-mint-text" />
                 Diğer mevcut ürünler
               </h4>
 
@@ -429,38 +436,40 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                     <div
                       key={otherOffer.offer_id}
                       onClick={() => handleOfferChange(otherOffer)}
-                      className="bg-white rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer overflow-hidden border border-gray-200 md:w-64 w-full flex-shrink-0"
+                      className="group bg-white rounded-3xl shadow-sm hover:shadow-lg transition-all cursor-pointer overflow-hidden border border-black/5 md:w-64 w-full flex-shrink-0"
                     >
                       {otherOffer.image_url && (
-                        <img
-                          src={otherOffer.image_url}
-                          alt={otherOffer.title}
-                          className="w-full h-40 object-cover"
-                          crossOrigin="anonymous"
-                          referrerPolicy="no-referrer"
-                        />
+                        <div className="relative overflow-hidden">
+                          <img
+                            src={otherOffer.image_url}
+                            alt={otherOffer.title}
+                            className="w-full h-40 object-cover kk-photo-zoom"
+                            crossOrigin="anonymous"
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
                       )}
 
                       <div className="p-3">
-                        <h5 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2">
+                        <h5 className="font-display font-bold text-kk-night text-sm mb-2 line-clamp-2">
                           {otherOffer.title}
                         </h5>
 
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="font-bold text-[#00A690] text-lg">
+                          <span className="font-display font-extrabold text-kk-night text-lg">
                             {formatTL(otherOffer.price_after)}
                           </span>
-                          <span className="line-through text-gray-400 text-xs">
+                          <span className="line-through text-gray-500 text-xs">
                             {formatTL(otherOffer.price_before)}
                           </span>
-                          <span className="text-xs text-red-600 font-semibold bg-red-50 px-1.5 py-0.5 rounded">
+                          <span className="kk-chip bg-kk-lime text-kk-night font-bold">
                             -{getDiscountPercent(otherOffer.price_before, otherOffer.price_after)}%
                           </span>
                         </div>
 
                         <div className="text-xs text-gray-600 flex items-center justify-between">
                           {otherOffer.available_until && (
-                            <span className="flex items-center gap-1">
+                            <span className="flex items-center gap-1 text-kk-coral-text font-semibold">
                               <Clock className="w-3 h-3" />
                               {getTimeRemaining(otherOffer.available_until)}
                             </span>
@@ -476,9 +485,13 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
           )}
 
           {loadingOtherOffers && (
-            <div className="border-t border-gray-200 px-6 md:px-8 py-6 bg-gray-50 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00A690] mx-auto"></div>
-              <p className="text-sm text-gray-600 mt-2">Diğer ürünler yükleniyor...</p>
+            <div className="border-t border-black/5 px-4 md:px-6 py-6 bg-kk-paper">
+              <div className="flex md:flex-row flex-col gap-4">
+                <div className="kk-skeleton rounded-3xl h-56 md:w-64 w-full" />
+                <div className="kk-skeleton rounded-3xl h-56 md:w-64 w-full hidden md:block" />
+                <div className="kk-skeleton rounded-3xl h-56 md:w-64 w-full hidden md:block" />
+              </div>
+              <p className="text-sm text-gray-600 mt-3 text-center">Diğer ürünler yükleniyor...</p>
             </div>
           )}
         </div>
@@ -486,32 +499,33 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
       {showLoginModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-[2100] flex items-center justify-center p-4"
+          className="fixed inset-0 bg-kk-night/60 backdrop-blur-sm z-[2100] flex items-center justify-center p-4"
           onClick={() => setShowLoginModal(false)}
         >
           <div
-            className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
+            className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-[#FFFFF0] rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center bg-kk-night px-6 pt-8 pb-6">
+              <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-3xl">🔒</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Giriş gerekli</h3>
-              <p className="text-gray-600">Giriş yapın:</p>
+              <h3 className="text-2xl font-display font-extrabold tracking-tight text-white mb-2">Giriş gerekli</h3>
+              <p className="text-white/70">Giriş yapın:</p>
             </div>
 
+            <div className="p-6">
             <ul className="space-y-2 mb-6">
-              <li className="flex items-center gap-2 text-gray-700">
-                <span className="text-[#00A690]">✓</span>
+              <li className="flex items-center gap-2 text-kk-night">
+                <span className="w-5 h-5 rounded-full bg-kk-mint text-kk-night text-xs font-bold flex items-center justify-center">✓</span>
                 <span>Teklifleri rezerve edin</span>
               </li>
-              <li className="flex items-center gap-2 text-gray-700">
-                <span className="text-[#00A690]">✓</span>
+              <li className="flex items-center gap-2 text-kk-night">
+                <span className="w-5 h-5 rounded-full bg-kk-mint text-kk-night text-xs font-bold flex items-center justify-center">✓</span>
                 <span>Bildirimler alın</span>
               </li>
-              <li className="flex items-center gap-2 text-gray-700">
-                <span className="text-[#00A690]">✓</span>
+              <li className="flex items-center gap-2 text-kk-night">
+                <span className="w-5 h-5 rounded-full bg-kk-mint text-kk-night text-xs font-bold flex items-center justify-center">✓</span>
                 <span>Rezervasyonlarınızı takip edin</span>
               </li>
             </ul>
@@ -519,26 +533,27 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
             <div className="space-y-3">
               <button
                 onClick={() => navigate('/customer/auth')}
-                className="w-full py-3 bg-[#00A690] hover:bg-[#F75C00] text-white rounded-lg font-semibold transition-colors duration-300 shadow-md"
+                className="w-full kk-btn-primary"
               >
                 Giriş Yap
               </button>
               <button
                 onClick={() => setShowLoginModal(false)}
-                className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-semibold transition-colors duration-300"
+                className="w-full kk-btn-ghost"
               >
                 Daha Sonra
               </button>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-gray-200 text-center">
+            <div className="mt-6 pt-6 border-t border-black/5 text-center">
               <p className="text-sm text-gray-600 mb-2">💼 İşletme sahibi misiniz?</p>
               <button
                 onClick={() => navigate('/merchant/auth')}
-                className="text-[#00A690] hover:text-[#F75C00] font-semibold text-sm"
+                className="text-kk-mint-text hover:underline font-semibold text-sm"
               >
                 KapKurtar'a ücretsiz katılın
               </button>
+            </div>
             </div>
           </div>
         </div>

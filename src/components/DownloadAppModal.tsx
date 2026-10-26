@@ -52,51 +52,54 @@ const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onClose }) 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-opacity"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-kk-night/60 backdrop-blur-sm transition-opacity"
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl max-w-md w-full relative transform transition-all"
+        className="bg-white rounded-3xl shadow-2xl max-w-md w-full relative transform transition-all overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute top-4 right-4 z-10 p-1.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
           aria-label="Kapat"
         >
           <X className="w-6 h-6" />
         </button>
 
         {/* Content */}
-        <div className="p-8">
+        <div className="bg-kk-night px-8 pt-8 pb-6">
           {/* Header */}
           <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-[#00A690] mb-2">
+            <h2 className="text-3xl font-display font-extrabold tracking-tight text-white mb-2">
               KapKurtar'ı İndirin
             </h2>
-            <p className="text-gray-600 text-lg">
+            <p className="text-kk-muted text-lg">
               Yakınınızdaki gıdayı kurtarın
             </p>
           </div>
 
           {/* QR Code (Google Play) */}
-          <div className="mb-6 flex flex-col items-center">
-            <div className="w-48 h-48 bg-white rounded-xl flex items-center justify-center border-2 border-gray-300 p-2">
+          <div className="flex flex-col items-center">
+            <div className="w-48 h-48 bg-white rounded-2xl flex items-center justify-center p-3 shadow-lg">
               <img
                 src={GOOGLE_PLAY_QR_SRC}
                 alt="Google Play'de KapKurtar uygulaması için QR kodu"
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="mt-2 text-sm text-gray-500 font-medium">Android için QR kodu tarayın</span>
+            <span className="mt-3 text-sm text-white/70 font-medium">Android için QR kodu tarayın</span>
           </div>
+        </div>
+
+        <div className="p-8">
 
           {/* App Store Buttons */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <button
               disabled
-              className="bg-gray-300 text-gray-500 px-4 py-3 rounded-lg font-medium cursor-not-allowed opacity-60 flex items-center justify-center space-x-2 transition-all"
+              className="bg-kk-paper text-gray-600 px-4 py-3 rounded-full font-medium cursor-not-allowed flex items-center justify-center space-x-2 transition-all"
             >
               <span className="text-2xl">📱</span>
               <span className="text-sm">iPhone · Yakında</span>
@@ -105,7 +108,7 @@ const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onClose }) 
               href={GOOGLE_PLAY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#00A690] text-white px-4 py-3 rounded-lg font-medium hover:bg-[#F75C00] flex items-center justify-center space-x-2 transition-all"
+              className="kk-btn-primary px-4 py-3 space-x-2"
             >
               <span className="text-2xl">🤖</span>
               <span className="text-sm">Google Play'den İndir</span>
@@ -113,12 +116,12 @@ const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onClose }) 
           </div>
 
           {/* Availability Text */}
-          <p className="text-center text-sm italic text-gray-500 mb-6">
+          <p className="text-center text-sm italic text-gray-600 mb-6">
             Android uygulaması Google Play'de yayında. iOS sürümü yakında!
           </p>
 
           {/* Email Notification Form */}
-          <div className="border-t border-gray-200 pt-6">
+          <div className="border-t border-black/5 pt-6">
             <p className="text-center text-sm text-gray-600 mb-4">
               iOS uygulaması yayınlandığında haberdar olmak için e-posta adresinizi bırakın
             </p>
@@ -129,17 +132,17 @@ const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onClose }) 
                 onChange={(e) => { setEmail(e.target.value); setSubmitError(null); }}
                 placeholder="email@ornek.com"
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00A690] focus:border-transparent transition-all"
+                className="kk-input transition-all"
               />
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#00A690] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#F75C00] transition-colors duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full kk-btn-dark"
               >
                 {isSubmitting ? 'Gönderiliyor...' : isSubmitted ? '✓ Teşekkürler!' : 'Beni Bilgilendir'}
               </button>
               {submitError && (
-                <p className="text-center text-sm text-red-600" role="alert">
+                <p className="text-center text-sm text-kk-coral-text" role="alert">
                   {submitError}
                 </p>
               )}

@@ -2,27 +2,27 @@ import { Calendar, User, ArrowLeft, AlertCircle, CheckCircle, Clock } from 'luci
 
 const BlogArticle10 = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-kk-paper">
+      <div className="bg-kk-night border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <a href="/blog" className="inline-flex items-center text-[#00A690] hover:text-[#F75C00] transition-colors duration-300">
+          <a href="/blog" className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 transition-colors duration-300">
             <ArrowLeft className="w-5 h-5 mr-2" />
             Bloga dön
           </a>
         </div>
       </div>
 
-      <div className="bg-white py-12">
+      <div className="bg-kk-night text-white pt-10 pb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
-            <span className="bg-[#00A690] text-white px-4 py-2 rounded-full text-sm font-medium">
+            <span className="kk-chip bg-kk-lime text-kk-night px-4 py-2 text-sm font-semibold">
               İsraf Karşıtı
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6">
             Son kullanma tarihleri: daha iyi tüketmek için anlamak
           </h1>
-          <div className="flex items-center text-gray-600 mb-8">
+          <div className="flex flex-wrap items-center text-kk-muted mb-8">
             <User className="w-5 h-5 mr-2" />
             <span className="mr-6">Dr. Mehmet Yılmaz</span>
             <Calendar className="w-5 h-5 mr-2" />
@@ -33,34 +33,34 @@ const BlogArticle10 = () => {
           <img
             src="https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=1200"
             alt="Gıda ambalajlarında tarihler"
-            className="w-full h-96 object-cover rounded-xl shadow-lg"
+            className="w-full h-72 md:h-96 object-cover rounded-3xl shadow-2xl"
           />
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none kk-card p-6 md:p-10">
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             SKT, TETT, "Son Kullanma Tarihi"... Ambalajlardaki bu tarihler genellikle yanlış anlaşılır.
             Sonuç: hala tüketilebilir tonlarca gıda çöpe gidiyor. Bunları çözmeyi öğrenelim!
           </p>
 
-          <blockquote className="border-l-4 border-[#00A690] pl-6 my-8 italic text-gray-700">
+          <blockquote className="border-l-4 border-kk-mint pl-6 my-8 italic text-gray-700">
             "Türkiye'de evsel gıda israfının %30'u son kullanma tarihlerinin yanlış anlaşılmasıyla ilgili.
             Oysa SKT ile TETT arasındaki fark çok önemli!"
             <br />
             <span className="text-sm not-italic">- Türk Tarım Bakanlığı, 2024</span>
           </blockquote>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
-            <AlertCircle className="inline w-6 h-6 mr-2 text-red-500" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">
+            <AlertCircle className="inline w-6 h-6 mr-2 text-kk-coral-text" />
             SKT: Son Kullanma Tarihi (Son Tüketim Tarihi)
           </h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
             SKT <strong>zorunlu</strong> bir tarihtir. Bu tarihten sonra ürün sağlık için risk oluşturabilir.
           </p>
 
-          <div className="bg-red-50 border-l-4 border-red-500 p-6 my-8">
+          <div className="bg-red-50 border-l-4 border-red-500 p-6 my-8 rounded-2xl">
             <h3 className="font-bold text-gray-900 mb-4">📋 SKT özellikleri:</h3>
             <ul className="space-y-2 text-gray-700">
               <li>• <strong>İfade:</strong> "...tarihine kadar tüketilmeli" / "Son Tüketim Tarihi"</li>
@@ -70,9 +70,9 @@ const BlogArticle10 = () => {
             </ul>
           </div>
 
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">SKT ile ilgili ürünler:</h3>
+          <h3 className="font-display text-xl font-extrabold text-kk-night mt-8 mb-3">SKT ile ilgili ürünler:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-            <div className="bg-white border-2 border-red-200 rounded-lg p-4">
+            <div className="bg-white border-2 border-red-200 rounded-2xl p-4">
               <h4 className="font-semibold text-gray-900 mb-3">🥩 Taze et ve balık</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Kıyma: 24-48 saat</li>
@@ -81,7 +81,7 @@ const BlogArticle10 = () => {
                 <li>• Deniz ürünleri: 24 saat</li>
               </ul>
             </div>
-            <div className="bg-white border-2 border-red-200 rounded-lg p-4">
+            <div className="bg-white border-2 border-red-200 rounded-2xl p-4">
               <h4 className="font-semibold text-gray-900 mb-3">🥛 Taze süt ürünleri</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Taze süt: 3-4 gün</li>
@@ -90,7 +90,7 @@ const BlogArticle10 = () => {
                 <li>• Taze ayran: 2-3 gün</li>
               </ul>
             </div>
-            <div className="bg-white border-2 border-red-200 rounded-lg p-4">
+            <div className="bg-white border-2 border-red-200 rounded-2xl p-4">
               <h4 className="font-semibold text-gray-900 mb-3">🥗 Hazır yemekler</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Hazır salatalar: 1-2 gün</li>
@@ -98,7 +98,7 @@ const BlogArticle10 = () => {
                 <li>• Catering yemekleri: 2-3 gün</li>
               </ul>
             </div>
-            <div className="bg-white border-2 border-red-200 rounded-lg p-4">
+            <div className="bg-white border-2 border-red-200 rounded-2xl p-4">
               <h4 className="font-semibold text-gray-900 mb-3">🍰 Taze pastalar</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Krema şanti: 24 saat</li>
@@ -108,7 +108,7 @@ const BlogArticle10 = () => {
             </div>
           </div>
 
-          <div className="bg-red-100 rounded-lg p-6 my-8">
+          <div className="bg-red-100 rounded-2xl p-6 my-8">
             <p className="font-bold text-red-800 mb-2">⚠️ ÖNEMLİ</p>
             <p className="text-red-700">
               SKT'den sonra, görünüşü iyi olsa bile ürünü atın. Patojen bakteriler
@@ -116,8 +116,8 @@ const BlogArticle10 = () => {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
-            <CheckCircle className="inline w-6 h-6 mr-2 text-[#00A690]" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">
+            <CheckCircle className="inline w-6 h-6 mr-2 text-kk-mint-text" />
             TETT: Tavsiye Edilen Tüketim Tarihi
           </h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
@@ -125,7 +125,7 @@ const BlogArticle10 = () => {
             (tat, doku, vitaminler) kaybeder ancak tamamen tüketilebilir ve tehlikesizdir.
           </p>
 
-          <div className="bg-green-50 border-l-4 border-[#00A690] p-6 my-8">
+          <div className="bg-green-50 border-l-4 border-kk-mint p-6 my-8 rounded-2xl">
             <h3 className="font-bold text-gray-900 mb-4">📋 TETT özellikleri:</h3>
             <ul className="space-y-2 text-gray-700">
               <li>• <strong>İfade:</strong> "Tercihen...tarihinden önce tüketilmeli" / "Tavsiye Edilen Tüketim Tarihi"</li>
@@ -135,9 +135,9 @@ const BlogArticle10 = () => {
             </ul>
           </div>
 
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">TETT ile ilgili ürünler:</h3>
+          <h3 className="font-display text-xl font-extrabold text-kk-night mt-8 mb-3">TETT ile ilgili ürünler:</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-            <div className="bg-white border-2 border-green-200 rounded-lg p-4">
+            <div className="bg-white border-2 border-kk-mint/40 rounded-2xl p-4">
               <h4 className="font-semibold text-gray-900 mb-3">🍪 Kuru ürünler</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Makarna: TETT'den +1 yıl sonra</li>
@@ -147,7 +147,7 @@ const BlogArticle10 = () => {
                 <li>• Tahıllar: TETT'den +6 ay sonra</li>
               </ul>
             </div>
-            <div className="bg-white border-2 border-green-200 rounded-lg p-4">
+            <div className="bg-white border-2 border-kk-mint/40 rounded-2xl p-4">
               <h4 className="font-semibold text-gray-900 mb-3">🥫 Konserveler</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Konserveler: TETT'den +2 yıl sonra</li>
@@ -155,7 +155,7 @@ const BlogArticle10 = () => {
                 <li>• Soslar: TETT'den +6 ay sonra</li>
               </ul>
             </div>
-            <div className="bg-white border-2 border-green-200 rounded-lg p-4">
+            <div className="bg-white border-2 border-kk-mint/40 rounded-2xl p-4">
               <h4 className="font-semibold text-gray-900 mb-3">☕ İçecekler</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Kahve: TETT'den +1 yıl sonra</li>
@@ -164,7 +164,7 @@ const BlogArticle10 = () => {
                 <li>• Gazlı içecekler: TETT'den +3 ay sonra</li>
               </ul>
             </div>
-            <div className="bg-white border-2 border-green-200 rounded-lg p-4">
+            <div className="bg-white border-2 border-kk-mint/40 rounded-2xl p-4">
               <h4 className="font-semibold text-gray-900 mb-3">🍫 Diğerleri</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Çikolata: TETT'den +6 ay sonra</li>
@@ -175,7 +175,7 @@ const BlogArticle10 = () => {
             </div>
           </div>
 
-          <div className="bg-green-100 rounded-lg p-6 my-8">
+          <div className="bg-green-100 rounded-2xl p-6 my-8">
             <p className="font-bold text-green-800 mb-2">💡 BİLİNMESİ İYİDİR</p>
             <p className="text-green-700">
               TETT'si 3 hafta geçmiş bir yoğurt mu? Tamamen tüketilebilir! Görünüşü ve tadı
@@ -183,8 +183,8 @@ const BlogArticle10 = () => {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
-            <Clock className="inline w-6 h-6 mr-2 text-orange-500" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">
+            <Clock className="inline w-6 h-6 mr-2 text-kk-coral-text" />
             Bir ürünün hala iyi olup olmadığını nasıl anlarız?
           </h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
@@ -192,7 +192,7 @@ const BlogArticle10 = () => {
           </p>
 
           <div className="space-y-6 my-8">
-            <div className="bg-white border-2 border-[#00A690] rounded-lg p-6">
+            <div className="bg-white border-2 border-kk-mint rounded-3xl p-6">
               <h3 className="font-bold text-gray-900 mb-3 flex items-center">
                 <span className="text-2xl mr-3">👀</span> Görme
               </h3>
@@ -203,7 +203,7 @@ const BlogArticle10 = () => {
               </ul>
             </div>
 
-            <div className="bg-white border-2 border-[#00A690] rounded-lg p-6">
+            <div className="bg-white border-2 border-kk-mint rounded-3xl p-6">
               <h3 className="font-bold text-gray-900 mb-3 flex items-center">
                 <span className="text-2xl mr-3">👃</span> Koklama
               </h3>
@@ -214,7 +214,7 @@ const BlogArticle10 = () => {
               </ul>
             </div>
 
-            <div className="bg-white border-2 border-[#00A690] rounded-lg p-6">
+            <div className="bg-white border-2 border-kk-mint rounded-3xl p-6">
               <h3 className="font-bold text-gray-900 mb-3 flex items-center">
                 <span className="text-2xl mr-3">👅</span> Tadma
               </h3>
@@ -226,10 +226,10 @@ const BlogArticle10 = () => {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">Özel durumlar</h2>
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">Özel durumlar</h2>
 
           <div className="space-y-4 my-8">
-            <div className="bg-blue-50 rounded-lg p-4">
+            <div className="bg-blue-50 rounded-2xl p-4">
               <h4 className="font-bold text-gray-900 mb-2">🥖 Ekmek</h4>
               <p className="text-sm text-gray-700">
                 Kuru (bayat) ekmek birkaç gün tüketilebilir. Kruton, galeta unu
@@ -237,7 +237,7 @@ const BlogArticle10 = () => {
               </p>
             </div>
 
-            <div className="bg-blue-50 rounded-lg p-4">
+            <div className="bg-blue-50 rounded-2xl p-4">
               <h4 className="font-bold text-gray-900 mb-2">🥚 Yumurtalar</h4>
               <p className="text-sm text-gray-700 mb-2">
                 <strong>Tazelik testi:</strong> Yumurtayı soğuk suya batırın.
@@ -249,7 +249,7 @@ const BlogArticle10 = () => {
               </ul>
             </div>
 
-            <div className="bg-blue-50 rounded-lg p-4">
+            <div className="bg-blue-50 rounded-2xl p-4">
               <h4 className="font-bold text-gray-900 mb-2">🧀 Peynirler</h4>
               <p className="text-sm text-gray-700">
                 Sert peynirler: küflü kısmı kesin, gerisi OK.<br />
@@ -258,13 +258,13 @@ const BlogArticle10 = () => {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">KapKurtar ve son kullanma tarihleri</h2>
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">KapKurtar ve son kullanma tarihleri</h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
             KapKurtar'da sunulan ürünler genellikle tarihine yakın ürünlerdir.
             TETT, ürünün bu tarihten sonra da güvenle tüketilebileceği anlamına gelir.
           </p>
 
-          <div className="bg-[#FFFFF0] rounded-lg p-6 my-8">
+          <div className="bg-kk-lime/15 rounded-2xl p-6 my-8">
             <h3 className="font-bold text-gray-900 mb-4">🛡️ KapKurtar ilkeleri:</h3>
             <ul className="space-y-2 text-gray-700">
               <li>• ✅ İşletmeler yürürlükteki sağlık standartlarına uygun ürünler sunmakla yükümlüdür</li>
@@ -274,20 +274,20 @@ const BlogArticle10 = () => {
             </ul>
           </div>
 
-          <blockquote className="border-l-4 border-[#00A690] pl-6 my-8 italic text-gray-700">
+          <blockquote className="border-l-4 border-kk-mint pl-6 my-8 italic text-gray-700">
             "TETT'si geçmiş bir ürün almak, akıllı bir israf karşıtı harekettir.
             Ürün sağlıklı, kalite yerinde, sadece büyük marketlerin pazarlaması
             bizi çok çabuk atmaya alıştırdı!"
           </blockquote>
 
-          <div className="bg-gray-100 rounded-lg p-8 my-12 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Hala mükemmel ürünleri kurtarın</h3>
-            <p className="text-gray-700 mb-6">
+          <div className="not-prose bg-kk-night text-white rounded-3xl p-8 my-12 text-center">
+            <h3 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-white mb-4">Hala mükemmel ürünleri kurtarın</h3>
+            <p className="text-white/70 mb-6">
               KapKurtar tekliflerini keşfedin ve satılmayan ürünlere ikinci bir şans verin
             </p>
             <a
               href="/offers"
-              className="bg-[#00A690] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#F75C00] transition-colors duration-300 inline-block"
+              className="kk-btn-primary px-8 py-3"
             >
               Teklifleri görüntüle
             </a>

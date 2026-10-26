@@ -182,17 +182,17 @@ export function NotificationBell({ userType }: NotificationBellProps) {
     switch (type) {
       case "offer":
       case "offer_nearby":
-        return "border-l-[#00A690]";
+        return "border-l-kk-mint-deep";
       case "reservation":
-        return "border-l-blue-500";
+        return "border-l-kk-lilac";
       case "offer_expired":
-        return "border-l-[#00A690]";
+        return "border-l-kk-mint-deep";
       case "stock_empty":
-        return "border-l-red-500";
+        return "border-l-kk-coral";
       case "system":
-        return "border-l-purple-500";
+        return "border-l-kk-lilac";
       default:
-        return "border-l-gray-500";
+        return "border-l-gray-400";
     }
   };
 
@@ -201,32 +201,32 @@ export function NotificationBell({ userType }: NotificationBellProps) {
       <div ref={bellRef} className="relative select-none">
         <button
           onClick={() => setOpen(!open)}
-          className={`relative p-2 rounded-full hover:bg-gray-100 transition-all ${
+          className={`relative p-2 rounded-full hover:bg-white/10 transition-all ${
             shake ? "animate-shake" : ""
           }`}
           aria-label="Bildirimler"
         >
           <Bell
-            className="w-6 h-6 text-[#FFFFF0] hover:text-[#F75C00] transition-colors duration-300"
+            className="w-6 h-6 text-white hover:text-kk-lime transition-colors duration-300"
           />
 
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1.5 border-2 border-white animate-pulse shadow-lg">
+            <span className="absolute -top-1 -right-1 min-w-[20px] h-5 bg-kk-coral text-kk-night text-xs font-bold rounded-full flex items-center justify-center px-1.5 border-2 border-kk-night animate-pulse shadow-lg">
               {unreadCount > 99 ? "99+" : unreadCount}
             </span>
           )}
         </button>
 
         {open && (
-          <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-2xl border border-gray-200 z-[9999] overflow-hidden">
-            <div className="flex justify-between items-center px-4 py-3 border-b border-gray-100 bg-[#F5E6D3]">
-              <h3 className="text-sm font-bold text-gray-800">
+          <div className="absolute right-0 mt-2 w-96 bg-white rounded-2xl shadow-2xl border border-black/5 z-[9999] overflow-hidden">
+            <div className="flex justify-between items-center px-4 py-3 border-b border-white/10 bg-kk-night">
+              <h3 className="text-sm font-display font-extrabold text-white">
                 Bildirimler {unreadCount > 0 && `(${unreadCount})`}
               </h3>
               {notifications.length > 0 && unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-xs text-[#00A690] hover:text-[#F75C00] font-medium hover:underline transition-colors duration-300"
+                  className="text-xs text-kk-lime hover:text-white font-medium hover:underline transition-colors duration-300"
                 >
                   Tümünü Okundu İşaretle
                 </button>
@@ -237,8 +237,8 @@ export function NotificationBell({ userType }: NotificationBellProps) {
               {notifications.length === 0 ? (
                 <div className="text-center py-12">
                   <Bell className="w-16 h-16 text-gray-300 mx-auto mb-3" />
-                  <p className="text-sm text-gray-500 font-medium">Bildirim Yok</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-sm text-gray-600 font-medium">Bildirim Yok</p>
+                  <p className="text-xs text-gray-500 mt-1">
                     Yeni teklifler ve rezervasyonlardan burada bilgilendirileceksiniz
                   </p>
                 </div>
@@ -247,25 +247,25 @@ export function NotificationBell({ userType }: NotificationBellProps) {
                   <div
                     key={n.id}
                     onClick={() => handleNotificationClick(n)}
-                    className={`px-4 py-3 cursor-pointer border-b border-gray-100 last:border-b-0 transition-all hover:bg-gray-50 ${
+                    className={`px-4 py-3 cursor-pointer border-b border-black/5 last:border-b-0 transition-all hover:bg-kk-paper ${
                       !n.is_read
-                        ? `bg-[#F5E6D3] border-l-4 ${getNotificationBorderColor(n.type)}`
+                        ? `bg-kk-lime/10 border-l-4 ${getNotificationBorderColor(n.type)}`
                         : "bg-white border-l-4 border-l-transparent"
                     }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#00A690] flex items-center justify-center text-lg shadow-sm">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-kk-mint flex items-center justify-center text-lg shadow-sm">
                         {getNotificationIcon(n.type)}
                       </div>
 
                       <div className="flex-1 min-w-0">
                         {n.title && (
-                          <p className="text-sm font-semibold text-gray-800 mb-1 line-clamp-1">
+                          <p className="text-sm font-semibold text-kk-night mb-1 line-clamp-1">
                             {n.title}
                           </p>
                         )}
                         <p className="text-sm text-gray-700 line-clamp-2">{n.message}</p>
-                        <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+                        <p className="text-xs text-gray-500 mt-1.5 flex items-center gap-1">
                           <span>🕒</span>
                           {new Date(n.created_at).toLocaleString("tr-TR", {
                             day: "2-digit",
@@ -277,7 +277,7 @@ export function NotificationBell({ userType }: NotificationBellProps) {
                       </div>
 
                       {!n.is_read && (
-                        <div className="flex-shrink-0 w-2.5 h-2.5 bg-[#00A690] rounded-full mt-1 shadow-sm"></div>
+                        <div className="flex-shrink-0 w-2.5 h-2.5 bg-kk-mint-deep rounded-full mt-1 shadow-sm"></div>
                       )}
                     </div>
                   </div>

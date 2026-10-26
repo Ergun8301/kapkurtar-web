@@ -125,43 +125,43 @@ const BlogPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-kk-paper">
       {/* Hero Section */}
-      <div className="bg-[#00A690] text-white py-16">
+      <div className="bg-kk-night text-white py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            KapKurtar Blog
+          <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+            KapKurtar <span className="text-kk-lime">Blog</span>
           </h1>
-          <p className="text-xl text-[#FFFFF0] mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto">
             İsraf önleyici yaşam tarzı için haberler, tavsiyeler ve tarifler
           </p>
 
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5 z-10" />
             <input
               type="text"
               placeholder="Makale ara..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#F75C00]"
+              className="kk-input rounded-full pl-12 pr-4 py-4"
             />
           </div>
         </div>
       </div>
 
       {/* Categories */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-kk-paper/95 backdrop-blur border-b border-black/5 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-4 overflow-x-auto py-4">
+          <div className="flex gap-2 overflow-x-auto py-3">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-colors duration-300 ${
+                className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors duration-300 ${
                   selectedCategory === category
-                    ? 'bg-[#00A690] text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-kk-night text-white'
+                    : 'bg-white border border-black/10 text-gray-700 hover:bg-black/5'
                 }`}
               >
                 {category}
@@ -175,21 +175,21 @@ const BlogPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredPosts.map((post) => (
-            <article key={post.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow group">
-              <div className="relative">
+            <article key={post.id} className="kk-card overflow-hidden hover:shadow-xl transition-shadow group">
+              <div className="relative aspect-[4/3] overflow-hidden">
                 <img
                   src={post.featured_image_url}
                   alt={post.title}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="kk-photo-zoom w-full h-full object-cover"
                 />
                 <div className="absolute top-4 left-4">
-                  <span className="bg-[#00A690] text-white px-3 py-1 rounded-full text-sm font-medium">
+                  <span className="kk-chip bg-kk-lime text-kk-night px-3 py-1 text-sm font-semibold">
                     {post.category}
                   </span>
                 </div>
                 {post.external_url && (
                   <div className="absolute top-4 right-4">
-                    <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center">
+                    <span className="kk-chip bg-kk-night/80 backdrop-blur text-white px-2.5 py-1 text-xs font-medium flex items-center">
                       <ExternalLink className="w-3 h-3 mr-1" />
                       Harici
                     </span>
@@ -203,7 +203,7 @@ const BlogPage = () => {
                   <Calendar className="w-4 h-4 mr-1" />
                   <span>{formatDate(post.published_at)}</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#00A690] transition-colors duration-300">
+                <h3 className="font-display text-xl font-extrabold tracking-tight text-kk-night mb-3 group-hover:text-kk-mint-text transition-colors duration-300">
                   {post.title}
                 </h3>
                 
@@ -216,7 +216,7 @@ const BlogPage = () => {
                       href={post.external_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center text-[#00A690] hover:text-[#F75C00] font-medium transition-colors duration-300"
+                      className="inline-flex items-center text-kk-mint-text hover:text-kk-night font-semibold transition-colors duration-300"
                     >
                       Makaleyi oku
                       <ExternalLink className="w-4 h-4 ml-1" />
@@ -224,7 +224,7 @@ const BlogPage = () => {
                   ) : (
                     <a
                       href={`/blog/${post.id}`}
-                      className="inline-flex items-center text-[#00A690] hover:text-[#F75C00] font-medium transition-colors duration-300"
+                      className="inline-flex items-center text-kk-mint-text hover:text-kk-night font-semibold transition-colors duration-300"
                     >
                       Devamını oku
                       <ArrowRight className="w-4 h-4 ml-1" />

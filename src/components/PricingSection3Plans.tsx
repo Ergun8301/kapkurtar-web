@@ -10,7 +10,7 @@ const PricingSection3Plans = () => {
       icon: Zap,
       iconBg: 'bg-gray-100',
       iconColor: 'text-gray-600',
-      gradient: 'from-gray-50 to-white',
+      gradient: 'from-white to-white',
       features: [
         'Sınırsız teklifler',
         'Temel istatistikler',
@@ -28,9 +28,9 @@ const PricingSection3Plans = () => {
       commission: '12',
       badge: 'ÖNERİLEN',
       icon: TrendingUp,
-      iconBg: 'bg-[#F75C00]',
-      iconColor: 'text-white',
-      gradient: 'from-[#00A690] via-[#00B89F] to-[#00A690]',
+      iconBg: 'bg-kk-lime',
+      iconColor: 'text-kk-night',
+      gradient: 'from-kk-night to-kk-night',
       features: [
         'Tüm Temel özellikler',
         'Gelişmiş istatistikler',
@@ -48,9 +48,9 @@ const PricingSection3Plans = () => {
       commission: '8',
       badge: null,
       icon: Award,
-      iconBg: 'bg-[#F75C00]',
-      iconColor: 'text-white',
-      gradient: 'from-orange-50 to-white',
+      iconBg: 'bg-kk-mint',
+      iconColor: 'text-kk-night',
+      gradient: 'from-white to-white',
       features: [
         'Tüm İşletme özellikler',
         'Özel hesap yöneticisi',
@@ -65,27 +65,27 @@ const PricingSection3Plans = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-white via-gray-50 to-white py-20" id="pricing">
+    <div className="bg-kk-paper py-20" id="pricing">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-block mb-4">
-            <span className="bg-[#FFFFF0] text-[#00A690] px-4 py-1 rounded-full text-sm font-semibold">
+            <span className="kk-chip bg-white text-kk-mint-text px-4 py-1 text-sm font-semibold border border-black/10">
               💰 Fiyatlandırma
             </span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight text-kk-night mb-4">
             Şeffaf ve Esnek Fiyatlandırma
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
             Tüm planlar için 3 ay ücretsiz deneme! Planınızı sonra seçin.
           </p>
-          <div className="bg-gradient-to-r from-[#00A690] to-[#008C7A] text-white px-10 py-4 rounded-2xl font-bold text-xl shadow-2xl inline-block">
+          <div className="bg-kk-night text-white px-10 py-4 rounded-3xl font-bold text-xl shadow-2xl inline-block">
             <div className="flex items-center gap-3">
               <span className="text-3xl">🎉</span>
               <div>
-                <div className="text-2xl">İLK 3 AY TAMAMEN ÜCRETSİZ</div>
-                <div className="text-sm font-normal opacity-90">%0 komisyon + 0₺ abonelik • Hemen başlayın!</div>
+                <div className="font-display text-2xl font-extrabold text-kk-lime">İLK 3 AY TAMAMEN ÜCRETSİZ</div>
+                <div className="text-sm font-normal text-white/70">%0 komisyon + 0₺ abonelik • Hemen başlayın!</div>
               </div>
             </div>
           </div>
@@ -96,21 +96,16 @@ const PricingSection3Plans = () => {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative rounded-3xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+              className={`relative overflow-visible transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
                 plan.highlight
-                  ? 'shadow-2xl ring-4 ring-[#00A690] ring-offset-4'
-                  : 'shadow-lg'
+                  ? 'rounded-3xl bg-kk-night text-white shadow-2xl ring-2 ring-kk-lime'
+                  : 'kk-card'
               }`}
-              style={{
-                background: plan.highlight
-                  ? 'linear-gradient(135deg, #ffffff 0%, #f0fffe 100%)'
-                  : 'white'
-              }}
             >
               {/* Badge Recommandé */}
               {plan.badge && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                  <div className="bg-gradient-to-r from-[#F75C00] to-[#FF6B1A] text-white px-6 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg">
+                  <div className="bg-kk-lime text-kk-night px-6 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg">
                     <Star className="w-4 h-4" fill="currentColor" />
                     {plan.badge}
                     <Star className="w-4 h-4" fill="currentColor" />
@@ -119,62 +114,62 @@ const PricingSection3Plans = () => {
               )}
 
               {/* Header avec gradient */}
-              <div className={`relative pt-${plan.badge ? '12' : '8'} pb-8 px-8 bg-gradient-to-br ${plan.gradient}`}>
+              <div className={`relative pt-${plan.badge ? '12' : '8'} pb-8 px-8 rounded-t-3xl bg-gradient-to-br ${plan.gradient}`}>
                 {plan.highlight && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#00A690]/10 to-transparent"></div>
+                  <div className="absolute inset-0 rounded-t-3xl bg-gradient-to-br from-kk-lime/10 to-transparent"></div>
                 )}
 
                 {/* Icon */}
-                <div className={`inline-flex ${plan.iconBg} ${plan.iconColor} p-3 rounded-xl mb-4 shadow-md`}>
+                <div className={`inline-flex ${plan.iconBg} ${plan.iconColor} p-3 rounded-2xl mb-4`}>
                   <plan.icon className="w-8 h-8" />
                 </div>
 
-                <h3 className="text-3xl font-bold mb-2 text-gray-900">{plan.name}</h3>
-                <p className="text-sm text-gray-600 mb-6">
+                <h3 className={`font-display text-3xl font-extrabold tracking-tight mb-2 ${plan.highlight ? 'text-white' : 'text-kk-night'}`}>{plan.name}</h3>
+                <p className={`text-sm mb-6 ${plan.highlight ? 'text-kk-muted' : 'text-gray-600'}`}>
                   {plan.description}
                 </p>
 
                 {/* Prix */}
                 <div className="mb-4">
                   <div className="flex items-baseline gap-2">
-                    <span className={`text-6xl font-black ${plan.highlight ? 'text-[#F75C00]' : 'text-gray-900'}`}>
+                    <span className={`font-display text-6xl font-extrabold ${plan.highlight ? 'text-kk-lime' : 'text-kk-night'}`}>
                       {plan.price}
                     </span>
                     <div className="flex flex-col">
-                      <span className="text-xl font-semibold text-gray-700">₺</span>
-                      <span className="text-sm text-gray-500">/ay</span>
+                      <span className={`text-xl font-semibold ${plan.highlight ? 'text-white' : 'text-gray-700'}`}>₺</span>
+                      <span className={`text-sm ${plan.highlight ? 'text-kk-muted' : 'text-gray-500'}`}>/ay</span>
                     </div>
                   </div>
                   <div className="mt-3 flex items-baseline gap-1">
-                    <span className="text-gray-600">+</span>
-                    <span className={`text-3xl font-bold ${plan.highlight ? 'text-[#F75C00]' : 'text-gray-700'}`}>
+                    <span className={plan.highlight ? 'text-kk-muted' : 'text-gray-600'}>+</span>
+                    <span className={`font-display text-3xl font-extrabold ${plan.highlight ? 'text-kk-lime' : 'text-kk-night'}`}>
                       %{plan.commission}
                     </span>
-                    <span className="text-sm text-gray-600">komisyon satışta</span>
+                    <span className={`text-sm ${plan.highlight ? 'text-kk-muted' : 'text-gray-600'}`}>komisyon satışta</span>
                   </div>
                 </div>
 
                 {/* Idéal pour */}
-                <div className={`inline-block px-4 py-2 rounded-lg text-sm font-medium ${
+                <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${
                   plan.highlight
-                    ? 'bg-[#F75C00]/10 text-[#F75C00]'
-                    : 'bg-gray-100 text-gray-700'
+                    ? 'bg-white/10 text-white'
+                    : 'bg-kk-paper text-gray-700'
                 }`}>
                   📦 {plan.ideal}
                 </div>
               </div>
 
               {/* Features */}
-              <div className="p-8 bg-white">
+              <div className={`p-8 rounded-b-3xl ${plan.highlight ? 'bg-kk-surface' : 'bg-white'}`}>
                 <ul className="space-y-4">
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
                       <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
-                        plan.highlight ? 'bg-[#00A690]' : 'bg-gray-200'
+                        plan.highlight ? 'bg-kk-lime' : 'bg-kk-mint/20'
                       }`}>
-                        <Check className={`w-4 h-4 ${plan.highlight ? 'text-white' : 'text-gray-600'}`} strokeWidth={3} />
+                        <Check className={`w-4 h-4 ${plan.highlight ? 'text-kk-night' : 'text-kk-mint-text'}`} strokeWidth={3} />
                       </div>
-                      <span className="text-gray-700 leading-tight">{feature}</span>
+                      <span className={`leading-tight ${plan.highlight ? 'text-white/90' : 'text-gray-700'}`}>{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -187,7 +182,7 @@ const PricingSection3Plans = () => {
         <div className="flex justify-center mb-8">
           <a
             href="/merchant/auth"
-            className="inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#00A690] to-[#008C7A] text-white px-12 py-5 rounded-2xl font-bold text-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105"
+            className="kk-btn-primary gap-3 px-10 py-5 text-xl md:text-2xl shadow-xl"
           >
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />

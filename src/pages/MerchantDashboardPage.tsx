@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Plus, Package, Clock, Pause, Play, Trash2, Edit, Building2, TrendingUp, Check, Phone, Archive, ChevronDown, ChevronUp, History, X } from 'lucide-react';
+import { Plus, Package, Clock, Pause, Play, Trash2, Edit, Building2, TrendingUp, Check, Phone, Archive, ChevronDown, ChevronUp, History, X, CheckCircle2, AlertCircle } from 'lucide-react';
 import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
@@ -10,6 +10,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useAddProduct } from '../contexts/AddProductContext';
 import { uploadImageToSupabase } from '../lib/uploadImage';
 import { OfferForm } from '../components/OfferForm';
+import { LogoMark } from '../components/brand/Logo';
 import { formatTL, toTurkishError } from '../lib/errorMessages';
 
 interface Offer {
@@ -1047,8 +1048,11 @@ const MerchantDashboardPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A690]"></div>
+      <div className="min-h-screen bg-kk-paper flex items-center justify-center">
+        <div className="relative w-20 h-20 flex items-center justify-center">
+          <div className="absolute inset-0 animate-spin rounded-full border-4 border-kk-mint/20 border-t-kk-mint-deep"></div>
+          <LogoMark size={40} />
+        </div>
       </div>
     );
   }
@@ -1063,12 +1067,12 @@ const MerchantDashboardPage = () => {
     };
 
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-md w-full text-center">
-          <div className="w-14 h-14 bg-[#FFFFF0] rounded-full flex items-center justify-center mx-auto mb-4">
-            <Building2 className="w-7 h-7 text-[#00A690]" />
+      <div className="min-h-screen bg-kk-paper flex items-center justify-center px-4">
+        <div className="kk-card p-8 max-w-md w-full text-center">
+          <div className="w-14 h-14 bg-kk-lime rounded-full flex items-center justify-center mx-auto mb-4">
+            <Building2 className="w-7 h-7 text-kk-night" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
+          <h2 className="font-display text-xl font-extrabold tracking-tight text-kk-night mb-2">
             {loadError === 'not_found' ? 'İşletme profili bulunamadı' : 'Bilgiler yüklenemedi'}
           </h2>
           <p className="text-sm text-gray-600 mb-6">
@@ -1080,7 +1084,7 @@ const MerchantDashboardPage = () => {
             {loadError === 'error' && (
               <button
                 onClick={() => window.location.reload()}
-                className="w-full py-3 bg-[#00A690] hover:bg-[#F75C00] text-white font-semibold rounded-lg transition-colors duration-300"
+                className="kk-btn-primary w-full py-3"
               >
                 Tekrar Dene
               </button>
@@ -1088,15 +1092,15 @@ const MerchantDashboardPage = () => {
             <button
               onClick={handleRelogin}
               className={
-                'w-full py-3 font-semibold rounded-lg transition-colors duration-300 ' +
+                'w-full py-3 ' +
                 (loadError === 'error'
-                  ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  : 'bg-[#00A690] hover:bg-[#F75C00] text-white')
+                  ? 'kk-btn-ghost'
+                  : 'kk-btn-primary')
               }
             >
               Yeniden Giriş Yap
             </button>
-            <a href="/contact" className="text-sm text-[#00A690] hover:text-[#F75C00] font-medium">
+            <a href="/contact" className="text-sm text-kk-mint-text hover:underline font-semibold">
               Destek ile iletişime geç
             </a>
           </div>
@@ -1107,10 +1111,10 @@ const MerchantDashboardPage = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-[#FFFFF0] text-[#00A690]';
-      case 'paused': return 'bg-yellow-100 text-yellow-800';
-      case 'expired': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active': return 'bg-kk-mint text-kk-night';
+      case 'paused': return 'bg-kk-lilac text-kk-night';
+      case 'expired': return 'bg-gray-200 text-gray-800';
+      default: return 'bg-gray-200 text-gray-800';
     }
   };
 
@@ -1121,33 +1125,33 @@ const MerchantDashboardPage = () => {
     const isArchived = reservation.status === 'archived';
 
     return (
-      <div className={`bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow ${compact ? 'p-2' : 'p-3'}`}>
+      <div className={`kk-card hover:shadow-lg transition-shadow ${compact ? 'p-3' : 'p-4'}`}>
         <div className="flex items-center justify-between mb-2">
           {isPending && (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#00A690] bg-[#FFFFF0] px-2 py-1 rounded-full">
+            <span className="kk-chip inline-flex items-center gap-1 text-xs font-semibold text-kk-night bg-kk-lime px-2.5 py-1">
               🟠 Beklemede
             </span>
           )}
           {isCompleted && (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#00A690] bg-[#FFFFF0] px-2 py-1 rounded-full">
+            <span className="kk-chip inline-flex items-center gap-1 text-xs font-semibold text-kk-night bg-kk-mint px-2.5 py-1">
               🟢 Teslim edildi
             </span>
           )}
           {isExpired && (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-gray-700 bg-gray-100 px-2 py-1 rounded-full">
+            <span className="kk-chip inline-flex items-center gap-1 text-xs font-semibold text-gray-700 bg-gray-200 px-2.5 py-1">
               ⚫ Süresi doldu
             </span>
           )}
           {isArchived && (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
+            <span className="kk-chip inline-flex items-center gap-1 text-xs font-semibold text-gray-600 bg-gray-100 px-2.5 py-1">
               📦 Arşivlendi
             </span>
           )}
           <span className="text-xs text-gray-500">{formatDate(reservation.created_at)}</span>
         </div>
 
-        <div className="mb-2 pb-2 border-b border-gray-100">
-          <p className="font-bold text-xs text-gray-900 mb-1">👤 {reservation.client_name}</p>
+        <div className="mb-3 pb-3 border-b border-black/5">
+          <p className="font-bold text-sm text-kk-night mb-1">👤 {reservation.client_name}</p>
           {reservation.client_phone && (
             <p className="text-xs text-gray-600">📞 {reservation.client_phone}</p>
           )}
@@ -1159,7 +1163,7 @@ const MerchantDashboardPage = () => {
               <img
                 src={reservation.offer_image_url}
                 alt={reservation.offer_title}
-                className={`${compact ? 'w-10 h-10' : 'w-12 h-12'} rounded-lg object-cover flex-shrink-0`}
+                className={`${compact ? 'w-12 h-12' : 'w-14 h-14'} rounded-2xl object-cover flex-shrink-0`}
                 crossOrigin="anonymous"
                 referrerPolicy="no-referrer"
                 onError={(e) => {
@@ -1168,14 +1172,14 @@ const MerchantDashboardPage = () => {
               />
             )}
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-xs text-gray-900 mb-1 line-clamp-1">
+              <p className="font-semibold text-sm text-kk-night mb-1 line-clamp-1">
                 {reservation.offer_title}
               </p>
-              <p className="text-xs text-gray-900 font-bold mb-1">
+              <p className="font-display text-sm text-kk-night font-extrabold mb-1">
                 💰 {formatTL(reservation.total_price)}
               </p>
               {isPending && (
-                <p className="text-xs text-[#00A690] font-semibold">
+                <p className="text-xs text-kk-mint-text font-semibold">
                   ⏰ {getTimeRemaining(reservation.available_until)}
                 </p>
               )}
@@ -1190,7 +1194,7 @@ const MerchantDashboardPage = () => {
                 <button
                   onClick={() => handleValidateReservation(reservation.reservation_id)}
                   disabled={processingReservationId === reservation.reservation_id}
-                  className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-[#00A690] hover:bg-[#F75C00] text-white rounded text-xs font-medium transition-colors duration-300 disabled:opacity-60 disabled:cursor-wait"
+                  className="kk-btn-primary flex-1 gap-1 px-3 py-2 text-xs disabled:cursor-wait"
                 >
                   <Check className="w-3 h-3" />
                   Onayla
@@ -1198,9 +1202,10 @@ const MerchantDashboardPage = () => {
                 {reservation.client_phone && (
                   <a
                     href={`tel:${reservation.client_phone}`}
-                    className="flex items-center justify-center gap-1 px-2 py-1.5 bg-green-100 hover:bg-[#F75C00] text-white rounded text-xs font-medium transition-colors duration-300"
+                    aria-label="Müşteriyi ara"
+                    className="flex items-center justify-center w-9 h-9 rounded-full bg-kk-night text-white hover:bg-kk-surface2 transition-colors duration-300"
                   >
-                    <Phone className="w-3 h-3" />
+                    <Phone className="w-4 h-4" />
                   </a>
                 )}
               </>
@@ -1209,7 +1214,7 @@ const MerchantDashboardPage = () => {
               <button
                 onClick={() => handleArchiveReservation(reservation.reservation_id)}
                 disabled={processingReservationId === reservation.reservation_id}
-                className="w-full flex items-center justify-center gap-1 px-2 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-medium transition-colors duration-300 disabled:opacity-60 disabled:cursor-wait"
+                className="kk-btn-ghost w-full gap-1 px-3 py-2 text-xs disabled:cursor-wait"
               >
                 <Archive className="w-3 h-3" />
                 Arşivle
@@ -1225,30 +1230,30 @@ const MerchantDashboardPage = () => {
     const offerStatus = getOfferStatus(offer);
     
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-        <div className="relative h-48">
+      <div className="kk-card p-3 overflow-hidden hover:shadow-lg transition-shadow group">
+        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
           <img
             src={offer.image_url || 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400'}
             alt={offer.title}
-            className="w-full h-full object-cover"
+            className="kk-photo-zoom w-full h-full object-cover"
           />
-          <div className={'absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-medium ' + getStatusColor(offerStatus)}>
+          <div className={'kk-chip absolute top-3 right-3 px-3 py-1 text-xs font-semibold shadow-sm ' + getStatusColor(offerStatus)}>
             {offerStatus === 'paused' ? '⏸️ Duraklatıldı' : offerStatus === 'active' ? '✅ Aktif' : '⏰ Süresi Doldu'}
           </div>
         </div>
 
-        <div className="p-4">
-          <h3 className="font-semibold text-gray-900 mb-1">{offer.title}</h3>
+        <div className="px-1 pt-4 pb-1">
+          <h3 className="font-display text-lg font-extrabold tracking-tight text-kk-night mb-1">{offer.title}</h3>
           <p className="text-sm text-gray-600 mb-3 line-clamp-2">{offer.description}</p>
 
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="flex items-baseline space-x-2">
                 <span className="text-xs text-gray-500 line-through">{formatTL(offer.price_before)}</span>
-                <span className="text-lg font-bold text-[#00A690]">{formatTL(offer.price_after)}</span>
+                <span className="font-display text-xl font-extrabold text-kk-night">{formatTL(offer.price_after)}</span>
               </div>
               {offer.discount_percent && (
-                <span className="text-xs font-medium text-[#00A690]">
+                <span className="kk-chip mt-1 bg-kk-lime text-kk-night px-2.5 py-0.5 text-xs font-bold">
                   %{offer.discount_percent} indirim
                 </span>
               )}
@@ -1267,12 +1272,12 @@ const MerchantDashboardPage = () => {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => toggleOfferStatus(offer.id, offer.is_active)}
-              className={'flex-1 flex items-center justify-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ' +
+              className={'flex-1 flex items-center justify-center px-3 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ' +
                 (togglingOfferId === offer.id
                   ? 'bg-gray-200 text-gray-500 cursor-wait opacity-60'
                   : offer.is_active
-                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    : 'bg-[#FFFFF0] text-[#00A690] hover:bg-green-300')}
+                    ? 'bg-gray-100 text-kk-night hover:bg-gray-200'
+                    : 'bg-kk-lime text-kk-night hover:bg-kk-lime-dark')}
               disabled={togglingOfferId === offer.id}
             >
               {togglingOfferId === offer.id ? (
@@ -1293,16 +1298,18 @@ const MerchantDashboardPage = () => {
 
             <button
               onClick={() => openEditModal(offer)}
-              className="p-2 bg-[#FFFFF0] text-[#00A690] rounded-lg hover:bg-green-300 transition-colors duration-300"
+              className="w-10 h-10 flex items-center justify-center bg-gray-100 text-kk-night rounded-full hover:bg-kk-lime transition-colors duration-300"
               title="Düzenle"
+              aria-label="Düzenle"
             >
               <Edit className="w-4 h-4" />
             </button>
 
             <button
               onClick={() => deleteOffer(offer.id)}
-              className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors duration-300"
+              className="w-10 h-10 flex items-center justify-center bg-kk-coral/15 text-kk-coral-text rounded-full hover:bg-kk-coral hover:text-kk-night transition-colors duration-300"
               title="Sil"
+              aria-label="Sil"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -1313,9 +1320,10 @@ const MerchantDashboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-kk-paper">
       {toast && (
-        <div className={'fixed top-4 right-4 z-[9999] px-6 py-3 rounded-lg shadow-lg ' + (toast.type === 'success' ? 'bg-[#00A690]' : 'bg-red-500') + ' text-white'}>
+        <div className={'fixed top-4 right-4 z-[9999] flex items-center gap-2 px-5 py-3 rounded-full shadow-2xl font-semibold ' + (toast.type === 'success' ? 'bg-kk-night text-white' : 'bg-kk-coral text-kk-night')}>
+          {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5 text-kk-lime flex-shrink-0" /> : <AlertCircle className="w-5 h-5 text-kk-night flex-shrink-0" />}
           {toast.message}
         </div>
       )}
@@ -1323,35 +1331,38 @@ const MerchantDashboardPage = () => {
       {/* HISTORY MODAL */}
       {showHistoryModal && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4"
+          className="fixed inset-0 bg-kk-night/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
           onClick={() => setShowHistoryModal(false)}
         >
           <div 
-            className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+            className="bg-kk-paper rounded-3xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+            <div className="p-6 bg-kk-night flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#FFFFF0] rounded-full flex items-center justify-center">
-                  <History className="w-6 h-6 text-[#00A690]" />
+                <div className="w-12 h-12 bg-kk-lime rounded-full flex items-center justify-center">
+                  <History className="w-6 h-6 text-kk-night" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Rezervasyon Geçmişi</h2>
-                  <p className="text-sm text-gray-600 mt-1">Tüm geçmiş rezervasyonlarınız</p>
+                  <h2 className="font-display text-2xl font-extrabold tracking-tight text-white">Rezervasyon Geçmişi</h2>
+                  <p className="text-sm text-kk-muted mt-1">Tüm geçmiş rezervasyonlarınız</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowHistoryModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-300"
+                aria-label="Kapat"
+                className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors duration-300"
               >
-                <X className="w-6 h-6 text-gray-600" />
+                <X className="w-6 h-6 text-white" />
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6">
               {historyLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A690]"></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-busy="true">
+                  <div className="kk-skeleton rounded-3xl h-48"></div>
+                  <div className="kk-skeleton rounded-3xl h-48"></div>
+                  <div className="kk-skeleton rounded-3xl h-48"></div>
                 </div>
               ) : allReservations.length === 0 ? (
                 <div className="text-center py-12">
@@ -1377,23 +1388,23 @@ const MerchantDashboardPage = () => {
       {/* ONBOARDING MODAL (identique) */}
       {showOnboardingModal && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9998] p-4"
+          className="fixed inset-0 bg-kk-night/60 backdrop-blur-sm flex items-center justify-center z-[9998] p-4"
           onClick={isFromSettings ? () => setShowOnboardingModal(false) : undefined}
         >
           <div 
-            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-gray-200">
+            <div className="p-6 bg-kk-night">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-[#FFFFF0] rounded-full flex items-center justify-center">
-                  <Building2 className="w-6 h-6 text-[#00A690]" />
+                <div className="w-12 h-12 bg-kk-lime rounded-full flex items-center justify-center">
+                  <Building2 className="w-6 h-6 text-kk-night" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="font-display text-2xl font-extrabold tracking-tight text-white">
                     {isFromSettings ? 'İşletme Ayarları' : 'İşletme Profilinizi Tamamlayın'}
                   </h2>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-kk-muted mt-1">
                     {isFromSettings
                       ? 'İşletme bilgilerinizi, konumunuzu ve logonuzu güncelleyin'
                       : 'Teklif yayınlamak için kaydınızı tamamlayın'}
@@ -1404,37 +1415,37 @@ const MerchantDashboardPage = () => {
 
             <form onSubmit={handleOnboardingSubmit} className="p-6 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">İşletme Adı *</label>
+                <label className="block text-sm font-semibold text-kk-night mb-2">İşletme Adı *</label>
                 <input
                   type="text"
                   value={onboardingData.company_name}
                   onChange={(e) => setOnboardingData({ ...onboardingData, company_name: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690]"
+                  className="kk-input"
                   placeholder="Örn: Ahmet'in Fırını"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Telefon *</label>
+                <label className="block text-sm font-semibold text-kk-night mb-2">Telefon *</label>
                 <input
                   type="tel"
                   value={onboardingData.phone}
                   onChange={(e) => setOnboardingData({ ...onboardingData, phone: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690]"
+                  className="kk-input"
                   placeholder="Örn: 0532 123 45 67"
                   required
                 />
               </div>
 
               <div className="space-y-4">
-                <p className="text-sm font-medium text-gray-700">📍 Haritada konumunuzu belirleyin</p>
+                <p className="text-sm font-semibold text-kk-night">📍 Haritada konumunuzu belirleyin</p>
 
                 <div className="relative">
                   {!mapLoaded && (
-                    <div className="w-full h-[400px] rounded-xl bg-gray-100 flex items-center justify-center">
+                    <div className="w-full h-[400px] rounded-3xl bg-gray-100 flex items-center justify-center">
                       <div className="text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00A690] mx-auto mb-2"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-4 border-kk-mint/20 border-t-kk-mint-deep mx-auto mb-2"></div>
                         <p className="text-sm text-gray-500">Harita yükleniyor...</p>
                       </div>
                     </div>
@@ -1442,7 +1453,7 @@ const MerchantDashboardPage = () => {
 
                   <div
                     ref={mapContainerRef}
-                    className={`w-full h-[400px] rounded-xl shadow-lg overflow-hidden ${!mapLoaded ? 'hidden' : 'block'}`}
+                    className={`w-full h-[400px] rounded-3xl shadow-lg overflow-hidden ${!mapLoaded ? 'hidden' : 'block'}`}
                     style={{ position: 'relative' }}
                   ></div>
 
@@ -1450,10 +1461,11 @@ const MerchantDashboardPage = () => {
                     <button
                       type="button"
                       onClick={handleGeolocate}
-                      className="absolute bottom-4 right-4 w-12 h-12 bg-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center border border-gray-200 hover:bg-gray-50 z-10"
+                      className="absolute bottom-4 right-4 w-12 h-12 bg-kk-lime rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center hover:bg-kk-lime-dark z-10"
                       title="Konumumu bul"
+                      aria-label="Konumumu bul"
                     >
-                      <svg className="w-6 h-6 text-[#00A690]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-6 h-6 text-kk-night" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
@@ -1461,7 +1473,7 @@ const MerchantDashboardPage = () => {
                   )}
                 </div>
 
-                <div className="text-xs text-gray-400 text-center">
+                <div className="text-xs text-gray-500 text-center">
                   {hasSavedLocation || locationChanged
                     ? `Konum: ${onboardingData.latitude.toFixed(6)}, ${onboardingData.longitude.toFixed(6)}`
                     : 'Konum henüz seçilmedi: işaretçiyi sürükleyin, adres arayın veya konum butonunu kullanın'}
@@ -1469,34 +1481,34 @@ const MerchantDashboardPage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">İşletme Logosu (isteğe bağlı)</label>
+                <label className="block text-sm font-semibold text-kk-night mb-2">İşletme Logosu (isteğe bağlı)</label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleLogoChange}
-                  className="w-full border-2 border-dashed border-gray-300 rounded-lg p-4 text-sm text-gray-500 cursor-pointer hover:border-[#00A690]"
+                  className="w-full border-2 border-dashed border-black/15 bg-kk-paper/60 rounded-3xl p-4 text-sm text-gray-600 cursor-pointer hover:border-kk-mint-deep file:mr-3 file:rounded-full file:border-0 file:bg-kk-night file:px-4 file:py-2 file:text-white file:font-semibold"
                   required={false}
                 />
                 {onboardingData.logo_url && (
                   <div className="mt-3 flex justify-center">
-                    <img src={onboardingData.logo_url} alt="İşletme Logosu" className="h-16 rounded-md shadow-sm" />
+                    <img src={onboardingData.logo_url} alt="İşletme Logosu" className="h-16 rounded-2xl shadow-sm" />
                   </div>
                 )}
               </div>
 
               {isFromSettings ? (
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <div className="flex justify-end gap-3 pt-4 border-t border-black/10">
                   <button
                     type="button"
                     onClick={() => setShowOnboardingModal(false)}
-                    className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium"
+                    className="kk-btn-ghost"
                   >
                     İptal
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmittingOnboarding}
-                    className="px-4 py-2 rounded-lg bg-[#00A690] hover:bg-[#F75C00] text-white font-medium"
+                    className="kk-btn-primary"
                   >
                     {isSubmittingOnboarding ? 'Kaydediliyor...' : 'Kaydet'}
                   </button>
@@ -1505,7 +1517,7 @@ const MerchantDashboardPage = () => {
                 <button
                   type="submit"
                   disabled={isSubmittingOnboarding}
-                  className="w-full py-3 bg-[#00A690] hover:bg-[#F75C00] text-white font-semibold rounded-lg"
+                  className="kk-btn-primary w-full py-3.5"
                 >
                   {isSubmittingOnboarding ? 'Kaydediliyor...' : 'Kaydet'}
                 </button>
@@ -1522,14 +1534,14 @@ const MerchantDashboardPage = () => {
           <div className="flex items-center gap-3 mb-4">
             <button
               onClick={() => setShowReservationsSection(!showReservationsSection)}
-              className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex items-center justify-between"
+              className="flex-1 kk-card p-4 hover:shadow-lg transition-all flex items-center justify-between"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#FFFFF0] rounded-full flex items-center justify-center">
-                  <Package className="w-5 h-5 text-[#00A690]" />
+                <div className="w-10 h-10 bg-kk-lime rounded-full flex items-center justify-center">
+                  <Package className="w-5 h-5 text-kk-night" />
                 </div>
                 <div className="text-left">
-                  <h2 className="text-lg font-bold text-gray-900">📦 Son Rezervasyonlar</h2>
+                  <h2 className="font-display text-lg font-extrabold tracking-tight text-kk-night">📦 Son Rezervasyonlar</h2>
                   <p className="text-sm text-gray-600">
                     {reservations.length > 0 ? `${reservations.length} devam ediyor` : 'Bekleyen rezervasyon yok'}
                   </p>
@@ -1547,18 +1559,20 @@ const MerchantDashboardPage = () => {
                 setShowHistoryModal(true);
                 fetchAllReservations();
               }}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all flex items-center gap-2"
+              className="kk-btn-dark h-full py-4"
             >
-              <History className="w-5 h-5 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Geçmiş</span>
+              <History className="w-5 h-5" />
+              <span className="text-sm font-semibold">Geçmiş</span>
             </button>
           </div>
 
           {showReservationsSection && (
             <div className="space-y-4">
               {reservationLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00A690]"></div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3" aria-busy="true">
+                  <div className="kk-skeleton rounded-3xl h-48"></div>
+                  <div className="kk-skeleton rounded-3xl h-48"></div>
+                  <div className="kk-skeleton rounded-3xl h-48"></div>
                 </div>
               ) : reservations.length === 0 ? (
                 <p className="text-sm text-gray-500 text-center py-4">Bekleyen rezervasyon yok</p>
@@ -1573,7 +1587,7 @@ const MerchantDashboardPage = () => {
                     <div className="text-center">
                       <button 
                         onClick={() => setShowAllInSection(!showAllInSection)}
-                        className="text-sm text-[#00A690] hover:text-[#00A690] font-medium"
+                        className="kk-btn-ghost px-5 py-2 text-sm"
                       >
                         {showAllInSection ? '← Daha Az Göster' : `Tümünü Göster (${reservations.length}) →`}
                       </button>
@@ -1585,15 +1599,15 @@ const MerchantDashboardPage = () => {
           )}
         </div>
 
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between gap-4 bg-kk-night text-white rounded-3xl p-5 sm:p-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Ürünlerim</h2>
-            <p className="text-gray-600 mt-1">Toplam {activeOffers.length + inactiveOffers.length} ürün</p>
+            <h2 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Ürünlerim</h2>
+            <p className="text-kk-muted mt-1">Toplam <span className="font-display font-extrabold text-kk-lime">{activeOffers.length + inactiveOffers.length}</span> ürün</p>
           </div>
           <div className="flex items-center gap-4">
             <button
               onClick={openAddProductModal}
-              className="flex items-center px-6 py-3 bg-[#00A690] text-white rounded-lg hover:bg-[#F75C00] transition-colors font-medium shadow-sm"
+              className="kk-btn-primary px-5 sm:px-6 py-3 whitespace-nowrap"
             >
               <Plus className="w-5 h-5 mr-2" />
               Ürün Ekle
@@ -1604,23 +1618,23 @@ const MerchantDashboardPage = () => {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-[#FFFFF0] rounded-full flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-[#00A690]" />
+              <div className="w-10 h-10 bg-kk-mint rounded-full flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-kk-night" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">✅ Aktif Teklifler</h3>
+              <h3 className="font-display text-xl font-extrabold tracking-tight text-kk-night">✅ Aktif Teklifler</h3>
             </div>
-            <span className="bg-[#FFFFF0] text-[#00A690] px-3 py-1 rounded-full text-sm font-semibold">
+            <span className="kk-chip bg-kk-lime text-kk-night px-3 py-1 text-sm font-bold">
               {activeOffers.length}
             </span>
           </div>
 
           {activeOffers.length === 0 ? (
-            <div className="bg-green-100 border-2 border-dashed border-green-300 rounded-lg p-8 text-center">
-              <Package className="w-12 h-12 text-[#F75C00] mx-auto mb-3" />
+            <div className="bg-white border-2 border-dashed border-black/15 rounded-3xl p-8 text-center">
+              <Package className="w-12 h-12 text-kk-mint-text mx-auto mb-3" />
               <p className="text-gray-600 mb-4">Henüz aktif teklif yok</p>
               <button
                 onClick={openAddProductModal}
-                className="inline-flex items-center px-6 py-3 bg-[#00A690] text-white rounded-lg hover:bg-[#F75C00] transition-colors font-medium"
+                className="kk-btn-primary px-6 py-3"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 İlk Teklifinizi Oluşturun
@@ -1639,12 +1653,12 @@ const MerchantDashboardPage = () => {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                   <Clock className="w-5 h-5 text-gray-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">⏸️ Pasif Teklifler</h3>
+                <h3 className="font-display text-xl font-extrabold tracking-tight text-kk-night">⏸️ Pasif Teklifler</h3>
               </div>
-              <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-semibold">
+              <span className="kk-chip bg-gray-200 text-gray-800 px-3 py-1 text-sm font-bold">
                 {inactiveOffers.length}
               </span>
             </div>

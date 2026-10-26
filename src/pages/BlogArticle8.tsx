@@ -2,27 +2,27 @@ import { Calendar, User, ArrowLeft, Apple, Leaf, Snowflake, Sun } from 'lucide-r
 
 const BlogArticle8 = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-kk-paper">
+      <div className="bg-kk-night border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <a href="/blog" className="inline-flex items-center text-[#00A690] hover:text-[#F75C00] transition-colors duration-300">
+          <a href="/blog" className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20 transition-colors duration-300">
             <ArrowLeft className="w-5 h-5 mr-2" />
             Bloga dön
           </a>
         </div>
       </div>
 
-      <div className="bg-white py-12">
+      <div className="bg-kk-night text-white pt-10 pb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-6">
-            <span className="bg-[#00A690] text-white px-4 py-2 rounded-full text-sm font-medium">
+            <span className="kk-chip bg-kk-lime text-kk-night px-4 py-2 text-sm font-semibold">
               Tavsiyeler
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6">
             Meyve ve sebze saklama: kapsamlı rehber
           </h1>
-          <div className="flex items-center text-gray-600 mb-8">
+          <div className="flex flex-wrap items-center text-kk-muted mb-8">
             <User className="w-5 h-5 mr-2" />
             <span className="mr-6">Diyetisyen Elif</span>
             <Calendar className="w-5 h-5 mr-2" />
@@ -33,20 +33,20 @@ const BlogArticle8 = () => {
           <img
             src="https://images.pexels.com/photos/1300972/pexels-photo-1300972.jpeg?auto=compress&cs=tinysrgb&w=1200"
             alt="Taze meyve ve sebzeler"
-            className="w-full h-96 object-cover rounded-xl shadow-lg"
+            className="w-full h-72 md:h-96 object-cover rounded-3xl shadow-2xl"
           />
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none kk-card p-6 md:p-10">
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             Evdeki gıda israfının %40'ının meyve ve sebzeleri ilgilendirdiğini biliyor muydunuz?
             Daha uzun süre taze kalmalarını sağlamak için nasıl doğru saklanacağını öğrenin.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
-            <Snowflake className="inline w-6 h-6 mr-2 text-blue-500" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">
+            <Snowflake className="inline w-6 h-6 mr-2 text-kk-mint-text" />
             Buzdolabında (0-5°C)
           </h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
@@ -54,7 +54,7 @@ const BlogArticle8 = () => {
             Bazıları lezzet ve dokularını kaybeder.
           </p>
 
-          <div className="bg-blue-50 rounded-lg p-6 my-8">
+          <div className="bg-blue-50 rounded-2xl p-6 my-8">
             <h3 className="font-bold text-gray-900 mb-4">✅ Buzdolabında saklanacaklar:</h3>
 
             <h4 className="font-semibold text-gray-900 mt-4 mb-2">Sebzeler (sebzelik bölümü):</h4>
@@ -89,7 +89,7 @@ const BlogArticle8 = () => {
               <li>• Kiraz</li>
             </ul>
 
-            <div className="bg-white rounded p-4 mt-4">
+            <div className="bg-white rounded-2xl p-4 mt-4">
               <p className="text-sm text-gray-700">
                 <strong>💡 İpucu:</strong> Meyve ve sebzeleri buzdolabına koymadan önce yıkamayın,
                 nem bozulmalarını hızlandırır. Tüketmeden hemen önce yıkayın.
@@ -97,15 +97,15 @@ const BlogArticle8 = () => {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
-            <Sun className="inline w-6 h-6 mr-2 text-orange-500" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">
+            <Sun className="inline w-6 h-6 mr-2 text-kk-coral-text" />
             Oda sıcaklığında (18-22°C)
           </h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
             Birçok Akdeniz meyvesi ve sebzesi ortam havasını buzdolabı soğuğuna tercih eder.
           </p>
 
-          <div className="bg-orange-50 rounded-lg p-6 my-8">
+          <div className="bg-orange-50 rounded-2xl p-6 my-8">
             <h3 className="font-bold text-gray-900 mb-4">🏠 Buzdolabı dışında saklanacaklar:</h3>
 
             <h4 className="font-semibold text-gray-900 mt-4 mb-2">Sebzeler:</h4>
@@ -131,7 +131,7 @@ const BlogArticle8 = () => {
               <li>• <strong>Mango</strong></li>
             </ul>
 
-            <div className="bg-white rounded p-4 mt-4">
+            <div className="bg-white rounded-2xl p-4 mt-4">
               <p className="text-sm text-gray-700">
                 <strong>⚠️ Dikkat:</strong> Patates ve soğanı asla bir arada saklamayın!
                 Patatesler soğanları daha hızlı filizlendirir.
@@ -139,8 +139,8 @@ const BlogArticle8 = () => {
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
-            <Apple className="inline w-6 h-6 mr-2 text-red-500" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">
+            <Apple className="inline w-6 h-6 mr-2 text-kk-coral-text" />
             Etilen gazı: dost mu düşman mı?
           </h2>
           <p className="text-gray-700 mb-6 leading-relaxed">
@@ -149,7 +149,7 @@ const BlogArticle8 = () => {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
-            <div className="bg-red-50 rounded-lg p-6">
+            <div className="bg-red-50 rounded-2xl p-6">
               <h4 className="font-bold text-gray-900 mb-3">🍎 Yüksek etilen üreticileri:</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Elma</li>
@@ -164,7 +164,7 @@ const BlogArticle8 = () => {
               </p>
             </div>
 
-            <div className="bg-green-50 rounded-lg p-6">
+            <div className="bg-green-50 rounded-2xl p-6">
               <h4 className="font-bold text-gray-900 mb-3">🥒 Etilene duyarlı olanlar:</h4>
               <ul className="text-sm text-gray-700 space-y-1">
                 <li>• Brokoli</li>
@@ -180,7 +180,7 @@ const BlogArticle8 = () => {
             </div>
           </div>
 
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 my-8">
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 my-8 rounded-2xl">
             <p className="font-bold text-gray-900 mb-2">💡 Profesyonel ipucu:</p>
             <p className="text-gray-700">
               Bir avokado veya armudu hızlı olgunlaştırmak mı istiyorsunuz? Bir elma veya muzla
@@ -188,38 +188,38 @@ const BlogArticle8 = () => {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">
-            <Leaf className="inline w-6 h-6 mr-2 text-[#00A690]" />
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">
+            <Leaf className="inline w-6 h-6 mr-2 text-kk-mint-text" />
             Gelişmiş saklama teknikleri
           </h2>
 
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">1. Buz banyosu</h3>
+          <h3 className="font-display text-xl font-extrabold text-kk-night mt-8 mb-3">1. Buz banyosu</h3>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Yumuşamış salata ve yapraklı sebzelere gevrekliğini geri kazandırmak için.
           </p>
-          <div className="bg-[#FFFFF0] rounded p-4 mb-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-4 mb-6">
             <p className="text-sm text-gray-700">
               <strong>Yöntem:</strong> Sebzeleri buz kalıplarıyla çok soğuk suyla dolu büyük bir kaseye
               15-30 dakika batırın. Süzün ve nazikçe kurulayın.
             </p>
           </div>
 
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">2. Emici kağıt</h3>
+          <h3 className="font-display text-xl font-extrabold text-kk-night mt-8 mb-3">2. Emici kağıt</h3>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Yapraklı sebzelerin ve mantarların raf ömrünü uzatmak için ideal.
           </p>
-          <div className="bg-[#FFFFF0] rounded p-4 mb-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-4 mb-6">
             <p className="text-sm text-gray-700">
               <strong>Yöntem:</strong> Sebzeleri buzdolabına koymadan önce hafifçe nemli emici kağıda sarın,
               sonra delikli plastik torbaya koyun.
             </p>
           </div>
 
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">3. Beyaz sirke</h3>
+          <h3 className="font-display text-xl font-extrabold text-kk-night mt-8 mb-3">3. Beyaz sirke</h3>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Kırmızı meyvelerin tazeliğini birkaç gün uzatır.
           </p>
-          <div className="bg-[#FFFFF0] rounded p-4 mb-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-4 mb-6">
             <p className="text-sm text-gray-700">
               <strong>Yöntem:</strong> 3 ölçü suya 1 ölçü beyaz sirke karıştırın.
               Kırmızı meyveleri hızlıca batırın, temiz suyla durulayın ve nazikçe kurulayın.
@@ -227,11 +227,11 @@ const BlogArticle8 = () => {
             </p>
           </div>
 
-          <h3 className="text-xl font-bold text-gray-900 mt-8 mb-3">4. Akıllıca dondurma</h3>
+          <h3 className="font-display text-xl font-extrabold text-kk-night mt-8 mb-3">4. Akıllıca dondurma</h3>
           <p className="text-gray-700 mb-4 leading-relaxed">
             Çok fazla meyve veya sebzeniz mi var? Akıllıca dondurun!
           </p>
-          <div className="bg-[#FFFFF0] rounded p-4 mb-6">
+          <div className="bg-kk-lime/15 rounded-2xl p-4 mb-6">
             <p className="text-sm text-gray-700 mb-3">
               <strong>Meyveler:</strong> Yıkayın, kurulayın ve bir tepsiye yayın. 2 saat dondurun,
               sonra dondurma torbasına aktarın. Smoothie ve kompostolar için mükemmel!
@@ -242,10 +242,10 @@ const BlogArticle8 = () => {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-4">Özet tablo</h2>
+          <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-kk-night mt-12 mb-4">Özet tablo</h2>
           <div className="overflow-x-auto my-8">
-            <table className="min-w-full bg-white border border-gray-200 text-sm">
-              <thead className="bg-[#00A690] text-white">
+            <table className="min-w-full bg-white border border-black/10 rounded-2xl overflow-hidden text-sm">
+              <thead className="bg-kk-night text-white">
                 <tr>
                   <th className="px-4 py-3 text-left">Gıda</th>
                   <th className="px-4 py-3 text-left">Nerede?</th>
@@ -288,14 +288,14 @@ const BlogArticle8 = () => {
             </table>
           </div>
 
-          <div className="bg-gray-100 rounded-lg p-8 my-12 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">KapKurtar ile akıllıca alışveriş yapın</h3>
-            <p className="text-gray-700 mb-6">
+          <div className="not-prose bg-kk-night text-white rounded-3xl p-8 my-12 text-center">
+            <h3 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-white mb-4">KapKurtar ile akıllıca alışveriş yapın</h3>
+            <p className="text-white/70 mb-6">
               İndirimli fiyatlarla hafif solmuş meyve ve sebzeler mi? Smoothie, çorba ve kompostolar için mükemmel!
             </p>
             <a
               href="/offers"
-              className="bg-[#00A690] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#F75C00] transition-colors duration-300 inline-block"
+              className="kk-btn-primary px-8 py-3"
             >
               Günün tekliflerini görüntüle
             </a>

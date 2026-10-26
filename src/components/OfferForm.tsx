@@ -366,15 +366,15 @@ export const OfferForm: React.FC<OfferFormProps> = ({
 
   return (
     <div 
-  className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  className="fixed inset-0 bg-kk-night/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
   onClick={onCancel}
 >
       {toast && (
         <div
           className={
-            'fixed top-4 right-4 z-[9999] px-6 py-3 rounded-lg shadow-lg ' +
-            (toast.type === 'success' ? 'bg-[#00A690]' : 'bg-red-500') +
-            ' text-white'
+            'fixed top-4 right-4 z-[9999] px-6 py-3 rounded-full shadow-2xl font-semibold ' +
+            (toast.type === 'success' ? 'bg-kk-night text-white' : 'bg-kk-coral text-kk-night') +
+            ''
           }
         >
           {toast.message}
@@ -382,85 +382,65 @@ export const OfferForm: React.FC<OfferFormProps> = ({
       )}
 
       <div 
-  className="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto"
+  className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-screen overflow-y-auto"
   onClick={(e) => e.stopPropagation()}
 >
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">
+        <div className="sticky top-0 z-10 bg-kk-night px-6 py-4 flex items-center justify-between">
+          <h2 className="font-display text-2xl font-extrabold tracking-tight text-white">
             {mode === 'create' ? 'Yeni Ürün Ekle' : 'Ürünü Düzenle'}
           </h2>
-          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onCancel} aria-label="Kapat" className="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Ürün Adı</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              placeholder="Örn: Taze Kruvasan Kutusu"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Açıklama</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              placeholder="Ürününüzü tanımlayın..."
-              rows={3}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-kk-night mb-2">
               📸 Ürün Fotoğrafı
             </label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+            <div className="border-2 border-dashed border-black/15 bg-kk-paper/60 rounded-3xl p-4 sm:p-6 text-center hover:border-kk-mint-deep transition-colors">
               {formData.imagePreview ? (
                 <div className="relative">
                   <img
                     src={formData.imagePreview}
                     alt="Önizleme"
-                    className="max-h-48 mx-auto rounded"
+                    className="w-full aspect-video object-cover rounded-2xl"
                   />
                   <button
                     onClick={() => setFormData((prev) => ({ ...prev, image: null, imagePreview: '' }))}
-                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full"
+                    aria-label="Fotoğrafı kaldır"
+                    className="absolute top-3 right-3 p-2 bg-kk-night/80 backdrop-blur text-white rounded-full hover:bg-kk-coral hover:text-kk-night transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
               ) : isMobile ? (
                 <div className="space-y-3">
+                  <div className="w-20 h-20 rounded-full bg-kk-lime/25 flex items-center justify-center mx-auto">
+                    <Camera className="w-9 h-9 text-kk-night" />
+                  </div>
                   <p className="text-sm text-gray-600 mb-3">
                     {mode === 'create'
                       ? 'Fotoğraf eklemek için seçin:'
                       : 'Fotoğrafı değiştir (isteğe bağlı)'}
                   </p>
-                  <div className="flex gap-3 justify-center">
+                  <div className="flex flex-wrap gap-3 justify-center">
                     <button
                       type="button"
                       onClick={() => cameraInputRef.current?.click()}
-                      className="flex flex-col items-center gap-2 px-4 py-3 bg-[#00A690] text-white rounded-lg hover:bg-[#F75C00] transition-colors"
+                      className="kk-btn-primary px-5 py-2.5 text-sm"
                     >
-                      <Camera className="w-8 h-8" />
-                      <span className="text-xs font-medium">Fotoğraf Çek</span>
+                      <Camera className="w-4 h-4" />
+                      <span>Fotoğraf Çek</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => galleryInputRef.current?.click()}
-                      className="flex flex-col items-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                      className="kk-btn-ghost px-5 py-2.5 text-sm"
                     >
-                      <ImageIcon className="w-8 h-8" />
-                      <span className="text-xs font-medium">Galeriden Seç</span>
+                      <ImageIcon className="w-4 h-4" />
+                      <span>Galeriden Seç</span>
                     </button>
                   </div>
                   <input
@@ -480,8 +460,10 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                   />
                 </div>
               ) : (
-                <label className="cursor-pointer">
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                <label className="cursor-pointer block py-4">
+                  <div className="w-20 h-20 rounded-full bg-kk-lime/25 flex items-center justify-center mx-auto mb-3">
+                    <Upload className="w-9 h-9 text-kk-night" />
+                  </div>
                   <p className="text-sm text-gray-600">
                     {mode === 'create'
                       ? 'Görsel seç'
@@ -498,9 +480,33 @@ export const OfferForm: React.FC<OfferFormProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold text-kk-night mb-2">Ürün Adı</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              placeholder="Örn: Taze Kruvasan Kutusu"
+              className="kk-input"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-kk-night mb-2">Açıklama</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              placeholder="Ürününüzü tanımlayın..."
+              rows={3}
+              className="kk-input"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-kk-night mb-2">
                 Orijinal Fiyat (₺)
               </label>
               <input
@@ -511,11 +517,11 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                 placeholder="600.00"
                 step="0.01"
                 min="0"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                className="kk-input"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">İndirimli Fiyat (₺)</label>
+              <label className="block text-sm font-semibold text-kk-night mb-2">İndirimli Fiyat (₺)</label>
               <input
                 type="number"
                 name="price_after"
@@ -524,21 +530,21 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                 placeholder="250.00"
                 step="0.01"
                 min="0"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                className="kk-input"
               />
             </div>
           </div>
 
           {formData.price_before && formData.price_after && parseFloat(formData.price_before) > 0 && (
-            <div className="bg-green-100 border border-green-300 rounded-lg p-3 text-center">
-              <span className="text-lg font-bold text-[#00A690]">
+            <div className="flex justify-center">
+              <span className="kk-chip bg-kk-lime text-kk-night px-4 py-1.5 font-display text-lg font-extrabold">
                 -%{calculateDiscount(formData.price_before, formData.price_after)} indirim
               </span>
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-kk-night mb-2">
               Mevcut Miktar
             </label>
             <input
@@ -549,28 +555,28 @@ export const OfferForm: React.FC<OfferFormProps> = ({
               placeholder="10"
               min="1"
               step="1"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+              className="kk-input"
             />
           </div>
 
           {mode === 'create' && (
-            <div className="border-t pt-4">
+            <div className="border-t border-black/10 pt-4">
               <div className="flex items-center mb-3">
                 <input
                   type="checkbox"
                   id="startNow"
                   checked={formData.startNow}
                   onChange={(e) => handleStartNowChange(e.target.checked)}
-                  className="w-4 h-4 text-[#00A690] rounded focus:ring-[#00A690]"
+                  className="w-5 h-5 rounded accent-kk-mint-deep"
                 />
-                <label htmlFor="startNow" className="ml-2 text-sm font-medium text-gray-700">
+                <label htmlFor="startNow" className="ml-2 text-sm font-semibold text-kk-night">
                   Başlangıç: Şimdi
                 </label>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-kk-night mb-2">
                     Başlangıç Tarihi ve Saati
                   </label>
                   <input
@@ -579,11 +585,11 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                     value={formData.available_from}
                     onChange={handleInputChange}
                     disabled={formData.startNow}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="kk-input disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-kk-night mb-2">
                     Bitiş Tarihi ve Saati
                   </label>
                   <input
@@ -591,18 +597,18 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                     name="available_until"
                     value={formData.available_until}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                    className="kk-input"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Süre</label>
+                <label className="block text-sm font-semibold text-kk-night mb-2">Süre</label>
                 <select
                   name="duration"
                   value={formData.duration}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                  className="kk-input"
                 >
                   <option value="30min">30 dakika</option>
                   <option value="1h">1 saat</option>
@@ -615,7 +621,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
 
               {formData.duration === 'custom' && (
                 <div className="mt-3">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-kk-night mb-2">
                     Özel Süre (dakika)
                   </label>
                   <input
@@ -625,7 +631,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                     onChange={handleInputChange}
                     placeholder="120"
                     min="1"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                    className="kk-input"
                   />
                 </div>
               )}
@@ -635,7 +641,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
           {mode === 'edit' && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-kk-night mb-2">
                   Başlangıç
                 </label>
                 <input
@@ -643,12 +649,12 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                   name="available_from"
                   value={formData.available_from}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                  className="kk-input"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-kk-night mb-2">
                   Bitiş
                 </label>
                 <input
@@ -656,7 +662,7 @@ export const OfferForm: React.FC<OfferFormProps> = ({
                   name="available_until"
                   value={formData.available_until}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A690] focus:border-transparent"
+                  className="kk-input"
                 />
               </div>
             </>
@@ -666,10 +672,10 @@ export const OfferForm: React.FC<OfferFormProps> = ({
             onClick={handleSubmit}
             disabled={isSubmitting || !isFormValid}
             className={
-              'w-full py-3 text-white rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed ' +
+              'kk-btn-primary w-full py-4 text-lg ' +
               (mode === 'create'
-                ? 'bg-[#00A690] hover:bg-[#F75C00]'
-                : 'bg-[#00A690] hover:bg-[#F75C00]')
+                ? ''
+                : '')
             }
           >
             {isSubmitting

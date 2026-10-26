@@ -23,46 +23,46 @@ const HomePage = () => {
       <StructuredData type="organization" />
       <HeroBanner />
 
-      {/* Section HowItWorks - fond turquoise clair */}
-      <div className="bg-[#2DD4BF]/10">
+      {/* Section HowItWorks */}
+      <div className="bg-kk-paper">
         <HowItWorks />
       </div>
 
-      {/* Section FeaturedOffers - fond blanc */}
-      <div className="bg-white">
+      {/* Section FeaturedOffers */}
+      <div className="bg-kk-paper">
         <FeaturedOffers onOpenDownloadModal={() => setShowDownloadModal(true)} />
       </div>
 
-      {/* Section ImpactSection - fond turquoise clair */}
-      <div className="bg-[#2DD4BF]/10">
+      {/* Section ImpactSection */}
+      <div className="bg-kk-paper">
         <ImpactSection />
       </div>
 
-      {/* CTA Download Section - fond crème */}
-      <div className="bg-[#fffff0] py-16">
+      {/* CTA Download Section - fond sombre */}
+      <div className="bg-kk-night text-white py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="flex justify-center mb-6">
-            <div className="bg-[#00615f] rounded-full p-4">
-              <Smartphone className="w-12 h-12 text-white" />
+            <div className="bg-kk-mint rounded-full p-4">
+              <Smartphone className="w-12 h-12 text-kk-night" />
             </div>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-display font-extrabold tracking-tight text-white mb-4">
             KapKurtar Uygulamasını İndirin
           </h2>
-          <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-kk-muted mb-8 max-w-2xl mx-auto">
             Gerçek zamanlı bildirimler alın ve yakınınızdaki hiçbir teklifi kaçırmayın
           </p>
           <button
             onClick={() => setShowDownloadModal(true)}
-            className="bg-[#f75c00] text-white px-8 py-4 rounded-lg font-bold hover:bg-[#FF7A29] transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+            className="kk-btn-primary px-8 py-4 text-lg shadow-lg"
           >
             Şimdi İndir
           </button>
         </div>
       </div>
 
-      {/* Section ForMerchants - fond turquoise clair */}
-      <div className="bg-[#2DD4BF]/10">
+      {/* Section ForMerchants */}
+      <div className="bg-kk-paper">
         <ForMerchantsSection />
       </div>
 

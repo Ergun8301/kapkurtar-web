@@ -48,82 +48,85 @@ const HeroBanner = () => {
   };
 
   return (
-    <div className="relative h-[600px] lg:h-[700px] overflow-hidden">
-      {/* Background Images */}
-      {slides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            index === currentSlide ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <img
-            src={slide.image}
-            alt={slide.alt}
-            className="w-full h-full object-cover"
-          />
-          {/* Dark gradient overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/30"></div>
-        </div>
-      ))}
+    <section className="relative bg-kk-night text-white overflow-hidden">
+      {/* Halo décoratif */}
+      <div className="pointer-events-none absolute -top-32 -right-32 w-[28rem] h-[28rem] rounded-full bg-kk-mint/10 blur-3xl" aria-hidden="true"></div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+        {/* Content */}
+        <div className="text-center lg:text-left kk-fade-up">
+          <h1 className="font-display font-extrabold tracking-tight text-5xl md:text-6xl lg:text-7xl mb-10 md:mb-12 leading-[0.95]">
+            Tasarruf Et, <span className="text-kk-lime">İsrafı Önle</span>, <br />Dünyayı Kurtar
+          </h1>
 
-      {/* Content Overlay */}
-      <div className="relative h-full flex items-center justify-center">
-        <div className="text-center text-white px-4 max-w-5xl">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-16 md:mb-20 lg:mb-24 leading-tight">
-            Tasarruf Et, <span className="text-[#F75C00]">İsrafı Önle</span>, <br />Dünyayı Kurtar
-          </h1> 
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <a
               href="/offers"
-              className="bg-[#00A690] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#F75C00] transition-colors duration-300 inline-flex items-center text-lg shadow-lg"
+              className="kk-btn-primary px-8 py-4 text-lg shadow-lg"
             >
               Kap Kurtar
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="w-5 h-5" />
             </a>
 
             <a
               href="/for-merchants"
-              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition-colors text-lg"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/5 text-white px-8 py-4 font-semibold hover:bg-white/10 transition-colors text-lg"
             >
               Sat Kurtar
             </a>
           </div>
         </div>
-      </div>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        aria-label="Önceki görsel"
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all z-10"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
+        {/* Photos */}
+        <div className="relative h-[340px] sm:h-[420px] lg:h-[520px] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+          {slides.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <img
+                src={slide.image}
+                alt={slide.alt}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-kk-night/70 via-kk-night/10 to-transparent"></div>
+            </div>
+          ))}
 
-      <button
-        onClick={nextSlide}
-        aria-label="Sonraki görsel"
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full hover:bg-opacity-70 transition-all z-10"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
-
-      {/* Slide Indicators */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {slides.map((_, index) => (
+          {/* Navigation Arrows */}
           <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            aria-label={`${index + 1}. görsel`}
-            className={`w-3 h-3 rounded-full transition-all ${
-              index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
-            }`}
-          />
-        ))}
+            onClick={prevSlide}
+            aria-label="Önceki görsel"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-kk-night/60 backdrop-blur text-white p-3 rounded-full hover:bg-kk-night/80 transition-all z-10"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+
+          <button
+            onClick={nextSlide}
+            aria-label="Sonraki görsel"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-kk-night/60 backdrop-blur text-white p-3 rounded-full hover:bg-kk-night/80 transition-all z-10"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
+          {/* Slide Indicators */}
+          <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 z-10">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                aria-label={`${index + 1}. görsel`}
+                className={`h-2.5 rounded-full transition-all ${
+                  index === currentSlide ? 'w-8 bg-kk-lime' : 'w-2.5 bg-white/60'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
