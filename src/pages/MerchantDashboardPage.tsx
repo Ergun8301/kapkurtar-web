@@ -1443,7 +1443,7 @@ const MerchantDashboardPage = () => {
 
                 <div className="relative">
                   {!mapLoaded && (
-                    <div className="w-full h-[400px] rounded-3xl bg-gray-100 flex items-center justify-center">
+                    <div className="absolute inset-0 z-10 w-full h-[400px] rounded-3xl bg-gray-100 flex items-center justify-center">
                       <div className="text-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-4 border-kk-mint/20 border-t-kk-mint-deep mx-auto mb-2"></div>
                         <p className="text-sm text-gray-500">Harita yükleniyor...</p>
@@ -1453,7 +1453,7 @@ const MerchantDashboardPage = () => {
 
                   <div
                     ref={mapContainerRef}
-                    className={`w-full h-[400px] rounded-3xl shadow-lg overflow-hidden ${!mapLoaded ? 'hidden' : 'block'}`}
+                    className={`w-full h-[400px] rounded-3xl shadow-lg overflow-hidden ${!mapLoaded ? 'opacity-0' : 'opacity-100'}`}
                     style={{ position: 'relative' }}
                   ></div>
 
