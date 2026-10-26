@@ -263,7 +263,7 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
           )}
 
           {/* Merchant row */}
-          <div className="border-b border-black/5 px-4 py-4 md:px-6">
+          <div className="border-b border-black/5 px-4 py-4 pr-16 md:px-6 md:pr-16">
             <div className="flex items-center gap-3 flex-wrap">
               {offer.merchant_logo_url ? (
                 <img

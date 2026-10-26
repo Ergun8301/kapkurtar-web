@@ -129,7 +129,7 @@ const Header = () => {
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <button onClick={handleLogoClick} className="flex items-center space-x-3 cursor-pointer">
-            <Logo tone="light" size={34} />
+            <span className="sm:hidden"><Logo tone="light" size={26} /></span><span className="hidden sm:inline-flex"><Logo tone="light" size={34} /></span>
           </button>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
