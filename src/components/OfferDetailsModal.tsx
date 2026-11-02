@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { formatTL, toTurkishError } from '../lib/errorMessages';
+import { isDemoOffer, getDemoOfferInfo, DEMO_CTA_LABEL } from '../lib/demoOffers';
 
 // Valeurs factices écrites par défaut en base (ne pas afficher)
 const PLACEHOLDER_VALUES = ['à définir', 'position gps', 'gps konumu', 'belirtilmemiş'];
@@ -149,7 +150,9 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
 
   const progressPercent = getProgressPercent();
   const isOutOfStock = typeof offer.quantity === 'number' && offer.quantity <= 0;
-  const merchantPlace = cleanPart(offer.merchant_city) || cleanPart(offer.merchant_street);
+  const isDemo = isDemoOffer(offer);
+  const demoInfo = getDemoOfferInfo(offer);
+  const merchantPlace = demoInfo?.city || cleanPart(offer.merchant_city) || cleanPart(offer.merchant_street);
   
   let progressColor = '#00E0B8';
   if (progressPercent < 66) progressColor = '#f59e0b';
@@ -163,6 +166,8 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
   };
 
   const handleReserve = async () => {
+    if (isDemo) return;
+
     if (!user) {
       setShowLoginModal(true);
       return;
@@ -259,6 +264,15 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
               <div className="absolute top-4 left-4 kk-chip bg-kk-lime text-kk-night font-extrabold text-base px-3 py-1.5 shadow-lg">
                 -{getDiscountPercent(offer.price_before, offer.price_after)}%
               </div>
+              {demoInfo && (
+                <span className="absolute bottom-4 right-4 text-[11px] text-white/80">
+                  Fotoğraf:{' '}
+                  <a href={demoInfo.photoUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-white">
+                    {demoInfo.photographer}
+                  </a>{' '}
+                  / Unsplash
+                </span>
+              )}
             </div>
           )}
 
@@ -303,14 +317,16 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                 </div>
               </div>
 
-              <button
-                onClick={handleGetDirections}
-                className="kk-btn-dark px-4 py-2 text-sm flex-shrink-0"
-                aria-label="Yol Tarifi"
-              >
-                <Navigation className="w-4 h-4" />
-                <span className="hidden md:inline">Yol Tarifi</span>
-              </button>
+              {!isDemo && (
+                <button
+                  onClick={handleGetDirections}
+                  className="kk-btn-dark px-4 py-2 text-sm flex-shrink-0"
+                  aria-label="Yol Tarifi"
+                >
+                  <Navigation className="w-4 h-4" />
+                  <span className="hidden md:inline">Yol Tarifi</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -325,7 +341,7 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                   )}
                 </div>
 
-                {offer.available_until && (
+                {offer.available_until && !isDemo && (
                   <div className="space-y-3 mb-4">
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div className="flex items-center gap-2 text-kk-night bg-gray-50 rounded-2xl px-3 py-3">
@@ -363,6 +379,7 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                   </span>
                 </div>
 
+                {!isDemo && (
                 <div className="mb-4 bg-gray-50 p-4 rounded-2xl">
                   <label className="block text-sm font-semibold text-kk-night mb-2">
                     Miktar
@@ -398,7 +415,17 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                     </button>
                   </div>
                 </div>
+                )}
 
+                {isDemo ? (
+                  <button
+                    type="button"
+                    disabled
+                    className="w-full py-4 text-lg rounded-full font-bold bg-gray-200 text-gray-600 cursor-not-allowed"
+                  >
+                    {DEMO_CTA_LABEL}
+                  </button>
+                ) : (
                 <button
                   onClick={handleReserve}
                   disabled={isReserving || isOutOfStock}
@@ -419,6 +446,7 @@ export const OfferDetailsModal: React.FC<OfferDetailsModalProps> = ({
                     '🛒 Şimdi Rezerve Et'
                   )}
                 </button>
+                )}
               </div>
             </div>
           </div>

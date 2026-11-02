@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, MapPin, Phone, Navigation, Package } from 'lucide-react';
 import { formatTL } from '../lib/errorMessages';
+import { isDemoOffer, getDemoOfferInfo } from '../lib/demoOffers';
 
 // Valeurs factices écrites par défaut en base (ne pas afficher)
 const PLACEHOLDER_VALUES = ['à définir', 'position gps', 'gps konumu', 'belirtilmemiş'];
@@ -63,9 +64,12 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
   if (!merchantId || offers.length === 0) return null;
 
   const merchant = offers[0];
-  const merchantAddress = [cleanPart(merchant.merchant_street), cleanPart(merchant.merchant_city)]
-    .filter(Boolean)
-    .join(', ');
+  const isDemo = isDemoOffer(merchant);
+  const merchantAddress = isDemo
+    ? getDemoOfferInfo(merchant)?.city || ''
+    : [cleanPart(merchant.merchant_street), cleanPart(merchant.merchant_city)]
+        .filter(Boolean)
+        .join(', ');
 
   const handleClose = () => {
     setIsOpen(false);
@@ -229,7 +233,8 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                 </a>
               )}
 
-              {/* Bouton Itinéraire */}
+              {/* Bouton Itinéraire (pas pour les offres d'exemple) */}
+              {!isDemo && (
               <button
   onClick={handleGetDirections}
   className="w-full kk-btn-primary px-4 py-2.5"
@@ -237,6 +242,7 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                 <Navigation className="w-4 h-4" />
                 Yol Tarifi
               </button>
+              )}
             </div>
           </div>
         </div>
@@ -295,7 +301,7 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                     {/* Timer + Stock + Barre */}
                     <div className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        {offer.available_until && (
+                        {offer.available_until && !isDemoOffer(offer) && (
                           <span className="kk-chip bg-kk-coral text-kk-night font-semibold">
                             {getTimeRemaining(offer.available_until)}
                           </span>
@@ -305,7 +311,7 @@ export const MerchantBottomSheet: React.FC<MerchantBottomSheetProps> = ({
                           Stok: {offer.quantity}
                         </span>
                       </div>
-                      {offer.available_until && (
+                      {offer.available_until && !isDemoOffer(offer) && (
                         <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
                           <div
                             className={`h-full transition-all duration-300 rounded-full ${

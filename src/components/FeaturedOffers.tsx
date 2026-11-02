@@ -9,6 +9,7 @@ import { useNearbyOffers } from '../hooks/useNearbyOffers';
 import { useClientLocation } from '../hooks/useClientLocation';
 import { getPublicImageUrl, NO_IMAGE_PLACEHOLDER } from '../lib/supabasePublic';
 import { formatTL, toTurkishError } from '../lib/errorMessages';
+import { isDemoOffer, getDemoOfferInfo, DEMO_CTA_LABEL } from '../lib/demoOffers';
 
 // Rayon de recherche des offres proches (km)
 const NEARBY_RADIUS_KM = 10;
@@ -111,6 +112,8 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
   };
 
   const handleReserve = (offer: Offer) => {
+    if (isDemoOffer(offer)) return;
+
     if (!user) {
       navigate('/customer/auth');
       return;
@@ -244,12 +247,14 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
               </div>
 
               <div className="p-5 flex flex-col flex-1">
+                {!isDemoOffer(offer) && (
                 <div className="flex items-center justify-end mb-2">
                   <div className="flex items-center text-sm font-semibold text-kk-coral-text">
                     <Clock className="w-4 h-4 mr-1" />
                     {formatTimeLeft(offer.available_until)}
                   </div>
                 </div>
+                )}
 
                 <h3 className="text-xl font-display font-extrabold tracking-tight text-kk-night mb-2">{offer.title}</h3>
                 <p className="text-gray-700 mb-3 text-sm line-clamp-2">{offer.description}</p>
@@ -257,7 +262,8 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
                 <div className="flex flex-wrap items-center gap-y-1 text-sm text-gray-600 mb-4">
                   <MapPin className="w-4 h-4 mr-1 text-kk-mint-text" />
                   <span>{offer.merchant?.company_name || 'Bilinmeyen İşletme'}</span>
-                  {!user && <span className="ml-2 kk-chip bg-kk-lilac/25 text-kk-night font-semibold">Tam adresi görmek için giriş yapın</span>}
+                  {getDemoOfferInfo(offer) && <span className="ml-2 text-xs text-gray-600">• {getDemoOfferInfo(offer)?.city}</span>}
+                  {!user && !isDemoOffer(offer) && <span className="ml-2 kk-chip bg-kk-lilac/25 text-kk-night font-semibold">Tam adresi görmek için giriş yapın</span>}
                   {user && offer.merchant?.full_address && (
                     <span className="ml-2 text-xs text-gray-600">• {offer.merchant.full_address}</span>
                   )}
@@ -272,7 +278,15 @@ const FeaturedOffers: React.FC<FeaturedOffersProps> = () => {
                       {formatTL(offer.original_price)}
                     </span>
                   </div>
-                  {user ? (
+                  {isDemoOffer(offer) ? (
+                    <button
+                      type="button"
+                      disabled
+                      className="rounded-full font-bold bg-gray-200 text-gray-600 cursor-not-allowed px-5 py-2.5 text-sm"
+                    >
+                      {DEMO_CTA_LABEL}
+                    </button>
+                  ) : user ? (
                     <button
                       onClick={() => handleReserve(offer)}
                       disabled={!offer.quantity || offer.quantity <= 0}
