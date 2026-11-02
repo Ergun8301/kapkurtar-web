@@ -13,6 +13,7 @@ import { MerchantBottomSheet } from "../components/MerchantBottomSheet";
 import { useClientNotifications } from "../hooks/useClientNotifications";
 import { formatTL, toTurkishError } from "../lib/errorMessages";
 import { GOOGLE_PLAY_URL } from "../lib/appLinks";
+import { isDemoOffer, getDemoOfferInfo } from "../lib/demoOffers";
 
 type Offer = {
   offer_id: string;
@@ -730,10 +731,11 @@ export default function OffersPage() {
       }
 
       el.addEventListener('click', () => {
-        const merchantId = offer.merchant_id || offer.merchant_name;
+        // Offres d'exemple : un seul marchand de démo réparti sur plusieurs villes, on n'affiche que l'offre cliquée
+        const merchantId = isDemoOffer(offer) ? offer.offer_id : (offer.merchant_id || offer.merchant_name);
         setSelectedMerchantId(merchantId);
         
-        const merchantProducts = offers.filter(o => 
+        const merchantProducts = isDemoOffer(offer) ? [offer] : offers.filter(o => 
           (o.merchant_id || o.merchant_name) === merchantId
         );
         setMerchantOffers(merchantProducts);
@@ -842,7 +844,7 @@ export default function OffersPage() {
           </span>
         </div>
 
-        {offer.available_until && (
+        {offer.available_until && !isDemoOffer(offer) && (
           <div className="space-y-1">
             <div className={`${isMobile ? "text-[10px]" : "text-xs"} flex`}>
               <span className={`kk-chip bg-kk-coral text-kk-night px-2 py-0.5 ${isMobile ? "text-[10px]" : "text-xs"}`}>{getTimeRemaining(offer.available_until)}</span>
@@ -896,9 +898,9 @@ export default function OffersPage() {
           {offer.merchant_name}
         </p>
 
-        {cleanPart(offer.merchant_city) && (
+        {(getDemoOfferInfo(offer)?.city || cleanPart(offer.merchant_city)) && (
           <p className={`text-gray-600 ${isMobile ? "text-[10px]" : "text-xs"} truncate min-w-0 flex-1`}>
-            📍 {cleanPart(offer.merchant_city)}
+            📍 {getDemoOfferInfo(offer)?.city || cleanPart(offer.merchant_city)}
           </p>
         )}
 
